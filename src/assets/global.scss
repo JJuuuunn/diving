@@ -1,0 +1,100 @@
+/* Global Styles */
+body {
+  font-family: 'Noto Sans KR', sans-serif;
+  margin: 0;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+:root {
+  --ocean-50: #ecfeff;
+  --ocean-100: #cffafe;
+  --ocean-500: #06b6d4;
+  --ocean-600: #0891b2;
+  --ocean-800: #155e75;
+  --ocean-900: #083344;
+  --ocean-950: #020617;
+
+  --slate-50: #f8fafc;
+  --slate-100: #f1f5f9;
+  --slate-200: #e2e8f0;
+  --slate-300: #cbd5e1;
+  --slate-400: #94a3b8;
+  --slate-500: #64748b;
+  --slate-600: #475569;
+  --slate-700: #334155;
+  --slate-800: #1e293b;
+  --slate-900: #0f172a;
+  --slate-950: #020617;
+
+  --blue-500: #3b82f6;
+  --blue-600: #2563eb;
+  --cyan-500: #06b6d4;
+  --cyan-400: #22d3ee;
+  --yellow-400: #facc15;
+  --red-500: #ef4444;
+  --red-400: #f87171;
+  --indigo-50: #eef2ff;
+  --indigo-300: #a5b4fc;
+  --indigo-600: #4f46e5;
+  --indigo-800: #3730a3;
+  --indigo-900: #312e81;
+
+  --white: #ffffff;
+  --black: #000000;
+}
+
+body {
+  background-color: var(--ocean-50);
+  color: var(--slate-800);
+  padding-bottom: 7rem;
+  transition: background-color 0.3s, color 0.3s;
+}
+
+body.dark {
+  background-color: var(--ocean-950);
+  color: var(--slate-200);
+}
+
+::-webkit-scrollbar { width: 6px; }
+::-webkit-scrollbar-thumb { background-color: #06b6d4; border-radius: 3px; }
+.dark ::-webkit-scrollbar-thumb { background-color: #155e75; }
+
+/* Vue Toast Transition */
+.toast-enter-active,
+.toast-leave-active {
+  transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+}
+.toast-enter-from,
+.toast-leave-to {
+  opacity: 0;
+  transform: translate(-50%, 20px) scale(0.95);
+}
+
+.animate-fade-in {
+  animation: fadeIn 0.5s ease-in-out;
+}
+@keyframes fadeIn {
+  from { opacity: 0; transform: translateY(10px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+/* Icon visibility */
+.dark .fa-sun {
+  display: inline-block;
+}
+.fa-sun {
+  display: none;
+}
+.dark .fa-moon {
+  display: none;
+}
+.fa-moon {
+  display: inline-block;
+}
+
+@media (max-width: 640px) {
+    .share-btn-icon {
+        display: none;
+    }
+}
