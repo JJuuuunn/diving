@@ -11,10 +11,9 @@
       </div>
       <div class="settings-inputs">
         <select id="poolSelect" :value="selectedPool" @change="emit('update:selectedPool', $event.target.value)" class="pool-select">
-          <option value="deepstation">딥스테이션</option>
-          <option value="k26">K26</option>
-          <option value="paradive">파라다이브</option>
-          <option value="custom">직접 입력</option>
+          <option v-for="(price, poolName) in poolPrices" :key="poolName" :value="poolName">
+            {{ getPoolDisplayName(poolName) }}
+          </option>
         </select>
         <div class="price-input-wrapper">
           <input type="text" inputmode="numeric" :value="basePrice" @input="updateBasePrice($event.target.value)" class="price-input" placeholder="0">
@@ -26,10 +25,13 @@
 </template>
 
 <script setup>
-defineProps({
+import { computed } from 'vue';
+
+const props = defineProps({
   currentDayType: String,
   selectedPool: String,
   basePrice: String,
+  poolPrices: Object,
 });
 
 const emit = defineEmits(['update:currentDayType', 'update:selectedPool', 'update:basePrice']);
@@ -42,5 +44,9 @@ const updateBasePrice = (value) => {
 const formatNumber = (n) => {
   if (!n && n !== 0) return '';
   return n.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",");
+};
+
+const getPoolDisplayName = (poolName) => {
+  return props.poolPrices[poolName]?.name || poolName;
 };
 </script>

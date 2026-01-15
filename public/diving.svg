@@ -1,0 +1,48 @@
+<svg class="w-24 h-24 drop-shadow-2xl" viewBox="0 0 100 100" fill="none" xmlns="http://www.w3.org/2000/svg">
+    <defs>
+        <linearGradient id="skirtGrad" x1="50" y1="0" x2="50" y2="100" gradientUnits="userSpaceOnUse">
+            <stop stop-color="#334155"/>
+            <stop offset="0.5" stop-color="#0f172a"/>
+            <stop offset="1" stop-color="#020617"/>
+        </linearGradient>
+
+        <linearGradient id="frameGrad" x1="0" y1="0" x2="100" y2="0" gradientUnits="userSpaceOnUse">
+            <stop stop-color="#22d3ee"/>
+            <stop offset="0.5" stop-color="#06b6d4"/>
+            <stop offset="1" stop-color="#0891b2"/>
+        </linearGradient>
+
+        <linearGradient id="glassGrad" x1="30" y1="30" x2="70" y2="70" gradientUnits="userSpaceOnUse">
+            <stop stop-color="#ecfeff" stop-opacity="0.9"/>
+            <stop offset="0.4" stop-color="#cffafe" stop-opacity="0.3"/>
+            <stop offset="1" stop-color="#06b6d4" stop-opacity="0.1"/>
+        </linearGradient>
+    </defs>
+
+    <g>
+        <path d="M85 5 V 55 Q 85 72 67 72" 
+              stroke="url(#frameGrad)" stroke-width="5" stroke-linecap="round" stroke-linejoin="round"/>
+        
+        <ellipse cx="85" cy="5" rx="2.5" ry="1.5" fill="#0891b2"/>
+
+        <path d="M67 72 L 63 73" stroke="url(#skirtGrad)" stroke-width="6" stroke-linecap="round"/>
+        <rect x="59" y="70" width="4" height="6" rx="1" fill="#1e293b"/>
+    </g>
+
+    <path d="M15 35 C 15 18 85 18 85 35 C 85 52 75 62 50 62 C 25 62 15 52 15 35 Z" 
+          fill="url(#skirtGrad)"/>
+
+    <path d="M20 35 C 20 22 28 22 45 22 C 48 22 50 25 48 35 L 46 50 C 45 54 38 58 28 55 C 24 53 20 45 20 35 Z" 
+          fill="none" stroke="url(#frameGrad)" stroke-width="3.5" stroke-linecap="round" stroke-linejoin="round"/>
+
+    <path d="M80 35 C 80 22 72 22 55 22 C 52 22 50 25 52 35 L 54 50 C 55 54 62 58 72 55 C 76 53 80 45 80 35 Z" 
+          fill="none" stroke="url(#frameGrad)" stroke-width="3.5" stroke-linecap="round" stroke-linejoin="round"/>
+
+    <path d="M22 35 C 22 24 29 24 44 24 C 46 24 47 26 46 34 L 44 48 C 43 51 37 54 29 52 C 25 51 22 44 22 35 Z" 
+          fill="url(#glassGrad)"/>
+    <path d="M78 35 C 78 24 71 24 56 24 C 54 24 53 26 54 34 L 56 48 C 57 51 63 54 71 52 C 75 51 78 44 78 35 Z" 
+          fill="url(#glassGrad)"/>
+
+    <path d="M25 35 L 35 28" stroke="white" stroke-width="3" stroke-opacity="0.3" stroke-linecap="round"/>
+    <path d="M65 35 L 75 28" stroke="white" stroke-width="3" stroke-opacity="0.3" stroke-linecap="round"/>
+</svg>

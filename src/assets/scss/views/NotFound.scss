@@ -1,0 +1,34 @@
+.not-found {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  height: 100vh;
+  text-align: center;
+  background-color: #f8f8f8;
+  color: #333;
+}
+
+h1 {
+  font-size: 3em;
+  margin-bottom: 20px;
+  color: #e44d26; /* A contrasting color */
+}
+
+p {
+  font-size: 1.2em;
+  margin-bottom: 30px;
+}
+
+/* Note: router-link is a component, not a native HTML tag.
+   Styles applied directly to it in CSS might not work as expected.
+   It often renders as an <a> tag. Targeting 'a' within the component might be more reliable. */
+.not-found a { /* Targeting the rendered <a> tag */
+  color: #007bff;
+  text-decoration: none;
+  font-weight: bold;
+}
+
+.not-found a:hover {
+  text-decoration: underline;
+}

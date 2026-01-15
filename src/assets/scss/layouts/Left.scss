@@ -1,0 +1,125 @@
+#left {
+  height: 100vh;
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 0; /* Hidden by default */
+  overflow: hidden;
+  transition: width 0.3s ease-in-out, visibility 0.3s ease-in-out; /* Added visibility to transition */
+  background-color: var(--slate-900);
+  color: var(--slate-200);
+  box-shadow: 3px 0 15px rgba(0,0,0,0.3);
+  z-index: 999;
+  visibility: hidden; /* Hide by default */
+  pointer-events: none; /* Prevent interaction when hidden */
+}
+
+#left.is-open {
+  width: 250px; /* Width when open */
+  visibility: visible; /* Show when open */
+  pointer-events: auto; /* Allow interaction when open */
+}
+
+.sidebar-nav {
+  padding: 20px;
+  width: 250px;
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+}
+
+.sidebar-nav p {
+  font-size: 1.2em;
+  font-weight: bold;
+  margin-bottom: 25px;
+  color: var(--ocean-400); /* Highlighted title */
+}
+
+#left ul {
+  list-style: none;
+  padding: 0;
+  flex-grow: 1;
+  margin-top: 0; /* Remove top margin from ul */
+}
+
+#left li {
+  margin-bottom: 8px; /* Slightly less spacing for menu items */
+}
+
+#left a {
+  color: var(--slate-300); /* Lighter text for links */
+  text-decoration: none;
+  display: flex;
+  align-items: center;
+  padding: 10px 15px; /* Generous padding */
+  border-radius: 8px; /* Rounded links */
+  transition: background-color 0.2s ease, color 0.2s ease;
+
+  &:hover {
+    background-color: var(--slate-800);
+    color: var(--white);
+  }
+
+  &.router-link-active { /* Style for active link */
+    background-color: var(--ocean-600);
+    color: var(--white);
+    font-weight: bold;
+    box-shadow: 0 2px 5px rgba(6, 182, 212, 0.3);
+  }
+}
+
+.sidebar-footer-actions {
+  margin-top: auto;
+  padding: 20px; /* Increased padding around actions */
+  border-top: 1px solid var(--slate-700);
+  display: flex;
+  flex-direction: column;
+  gap: 15px;
+}
+
+.dark-mode-toggle {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  label {
+    margin-right: 10px;
+    font-size: 0.9em;
+    color: var(--slate-200); /* Brighter label color */
+  }
+  input[type="checkbox"] {
+    appearance: none;
+    width: 40px;
+    height: 22px;
+    background-color: var(--slate-700);
+    border-radius: 11px;
+    position: relative;
+    cursor: pointer;
+    transition: background-color 0.3s;
+    outline: none;
+
+    &::before {
+      content: '';
+      position: absolute;
+      width: 18px;
+      height: 18px;
+      border-radius: 50%;
+      background-color: var(--slate-300);
+      top: 2px;
+      left: 2px;
+      transition: transform 0.3s, background-color 0.3s;
+      box-shadow: 0 1px 3px rgba(0,0,0,0.3);
+    }
+
+    &:checked {
+      background-color: var(--ocean-500);
+      &::before {
+        transform: translateX(18px);
+        background-color: var(--white);
+      }
+    }
+  }
+}
+
+body.dark {
+  // Overrides if necessary, but mostly handled by var()
+}

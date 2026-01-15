@@ -1,0 +1,66 @@
+#wrap {
+  display: flex;
+  height: 100vh; /* Full viewport height */
+  font-family: Arial, sans-serif;
+}
+
+#container {
+  flex-grow: 1;
+  display: flex;
+  flex-direction: column;
+}
+
+.container {
+  flex-grow: 1;
+  padding: 20px;
+}
+
+.toggle-button {
+  position: fixed;
+  top: 15px; /* Slightly lower */
+  left: 15px; /* Static position */
+  cursor: pointer;
+  font-size: 1.8em; /* Slightly smaller icon */
+  z-index: 1000;
+  color: #34495e; /* Darker, less harsh color */
+  background-color: #ecf0f1; /* Light background for the button */
+  padding: 8px 12px; /* Adjusted padding */
+  border-radius: 8px; /* More rounded corners */
+  box-shadow: 0 2px 5px rgba(0,0,0,0.15); /* A bit more pronounced shadow */
+  transition: all 0.3s ease-in-out; /* Removed 'left' from transition */
+
+  &:hover {
+    background-color: #bdc3c7; /* Darker on hover */
+    color: #2c3e50;
+    box-shadow: 0 4px 8px rgba(0,0,0,0.2);
+  }
+
+  span {
+    display: block; /* Ensure the span fills the button */
+    line-height: 1; /* Align text vertically */
+  }
+}
+
+/* Add basic styles for pl-0 pr-0 if they are not provided by a framework */
+.pl-0 {
+  padding-left: 0 !important;
+}
+
+.pr-0 {
+  padding-right: 0 !important;
+}
+
+// Dark mode adjustments for toggle button
+body.dark {
+  .toggle-button {
+    color: #ecf0f1; /* Light color for the icon in dark mode */
+    background-color: #34495e; /* Dark background for the button */
+    box-shadow: 0 2px 5px rgba(0,0,0,0.4);
+
+    &:hover {
+      background-color: #2c3e50;
+      color: #ecf0f1;
+      box-shadow: 0 4px 8px rgba(0,0,0,0.6);
+    }
+  }
+}
