@@ -1,0 +1,49 @@
+.toggle-container {
+  width: 96px; // 120px * 0.8
+  height: 40px; // 50px * 0.8
+  border-radius: 20px; // 25px * 0.8
+  padding: 4px; // 5px * 0.8
+  cursor: pointer;
+  position: relative;
+  transition: all 0.4s ease;
+
+  // Night (Off) State
+  background: linear-gradient(135deg, #0f172a, #3b82f6); // Cyan to Deep Blue
+
+  .thumb {
+    width: 32px; // 40px * 0.8
+    height: 32px; // 40px * 0.8
+    border-radius: 50%;
+    position: absolute;
+    top: 50%;
+    left: 4px;
+    transform: translateY(-50%);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: all 0.4s ease;
+    background: linear-gradient(135deg, #3b82f6, #0f172a); // Cyan to Deep Blue (reversed for knob)
+    box-shadow: 0 3px 12px rgba(0, 0, 0, 0.3); // Adjusted shadow
+
+    .icon {
+      width: 20px; // 24px * 0.8
+      height: 20px;
+      color: #e0e1dd;
+    }
+  }
+
+  // Day (On) State
+  &.is-day {
+    background: linear-gradient(135deg, #FFD700, #FF69B4); // Lighter Orange/Gold to Pink
+    
+    .thumb {
+      transform: translate(56px, -50%); // Adjusted translate
+      background: linear-gradient(135deg, #FF69B4, #FFD700); // Pink to Lighter Orange/Gold (reversed for knob)
+      box-shadow: 0 3px 12px rgba(0, 0, 0, 0.2); // Adjusted shadow
+
+      .icon {
+        color: #fff;
+      }
+    }
+  }
+}

@@ -1,52 +1,75 @@
 <template>
-  <aside id="left" :class="{ 'is-open': isOpen }">
-    <nav v-if="isOpen" class="sidebar-nav">
-      <p>Left Sidebar</p>
-      <ul>
-        <li><RouterLink :to="{ name: RouterName.Main }">Home</RouterLink></li>
-        <li><RouterLink :to="{ name: RouterName.Settlement }">Settlement</RouterLink></li>
-      </ul>
-
-      <div class="sidebar-footer-actions">
-        <div class="dark-mode-toggle">
-          <label for="darkModeToggle">Dark Mode</label>
-          <input type="checkbox" id="darkModeToggle" v-model="isDarkMode" />
+  <div id="sidebar-overlay" :class="{ 'is-open': isOpen }" @click.self="$emit('close')">
+    <aside id="left-sidebar">
+      <header class="sidebar-header">
+        <div class="logo">
+          <span class="icon" v-html="divingMaskIcon"></span>
+          <span>Diving</span>
         </div>
-        <!-- Removed Copy URL button and feedback -->
-      </div>
-    </nav>
-  </aside>
+        <button class="close-btn" @click="$emit('close')">&times;</button>
+      </header>
+      <nav class="sidebar-nav">
+        <ul>
+          <li>
+            <RouterLink :to="{ name: RouterName.Main }" custom v-slot="{ href, navigate, isExactActive }">
+              <a :href="href" @click="navigate(); $emit('close')" :class="{ 'router-link-exact-active': isExactActive }">
+                <span class="icon" v-html="homeIcon">
+                </span>
+                <span>Home</span>
+              </a>
+            </RouterLink>
+          </li>
+          <li>
+            <RouterLink :to="{ name: RouterName.Settlement }" custom v-slot="{ href, navigate, isActive }">
+              <a :href="href" @click="navigate(); $emit('close')" :class="{ 'router-link-active': isActive }">
+                <span class="icon" v-html="calculatorIcon">
+                </span>
+                <span>Settlement</span>
+              </a>
+            </RouterLink>
+          </li>
+        </ul>
+      </nav>
+      <footer class="sidebar-footer">
+        <DarkModeToggle v-model="isDay" />
+        <p>Designed for Divers 🤿</p>
+        <div class="links">
+          <a href="https://github.com/JJuuuunn" target="_blank" rel="noopener noreferrer">GitHub</a> | 
+          <a href="https://www.instagram.com/jjuuuunn.hob" target="_blank" rel="noopener noreferrer">Instagram</a>
+        </div>
+      </footer>
+    </aside>
+  </div>
 </template>
 
 <script setup lang="ts">
-import { ref, watch, onMounted } from 'vue'; // Removed defineProps
-import { RouterName } from '@/mappings/enum'; // Import RouterName
+import { ref, watch } from 'vue';
+import { RouterName } from '@/mappings/enum';
+import divingMaskIcon from '@/assets/icons/diving-mask.svg?raw';
+import homeIcon from '@/assets/icons/home.svg?raw';
+import calculatorIcon from '@/assets/icons/calculator.svg?raw';
+import DarkModeToggle from '@/components/DarkModeToggle.vue';
 
-// Props
-const props = defineProps<{
+defineProps<{
   isOpen: boolean;
 }>();
 
-// Dark Mode logic
-const isDarkMode = ref(false);
+defineEmits(['close']);
 
-watch(isDarkMode, (newValue) => {
-  if (newValue) {
-    document.body.classList.add('dark');
-  } else {
+const isDay = ref(localStorage.getItem('isDay') === 'true');
+
+const applyTheme = (isDayMode: boolean) => {
+  if (isDayMode) {
     document.body.classList.remove('dark');
+  } else {
+    document.body.classList.add('dark');
   }
-  localStorage.setItem('darkMode', newValue.toString());
-});
+};
 
-onMounted(() => {
-  const savedMode = localStorage.getItem('darkMode');
-  if (savedMode === 'true') {
-    isDarkMode.value = true;
-  }
-});
-
-// Removed URL Copy logic
+watch(isDay, (newValue) => {
+  localStorage.setItem('isDay', String(newValue));
+  applyTheme(newValue);
+}, { immediate: true });
 </script>
 
 <style lang="scss">
