@@ -5,7 +5,7 @@ import SettingsCard from './SettingsCard.vue';
 import PeopleCard from './PeopleCard.vue';
 import ResultSection from './ResultSection.vue';
 import AppToast from './AppToast.vue';
-import '../../assets/scss/Settlement/settlement.scss';
+import '../../assets/scss/settlement/settlement.scss';
 
 // --- State ---
 import poolPrices from '../../data/poolPrices.json';

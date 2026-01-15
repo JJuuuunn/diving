@@ -8,8 +8,8 @@
   </div>
 </template>
 
-<script setup lang="ts"> // Changed to ts to allow RouterName import
-import { RouterName } from '@/mappings/enum'; // Import RouterName
+<script setup lang="ts">
+import { RouterName } from '@/mappings/enum';
 </script>
 
 <style lang="scss">
