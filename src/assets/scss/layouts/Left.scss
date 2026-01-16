@@ -7,30 +7,31 @@
 }
 
 body.dark {
-  --sidebar-bg: rgba(27, 38, 59, 0.8);
-  --sidebar-border: rgba(65, 90, 119, 0.5);
+  --sidebar-bg: rgba(15, 23, 42, 0.8);
+  --sidebar-border: rgba(255, 255, 255, 0.1);
   --sidebar-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.37);
-  --sidebar-text: #e0e1dd;
-  --sidebar-icon-color: #415a77;
-  --sidebar-hover-bg: rgba(65, 90, 119, 0.3);
-  --sidebar-active-color: #ff6b6b;
-  --logo-icon-color: #22d3ee;
+  --sidebar-text: var(--slate-200);
+  --sidebar-icon-color: var(--slate-400);
+  --sidebar-hover-bg: rgba(255, 255, 255, 0.05);
+  --sidebar-active-bg: var(--ocean-500);
+  --sidebar-active-text: var(--white);
+  --logo-icon-color: var(--ocean-400);
 }
 
 body:not(.dark) {
-  --sidebar-bg: rgba(255, 255, 255, 0.8);
-  --sidebar-border: rgba(0, 0, 0, 0.1);
+  --sidebar-bg: rgba(255, 255, 255, 0.7);
+  --sidebar-border: rgba(0, 0, 0, 0.07);
   --sidebar-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.1);
-  --sidebar-text: #1e293b;
-  --sidebar-icon-color: #64748b;
+  --sidebar-text: var(--slate-700);
+  --sidebar-icon-color: var(--slate-500);
   --sidebar-hover-bg: rgba(0, 0, 0, 0.05);
-  --sidebar-active-color: #3b82f6;
-  --logo-icon-color: #0891b2;
+  --sidebar-active-bg: var(--ocean-500);
+  --sidebar-active-text: var(--white);
+  --logo-icon-color: var(--ocean-600);
 }
 
 // --- SIDEBAR MECHANISM ---
 
-// 1. The overlay is a full-screen container, initially hidden.
 #sidebar-overlay {
   position: fixed;
   top: 0;
@@ -38,25 +39,22 @@ body:not(.dark) {
   width: 100%;
   height: 100%;
   background-color: var(--overlay-bg);
-  visibility: hidden; // Hidden by default
+  visibility: hidden;
   opacity: 0;
   transition: visibility 0.3s, opacity 0.3s;
   z-index: 1000;
   font-family: 'Poppins', sans-serif;
 
-  // 2. When 'is-open' class is added, the overlay becomes visible...
   &.is-open {
     visibility: visible;
     opacity: 1;
 
-    // 3. ...and the sidebar inside it slides into view.
     #left-sidebar {
       transform: translateX(0);
     }
   }
 }
 
-// 4. The sidebar itself starts off-screen to the left.
 #left-sidebar {
   width: var(--sidebar-width);
   height: 100%;
@@ -68,7 +66,7 @@ body:not(.dark) {
   position: fixed;
   top: 0;
   left: 0;
-  transform: translateX(calc(-1 * var(--sidebar-width))); // Starts hidden
+  transform: translateX(calc(-1 * var(--sidebar-width)));
   transition: transform 0.4s cubic-bezier(0.19, 1, 0.22, 1);
   display: flex;
   flex-direction: column;
@@ -77,23 +75,30 @@ body:not(.dark) {
   .sidebar-header {
     display: flex;
     align-items: center;
-    justify-content: center; // Center the logo block
+    justify-content: flex-start; /* Changed from center to flex-start */
     padding: 1.5rem;
     color: var(--sidebar-text);
-    position: relative; // Needed for absolute positioning of the child button
+    position: relative;
+    border-bottom: 1px solid var(--sidebar-border);
 
     .logo {
       display: flex;
       align-items: center;
       font-size: 1.5rem;
-      font-weight: 600;
-      // No flex-grow needed as the parent is centering it
-      .icon svg {
-        width: 32px;
-        height: 32px;
+      font-weight: 700;
+      color: var(--sidebar-text);
+      
+      .icon {
+        display: flex;
+        align-items: center;
         margin-right: 0.75rem;
-        color: var(--logo-icon-color);
-        transition: color 0.3s;
+        
+          svg {
+            width: 40px;
+            height: 40px;
+            color: var(--logo-icon-color);
+            transition: color 0.3s;
+        }
       }
     }
 
@@ -106,13 +111,14 @@ body:not(.dark) {
       border: none;
       font-size: 2.5rem;
       cursor: pointer;
-      color: var(--sidebar-text);
+      color: var(--sidebar-icon-color);
       line-height: 1;
       opacity: 0.7;
-      transition: opacity 0.2s;
+      transition: opacity 0.2s, color 0.2s;
       
       &:hover {
         opacity: 1;
+        color: var(--sidebar-text);
       }
     }
   }
@@ -131,12 +137,12 @@ body:not(.dark) {
         align-items: center;
         padding: 1rem 1.5rem;
         margin: 0.5rem 1rem;
-        border-radius: 0.5rem;
+        border-radius: 0.75rem;
         text-decoration: none;
         color: var(--sidebar-text);
         font-size: 1rem;
-        font-weight: 500;
-        transition: background-color 0.2s, color 0.2s;
+        font-weight: 600;
+        transition: background-color 0.2s, color 0.2s, box-shadow 0.2s;
         
         &:hover {
           background-color: var(--sidebar-hover-bg);
@@ -144,24 +150,26 @@ body:not(.dark) {
 
         &.router-link-exact-active,
         &.router-link-active {
-            background-color: var(--sidebar-active-color);
-            color: #fff;
-            .icon svg {
-                color: #fff;
-            }
+          background-color: var(--sidebar-active-bg);
+          color: var(--sidebar-active-text);
+          box-shadow: 0 4px 10px rgba(var(--ocean-500), 0.3);
+
+          .icon svg {
+            color: var(--sidebar-active-text);
+          }
         }
 
         .icon {
-            margin-right: 1rem;
-            display: flex;
-            align-items: center;
-            
-            svg {
-              width: 24px;
-              height: 24px;
-              color: var(--sidebar-icon-color);
-              transition: color 0.2s;
-            }
+          margin-right: 1rem;
+          display: flex;
+          align-items: center;
+          
+          svg {
+            width: 24px;
+            height: 24px;
+            color: var(--sidebar-icon-color);
+            transition: color 0.2s;
+          }
         }
       }
     }
@@ -170,25 +178,29 @@ body:not(.dark) {
   .sidebar-footer {
     padding: 1.5rem;
     margin-top: auto;
+    border-top: 1px solid var(--sidebar-border);
     display: flex;
     flex-direction: column;
     align-items: center;
-    gap: 1.5rem;
+    gap: 1.25rem;
 
     p {
       margin: 0;
       color: var(--sidebar-icon-color);
       font-size: 0.8rem;
+      font-weight: 500;
     }
 
     .links a {
       color: var(--sidebar-icon-color);
       text-decoration: none;
       font-size: 0.8rem;
+      font-weight: 500;
       transition: color 0.2s;
 
       &:hover {
         color: var(--sidebar-text);
+        text-decoration: underline;
       }
     }
   }

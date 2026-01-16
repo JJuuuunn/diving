@@ -4,7 +4,7 @@
       <header class="sidebar-header">
         <div class="logo">
           <span class="icon" v-html="divingMaskIcon"></span>
-          <span>Diving</span>
+          <span>JJuuuunn Diving</span>
         </div>
         <button class="close-btn" @click="$emit('close')">&times;</button>
       </header>
@@ -48,7 +48,7 @@ import { RouterName } from '@/mappings/enum';
 import divingMaskIcon from '@/assets/icons/diving-mask.svg?raw';
 import homeIcon from '@/assets/icons/home.svg?raw';
 import calculatorIcon from '@/assets/icons/calculator.svg?raw';
-import DarkModeToggle from '@/components/DarkModeToggle.vue';
+import DarkModeToggle from '@/views/components/DarkModeToggle.vue';
 
 defineProps<{
   isOpen: boolean;

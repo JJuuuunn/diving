@@ -5,7 +5,6 @@ import SettingsCard from './SettingsCard.vue';
 import PeopleCard from './PeopleCard.vue';
 import ResultSection from './ResultSection.vue';
 import AppToast from './AppToast.vue';
-import '../../assets/scss/settlement/settlement.scss';
 
 // --- State ---
 import poolPrices from '../../data/poolPrices.json';
@@ -272,3 +271,7 @@ onMounted(() => {
 
   <AppToast v-if="toast.visible" :message="toast.message" :is-error="toast.isError" />
 </template>
+
+<style lang="scss">
+@import '@/assets/scss/views/settlement/Settlement.scss';
+</style>

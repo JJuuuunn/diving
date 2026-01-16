@@ -1,21 +1,21 @@
 @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@400;600;700&display=swap');
 
 body.dark {
-  --page-text-primary: #e0e1dd;
-  --page-text-secondary: #415a77;
-  --page-accent: #ff6b6b;
-  --page-card-bg: rgba(27, 38, 59, 0.7);
-  --page-card-border: rgba(65, 90, 119, 0.5);
+  --page-text-primary: var(--slate-100);
+  --page-text-secondary: var(--slate-400);
+  --page-accent: var(--ocean-400);
+  --page-card-bg: rgba(15, 23, 42, 0.7);
+  --page-card-border: var(--slate-800);
   --page-card-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.37);
-  --page-bg-image: linear-gradient(var(--page-text-secondary) 1px, transparent 1px), linear-gradient(to right, var(--page-text-secondary) 1px, var(--bg-color) 1px);
+  --page-bg-image: linear-gradient(var(--slate-800) 1px, transparent 1px), linear-gradient(to right, var(--slate-800) 1px, var(--bg-color) 1px);
 }
 
 body:not(.dark) {
-  --page-text-primary: #1e293b;
-  --page-text-secondary: #64748b;
-  --page-accent: #3b82f6;
-  --page-card-bg: rgba(255, 255, 255, 0.7);
-  --page-card-border: rgba(0, 0, 0, 0.1);
+  --page-text-primary: var(--slate-800);
+  --page-text-secondary: var(--slate-500);
+  --page-accent: var(--ocean-500);
+  --page-card-bg: rgba(255, 255, 255, 0.6);
+  --page-card-border: var(--slate-200);
   --page-card-shadow: 0 4px 6px -1px rgba(0,0,0,0.1), 0 2px 4px -1px rgba(0,0,0,0.06);
   --page-bg-image: none;
 }
@@ -35,10 +35,17 @@ body:not(.dark) {
   text-align: center;
   margin-bottom: 3rem;
   h1 {
-    font-size: 2.5rem;
-    font-weight: 700;
+    font-size: 1.8rem;
+    font-weight: 800;
+    line-height: 1.3;
     color: var(--page-text-primary);
     margin: 0 0 0.5rem;
+
+    .chunk {
+      display: inline-block;
+      white-space: nowrap;
+      margin-right: 0.2em;
+    }
   }
   p {
     font-size: 1.1rem;
@@ -89,7 +96,7 @@ body:not(.dark) {
     color: var(--page-accent);
     transition: color 0.3s;
     
-    img {
+    img, svg {
       width: 32px;
       height: 32px;
     }

@@ -12,8 +12,8 @@
 
 <script setup lang="ts">
 import { ref, computed, watch } from 'vue';
-import sunIcon from './sun.svg?raw';
-import moonStarsIcon from './moon-stars.svg?raw';
+import sunIcon from '@/assets/icons/sun.svg?raw';
+import moonStarsIcon from '@/assets/icons/moon-stars.svg?raw';
 
 const props = defineProps<{
   modelValue: boolean; // true for day, false for night
@@ -36,5 +36,5 @@ watch(() => props.modelValue, (newValue) => {
 </script>
 
 <style lang="scss">
-@import './DarkModeToggle.scss';
+@import '@/assets/scss/components/DarkModeToggle.scss';
 </style>
