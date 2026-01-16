@@ -273,5 +273,5 @@ onMounted(() => {
 </template>
 
 <style lang="scss">
-@import '@/assets/scss/views/settlement/Settlement.scss';
+@import '@/assets/scss/pages/_settlement.scss';
 </style>

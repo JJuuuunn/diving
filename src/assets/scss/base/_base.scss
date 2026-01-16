@@ -1,0 +1,16 @@
+body {
+  margin: 0;
+  font-family: var(--font-family);
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  background-color: var(--bg-color);
+  transition: background-color 0.3s;
+}
+
+#app-container {
+  position: relative;
+}
+
+#main-content {
+  // No special styles needed, it will take up the full space
+}

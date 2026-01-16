@@ -1,0 +1,72 @@
+:root {
+  // Fonts
+  --font-family: 'Poppins', sans-serif;
+
+  // Sidebar
+  --sidebar-width: 280px;
+  --overlay-bg: rgba(0, 0, 0, 0.4);
+}
+
+body.dark {
+  // Base
+  --bg-color: var(--slate-900);
+  --text-color: var(--slate-200);
+  --icon-color: #ffffff;
+
+  // Menu Button
+  --menu-button-bg: rgba(255, 255, 255, 0.1);
+  --menu-button-hover-bg: rgba(255, 255, 255, 0.2);
+  --menu-button-border: rgba(255, 255, 255, 0.2);
+
+  // Sidebar
+  --sidebar-bg: rgba(15, 23, 42, 0.8);
+  --sidebar-border: rgba(255, 255, 255, 0.1);
+  --sidebar-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.37);
+  --sidebar-text: var(--slate-200);
+  --sidebar-icon-color: var(--slate-400);
+  --sidebar-hover-bg: rgba(255, 255, 255, 0.05);
+  --sidebar-active-bg: var(--ocean-500);
+  --sidebar-active-text: var(--white);
+  --logo-icon-color: var(--ocean-400);
+
+  // Page (Home)
+  --page-text-primary: var(--slate-100);
+  --page-text-secondary: var(--slate-400);
+  --page-accent: var(--ocean-400);
+  --page-card-bg: rgba(15, 23, 42, 0.7);
+  --page-card-border: var(--slate-800);
+  --page-card-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.37);
+  --page-bg-image: linear-gradient(var(--slate-800) 1px, transparent 1px), linear-gradient(to right, var(--slate-800) 1px, var(--bg-color) 1px);
+}
+
+body:not(.dark) {
+  // Base
+  --bg-color: var(--slate-50);
+  --text-color: var(--slate-800);
+  --icon-color: #333333;
+
+  // Menu Button
+  --menu-button-bg: rgba(255, 255, 255, 0.8);
+  --menu-button-hover-bg: rgba(255, 255, 255, 1);
+  --menu-button-border: rgba(0, 0, 0, 0.1);
+
+  // Sidebar
+  --sidebar-bg: rgba(255, 255, 255, 0.7);
+  --sidebar-border: rgba(0, 0, 0, 0.07);
+  --sidebar-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.1);
+  --sidebar-text: var(--slate-700);
+  --sidebar-icon-color: var(--slate-500);
+  --sidebar-hover-bg: rgba(0, 0, 0, 0.05);
+  --sidebar-active-bg: var(--ocean-500);
+  --sidebar-active-text: var(--white);
+  --logo-icon-color: var(--ocean-600);
+  
+  // Page (Home)
+  --page-text-primary: var(--slate-800);
+  --page-text-secondary: var(--slate-500);
+  --page-accent: var(--ocean-500);
+  --page-card-bg: rgba(255, 255, 255, 0.6);
+  --page-card-border: var(--slate-200);
+  --page-card-shadow: 0 4px 6px -1px rgba(0,0,0,0.1), 0 2px 4px -1px rgba(0,0,0,0.06);
+  --page-bg-image: none;
+}

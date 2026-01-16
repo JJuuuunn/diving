@@ -1,0 +1,206 @@
+// --- SIDEBAR MECHANISM ---
+
+#sidebar-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  // 배경을 좀 더 진하게 (블러 효과 강조)
+  background-color: rgba(0, 0, 0, 0.4); 
+  visibility: hidden;
+  opacity: 0;
+  transition: visibility 0.3s, opacity 0.3s;
+  z-index: 1000;
+  font-family: 'Pretendard', 'Poppins', sans-serif; // 폰트 우선순위
+
+  &.is-open {
+    visibility: visible;
+    opacity: 1;
+
+    #left-sidebar {
+      transform: translateX(0);
+    }
+  }
+}
+
+#left-sidebar {
+  width: var(--sidebar-width);
+  height: 100%;
+  background: var(--sidebar-bg);
+  border-right: 1px solid var(--sidebar-border);
+  box-shadow: 4px 0 24px rgba(0, 0, 0, 0.1); // 그림자 좀 더 부드럽게
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  position: fixed;
+  top: 0;
+  left: 0;
+  transform: translateX(calc(-1 * var(--sidebar-width)));
+  transition: transform 0.4s cubic-bezier(0.19, 1, 0.22, 1);
+  display: flex;
+  flex-direction: column;
+  z-index: 1001;
+
+  // --- HEADER START ---
+  .sidebar-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between; // 로고와 닫기 버튼 양 끝 정렬
+    padding: 1.5rem;
+    position: relative;
+    border-bottom: 1px solid var(--sidebar-border);
+
+    // 브랜드 로고 영역 스타일링
+    .brand-logo {
+      display: flex;
+      align-items: center;
+      text-decoration: none;
+      gap: 12px;
+
+      // 1. 아이콘 스타일
+      .logo-icon {
+        display: flex;
+        align-items: center;
+
+        svg {
+          width: 36px;
+          height: 36px;
+          transition: all 0.3s ease;
+          
+          /* [라이트 모드 기본값] */
+          color: #0ea5e9; 
+          filter: drop-shadow(0 0 2px rgba(14, 165, 233, 0.3));
+
+          /* [다크 모드 적용] */
+          /* :global 제거 -> 표준 문법인 body.dark & 사용 */
+          body.dark & { 
+            color: #38bdf8; /* 더 밝은 색 */
+            filter: drop-shadow(0 0 8px rgba(56, 189, 248, 0.8)); /* 빛이 더 강하게 퍼짐 */
+          }
+        }
+      }
+
+      // 2. 텍스트 스타일
+      .logo-text {
+        font-size: 1.25rem;
+        font-weight: 800;
+        letter-spacing: -0.5px;
+        color: var(--sidebar-text);
+        transition: color 0.3s;
+      }
+
+      // 호버 효과
+      &:hover {
+        .logo-icon svg {
+          transform: rotate(-10deg) scale(1.1);
+          
+          /* 호버 시 빛이 더 강렬해짐 */
+          filter: drop-shadow(0 0 10px rgba(14, 165, 233, 0.8));
+          
+          :global(body.dark) & {
+             filter: drop-shadow(0 0 15px rgba(56, 189, 248, 0.9)); /* 다크모드 호버 시 */
+          }
+        }
+      }
+    }
+
+    .close-btn {
+      background: none;
+      border: none;
+      font-size: 2rem;
+      cursor: pointer;
+      color: var(--sidebar-icon-color);
+      opacity: 0.6;
+      transition: all 0.2s;
+      
+      &:hover {
+        opacity: 1;
+        color: var(--sidebar-text);
+        transform: rotate(90deg); // 닫기 버튼 회전 효과
+      }
+    }
+  }
+  // --- HEADER END ---
+
+  .sidebar-nav {
+    flex-grow: 1;
+    padding: 1.5rem 0;
+    
+    ul {
+      list-style: none;
+      padding: 0;
+      margin: 0;
+
+      li a {
+        display: flex;
+        align-items: center;
+        padding: 0.8rem 1.5rem;
+        margin: 0.5rem 1rem;
+        border-radius: 12px; // 더 둥글게
+        text-decoration: none;
+        color: var(--sidebar-text);
+        font-size: 1rem;
+        font-weight: 600;
+        transition: all 0.2s ease;
+        
+        &:hover {
+          background-color: var(--sidebar-hover-bg);
+          transform: translateX(4px); // 오른쪽으로 살짝 이동
+        }
+
+        &.router-link-exact-active,
+        &.router-link-active {
+          background-color: rgba(14, 165, 233, 0.1); // 브랜드 컬러의 연한 배경
+          color: #0ea5e9; // 텍스트도 브랜드 컬러로
+          
+          .icon svg {
+            color: #0ea5e9; // 아이콘도 브랜드 컬러로
+          }
+        }
+
+        .icon {
+          margin-right: 1rem;
+          display: flex;
+          align-items: center;
+          
+          svg {
+            width: 22px;
+            height: 22px;
+            color: var(--sidebar-icon-color);
+            transition: color 0.2s;
+          }
+        }
+      }
+    }
+  }
+
+  .sidebar-footer {
+    padding: 2rem 1.5rem;
+    margin-top: auto;
+    border-top: 1px solid var(--sidebar-border);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 1rem;
+
+    p {
+      margin: 0;
+      color: var(--sidebar-icon-color);
+      font-size: 0.85rem;
+      font-weight: 500;
+    }
+
+    .links a {
+      color: var(--sidebar-icon-color);
+      text-decoration: none;
+      font-size: 0.85rem;
+      font-weight: 500;
+      transition: color 0.2s;
+
+      &:hover {
+        color: #0ea5e9; // 호버 시 브랜드 컬러
+        text-decoration: underline;
+      }
+    }
+  }
+}

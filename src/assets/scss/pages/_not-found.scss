@@ -1,0 +1,118 @@
+// assets/scss/pages/_not-found.scss
+
+.not-found-container {
+  position: relative;
+  height: 100vh;
+  width: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+  overflow: hidden;
+  
+  // 심해 느낌: 항상 어두운 배경 유지 (시스템 테마와 무관하게 컨셉 유지)
+  background: linear-gradient(180deg, #1e3a8a 0%, #0f172a 100%);
+  color: #fff;
+}
+
+.content-box {
+  z-index: 10; 
+  padding: 0 20px;
+}
+
+.error-code {
+  font-size: 8rem;
+  font-weight: 900;
+  margin: 0;
+  line-height: 1;
+  opacity: 0.2;
+  letter-spacing: -5px;
+  
+  // 텍스트 물결 효과
+  background: linear-gradient(to bottom, rgba(255,255,255,0.8), rgba(255,255,255,0));
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+}
+
+.error-message {
+  font-size: 2rem;
+  font-weight: 700;
+  margin-top: -40px; 
+  margin-bottom: 1.5rem;
+  text-shadow: 0 2px 10px rgba(0,0,0,0.5);
+}
+
+.description {
+  font-size: 1.1rem;
+  line-height: 1.6;
+  color: #cbd5e1;
+  margin-bottom: 3rem;
+
+  strong {
+    color: #38bdf8;
+  }
+}
+
+/* --- 버튼 스타일 --- */
+.ascend-btn {
+  display: inline-flex; // 아이콘과 텍스트 가로 정렬
+  align-items: center;
+  gap: 10px; // 아이콘과 텍스트 사이 간격
+  
+  padding: 1rem 2rem;
+  background-color: #0ea5e9;
+  color: white;
+  text-decoration: none;
+  border-radius: 50px;
+  font-weight: bold;
+  font-size: 1.1rem;
+  transition: all 0.3s ease;
+  box-shadow: 0 4px 15px rgba(14, 165, 233, 0.4);
+
+  &:hover {
+    background-color: #0284c7;
+    transform: translateY(-5px);
+    box-shadow: 0 8px 25px rgba(14, 165, 233, 0.6);
+  }
+
+  // 아이콘 스타일
+  .btn-icon {
+    width: 24px;
+    height: 24px;
+    // 아이콘을 흰색으로 강제 변경 (원본이 검정색이어도 흰색으로 나옴)
+    filter: brightness(0) invert(1); 
+  }
+}
+
+/* --- Bubble Animation --- */
+.bubble {
+  position: absolute;
+  bottom: -100px;
+  background: rgba(255, 255, 255, 0.1);
+  border-radius: 50%;
+  pointer-events: none;
+  
+  animation-name: rise;
+  animation-timing-function: ease-in;
+  animation-iteration-count: infinite;
+}
+
+@keyframes rise {
+  0% {
+    transform: translateY(0) scale(1);
+  }
+  50% {
+    opacity: 0.8;
+  }
+  100% {
+    transform: translateY(-120vh) scale(1.2);
+    opacity: 0;
+  }
+}
+
+/* 모바일 대응 */
+@media (max-width: 600px) {
+  .error-code { font-size: 6rem; }
+  .error-message { font-size: 1.5rem; margin-top: -30px; }
+  .ascend-btn { width: 100%; justify-content: center; }
+}

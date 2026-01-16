@@ -29,5 +29,5 @@ const closeSidebar = () => {
 </script>
 
 <style lang="scss">
-@import '@/assets/scss/App.scss';
+@import '@/assets/scss/main.scss';
 </style>

@@ -1,0 +1,20 @@
+// 1. Abstracts (Variables, mixins, etc.)
+@import 'abstracts/colors';
+@import 'abstracts/variables';
+
+// 2. Base (Reset, base styles, typography)
+@import 'base/reset';
+@import 'base/base';
+@import 'base/typography';
+
+// 3. Components (Reusable small elements)
+@import 'components/menu-toggle';
+@import 'components/dark-mode-toggle';
+
+// 4. Layout (Sidebar, header, etc.)
+@import 'layout/sidebar';
+
+// 5. Pages (Specific page styles)
+@import 'pages/home';
+@import 'pages/settlement';
+@import 'pages/not-found';

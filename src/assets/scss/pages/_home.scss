@@ -1,0 +1,207 @@
+.page-container {
+  font-family: 'Pretendard', 'Poppins', sans-serif;
+  padding: 6rem 1.5rem 2rem;
+  min-height: 100vh;
+  
+  // 배경 설정 (변수 활용 + 그라데이션 오버레이 추천)
+  background-color: var(--bg-color); 
+  // 만약 배경 이미지가 없다면 은은한 그라데이션 추가 추천:
+  // background: linear-gradient(135deg, var(--bg-color) 0%, rgba(14, 165, 233, 0.05) 100%);
+  
+  transition: background-color 0.3s ease;
+}
+
+.page-header {
+  text-align: center;
+  margin-bottom: 4rem;
+
+  h1 {
+    font-size: 2.5rem; // 크기 키움
+    font-weight: 800;
+    line-height: 1.2;
+    margin: 0 0 1rem;
+    
+    // 텍스트 그라데이션 (Ocean Blue)
+    background: linear-gradient(135deg, #2563eb, #06b6d4);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    
+    // 다크모드일 때 그라데이션 조정
+    body.dark & {
+      background: linear-gradient(135deg, #60a5fa, #22d3ee);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+    }
+
+    .chunk {
+      display: inline-block;
+      white-space: nowrap;
+      margin-right: 0.2em;
+    }
+  }
+
+  p {
+    font-size: 1.1rem;
+    color: var(--page-text-secondary);
+    margin: 0;
+    opacity: 0.8;
+  }
+}
+
+.dashboard-cards {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 1.5rem;
+  max-width: 1200px;
+  margin: 0 auto;
+
+  @media (min-width: 768px) {
+    grid-template-columns: repeat(2, 1fr);
+  }
+  @media (min-width: 1024px) {
+    grid-template-columns: repeat(3, 1fr); // 3열 배치
+  }
+}
+
+.dashboard-card {
+  // Glassmorphism Base
+  background: rgba(255, 255, 255, 0.6); // 반투명
+  border: 1px solid rgba(255, 255, 255, 0.4);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  
+  border-radius: 1.25rem;
+  padding: 1.75rem;
+  display: flex;
+  align-items: center;
+  text-decoration: none;
+  position: relative;
+  overflow: hidden;
+  box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.05);
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+
+  // 다크모드 카드 배경
+  body.dark & {
+    background: rgba(30, 41, 59, 0.6); // 어두운 반투명
+    border-color: rgba(255, 255, 255, 0.1);
+    box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.3);
+  }
+
+  // Hover Effect: 둥둥 뜨는 느낌 + 보더 강조
+  &:hover:not(.disabled) {
+    transform: translateY(-8px);
+    box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04);
+    border-color: #0ea5e9; // 브랜드 컬러
+
+    .card-icon svg {
+      transform: scale(1.1) rotate(-5deg);
+      color: #0ea5e9;
+    }
+    
+    .card-go {
+      transform: translateX(4px);
+      color: #0ea5e9;
+    }
+  }
+
+  .card-icon {
+    width: 56px;
+    height: 56px;
+    background: rgba(14, 165, 233, 0.1); // 아이콘 배경 연한 파랑
+    border-radius: 1rem;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin-right: 1.25rem;
+    flex-shrink: 0;
+
+    svg {
+      width: 28px;
+      height: 28px;
+      color: var(--page-text-secondary); // 기본 회색
+      transition: all 0.3s ease;
+      
+      // 다크모드에서 아이콘 기본 상태
+      body.dark & {
+        color: #94a3b8;
+      }
+    }
+  }
+
+  .card-info {
+    flex-grow: 1;
+    h2 {
+      font-size: 1.15rem;
+      font-weight: 700;
+      color: var(--page-text-primary);
+      margin: 0 0 0.25rem;
+    }
+    p {
+      color: var(--page-text-secondary);
+      margin: 0;
+      font-size: 0.9rem;
+      line-height: 1.4;
+    }
+  }
+  
+  .card-go {
+    color: var(--page-text-secondary);
+    font-size: 1.5rem;
+    font-weight: 300;
+    transition: all 0.3s ease;
+  }
+
+  .status-badge {
+    font-size: 0.75rem;
+    padding: 4px 8px;
+    background: rgba(0,0,0,0.05);
+    border-radius: 20px;
+    color: var(--page-text-secondary);
+    font-weight: 600;
+    
+    body.dark & {
+        background: rgba(255,255,255,0.1);
+    }
+  }
+
+  // 비활성화 상태 스타일
+  &.disabled {
+    cursor: default;
+    opacity: 0.7;
+    background: rgba(240, 240, 240, 0.3); // 더 흐리게
+    
+    body.dark & {
+        background: rgba(255, 255, 255, 0.02);
+    }
+    
+    .card-icon {
+        background: rgba(0,0,0,0.03); // 아이콘 배경도 흐리게
+        body.dark & { background: rgba(255,255,255,0.05); }
+    }
+  }
+}
+
+// 등장 애니메이션
+.fade-in-up {
+  opacity: 0;
+  animation: fadeInUp 0.8s forwards;
+}
+
+.delay {
+  animation-delay: 0.2s;
+}
+
+@keyframes fadeInUp {
+  from { opacity: 0; transform: translateY(20px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+// 모바일 대응
+@media (max-width: 600px) {
+  .page-header h1 {
+    font-size: 2rem;
+  }
+  .dashboard-card {
+    padding: 1.25rem;
+  }
+}

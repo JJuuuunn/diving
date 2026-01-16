@@ -36,5 +36,5 @@ watch(() => props.modelValue, (newValue) => {
 </script>
 
 <style lang="scss">
-@import '@/assets/scss/components/DarkModeToggle.scss';
+@import '@/assets/scss/components/_dark-mode-toggle.scss';
 </style>

@@ -1,8 +1,8 @@
 import { createRouter, createWebHistory } from 'vue-router'
-import Home from '../views/Home.vue'
-import SettlementContent from '../views/settlement/Content.vue'
-import NotFound from '../views/NotFound.vue'
-import { RouterName } from '../mappings/enum'
+import Home from '@/views/Home.vue'
+import SettlementContent from '@/views/settlement/Content.vue'
+import NotFound from '@/views/NotFound.vue'
+import { RouterName } from '@/mappings/enum'
 
 const routes = [
   {
