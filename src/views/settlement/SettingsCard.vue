@@ -5,7 +5,6 @@
       <h2 class="card-title">기본 설정</h2>
     </div>
     <div class="card-body">
-
       <div class="day-type-toggle">
         <button @click="emit('update:currentDayType', 'weekday')"
           :class="{ active: currentDayType === 'weekday', inactive: currentDayType !== 'weekday' }">
@@ -25,7 +24,6 @@
             <i class="fa-regular fa-keyboard custom-icon"></i>
           </div>
           <div class="pool-name">직접 입력</div>
-
           <transition name="scale">
             <div class="check-icon" v-if="selectedPool === 'custom'">
               <i class="fa-solid fa-circle-check"></i>
@@ -34,14 +32,14 @@
         </div>
 
         <div v-for="(info, poolKey) in poolPrices" :key="poolKey" class="pool-card"
-          :class="{ active: selectedPool === poolKey }" @click="emit('update:selectedPool', poolKey)">
+          :class="{ active: selectedPool === poolKey }" @click="emit('update:selectedPool', String(poolKey))">
           <div class="pool-logo-wrapper">
-            <img v-if="poolImages[poolKey]" :src="poolImages[poolKey]" class="pool-logo-img" alt="logo">
+            <img v-if="poolImages[poolKey as keyof typeof poolImages]" :src="poolImages[poolKey as keyof typeof poolImages]" class="pool-logo-img" alt="logo">
             <i v-else class="fa-solid fa-water fallback-icon"></i>
           </div>
 
           <div class="pool-name">{{ info.name }}</div>
-          <div class="pool-price">{{ formatNumber(info[currentDayType]) }}원</div>
+          <div class="pool-price">{{ formatNumber(info[currentDayType as keyof PoolInfo]) }}원</div>
 
           <transition name="scale">
             <div class="check-icon" v-if="selectedPool === poolKey">
@@ -54,17 +52,16 @@
       <div class="price-input-row">
         <label class="price-label">입장료 (1인)</label>
         <div class="price-input-wrapper full-width">
-          <input type="text" inputmode="numeric" :value="basePrice" @input="updateBasePrice($event.target.value)"
+          <input type="text" inputmode="numeric" :value="basePrice" @input="updateBasePrice($event)"
             class="price-input" placeholder="0">
           <span class="price-input-currency">원</span>
         </div>
       </div>
-
     </div>
   </section>
 </template>
 
-<script setup>
+<script setup lang="ts">
 import deepstationImg from '@/assets/icons/deepstation.png';
 import paradiveImg from '@/assets/icons/paradive.png';
 import k26Img from '@/assets/icons/k26.png';
@@ -72,14 +69,26 @@ import tsnImg from '@/assets/icons/tsn.png';
 import aqualineImg from '@/assets/icons/aqualine.png';
 import suwonImg from '@/assets/icons/suwon.png';
 
-const props = defineProps({
-  currentDayType: String,
-  selectedPool: String,
-  basePrice: String,
-  poolPrices: Object,
-});
+// 타입 정의
+interface PoolInfo {
+  name: string;
+  weekday: number;
+  weekend: number;
+}
 
-const emit = defineEmits(['update:currentDayType', 'update:selectedPool', 'update:basePrice']);
+// Props 타입 정의 (Generic 사용)
+const props = defineProps<{
+  currentDayType: string;
+  selectedPool: string;
+  basePrice: string;
+  poolPrices: Record<string, PoolInfo>;
+}>();
+
+const emit = defineEmits<{
+  (e: 'update:currentDayType', value: string): void;
+  (e: 'update:selectedPool', value: string): void;
+  (e: 'update:basePrice', value: string): void;
+}>();
 
 const poolImages = {
   deepstation: deepstationImg,
@@ -90,12 +99,13 @@ const poolImages = {
   suwon: suwonImg,
 };
 
-const updateBasePrice = (value) => {
-  const formattedValue = value.replace(/[^0-9]/g, '');
+const updateBasePrice = (event: Event) => {
+  const target = event.target as HTMLInputElement;
+  const formattedValue = target.value.replace(/[^0-9]/g, '');
   emit('update:basePrice', formatNumber(formattedValue));
 };
 
-const formatNumber = (n) => {
+const formatNumber = (n: number | string) => {
   if (!n && n !== 0) return '';
   return n.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",");
 };

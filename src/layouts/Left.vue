@@ -50,7 +50,7 @@ import { RouterName } from '@/mappings/enum';
 import divingMaskIcon from '@/assets/icons/diving-mask.svg?raw';
 import homeIcon from '@/assets/icons/home.svg?raw';
 import calculatorIcon from '@/assets/icons/calculator.svg?raw';
-import DarkModeToggle from '@/views/components/DarkModeToggle.vue';
+import DarkModeToggle from '@/components/DarkModeToggle.vue';
 
 defineProps<{
   isOpen: boolean;

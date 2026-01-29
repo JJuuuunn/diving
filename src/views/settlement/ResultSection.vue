@@ -74,11 +74,11 @@
                 <div class="person-meta">{{ r.isBooker ? '예약자' : '참석자' }} · {{ r.isMember ? '회원' : '비회원' }}</div>
                 <div v-if="r.bank || r.account" class="person-account-meta"><i class="fa-regular fa-credit-card"></i>{{ r.bank }} {{ r.account }}</div>
               </td>
-              <td class="prepaid-cell">{{ formatNumber(getNumericPrice(r.prepaid)) }}</td>
-              <td class="cost-cell">{{ formatNumber(Math.round(r.myCost)) }}</td>
+              <td class="prepaid-cell">{{ formatNumber(r.prepaid) }}</td>
+              <td class="cost-cell">{{ formatNumber(Math.round(r.myCost || 0)) }}</td>
               <td class="balance-cell">
-                <span v-if="r.balance > 0" class="balance-positive">+{{ formatNumber(Math.round(r.balance/10)*10) }}</span>
-                <span v-else-if="r.balance < 0" class="balance-negative">{{ formatNumber(Math.round(r.balance/10)*10) }}</span>
+                <span v-if="(r.balance || 0) > 0" class="balance-positive">+{{ formatNumber(Math.round((r.balance || 0)/10)*10) }}</span>
+                <span v-else-if="(r.balance || 0) < 0" class="balance-negative">{{ formatNumber(Math.round((r.balance || 0)/10)*10) }}</span>
                 <span v-else class="balance-zero">-</span>
               </td>
             </tr>
@@ -89,27 +89,51 @@
   </section>
 </template>
 
-<script setup>
-const props = defineProps({
-  showResultSection: Boolean,
-  memberCostDisplay: String,
-  nonMemberCostDisplay: String,
-  settlementList: Array,
-  detailTableBody: Array
-});
+<script setup lang="ts">
+// 타입 정의
+interface Settlement {
+  from: string;
+  to: string;
+  amount: number;
+  bank: string;
+  account: string;
+}
 
-const emit = defineEmits(['copyResultText', 'copyAccountText']);
+interface Person {
+  id: number;
+  name: string;
+  isBooker: boolean;
+  isMember: boolean;
+  prepaid: number;
+  bank: string;
+  account: string;
+  myCost?: number;
+  balance?: number;
+}
 
-const formatNumber = (n) => {
-  if (!n && n !== 0) return '';
+const props = defineProps<{
+  showResultSection: boolean;
+  memberCostDisplay: string;
+  nonMemberCostDisplay: string;
+  settlementList: Settlement[];
+  detailTableBody: Person[];
+}>();
+
+const emit = defineEmits<{
+  (e: 'copyResultText'): void;
+  (e: 'copyAccountText', text: string): void;
+}>();
+
+const formatNumber = (n: number | string | undefined) => {
+  if (n === undefined || n === null || (typeof n === 'string' && n === '')) return '';
   return n.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",");
 };
 
-const getNumericPrice = (formattedPrice) => {
+const getNumericPrice = (formattedPrice: number | string) => {
     return Number(String(formattedPrice).replace(/,/g, '')) || 0;
 };
 
-const copyAccountText = (transaction) => {
+const copyAccountText = (transaction: Settlement) => {
     emit('copyAccountText', `${transaction.bank} ${transaction.account}`);
 }
 </script>

@@ -22,16 +22,31 @@
   </section>
 </template>
 
-<script setup>
+<script setup lang="ts">
 import PersonCard from './PersonCard.vue';
 
-const props = defineProps({
-  people: Array
-});
+// Person 타입 정의 (임시, 실제로는 types.ts에서 import 권장)
+interface Person {
+  id: number;
+  name: string;
+  isBooker: boolean;
+  isMember: boolean;
+  prepaid: number;
+  bank: string;
+  account: string;
+}
 
-const emit = defineEmits(['addPerson', 'update:people', 'removePerson']);
+const props = defineProps<{
+  people: Person[];
+}>();
 
-const updatePerson = (updatedPerson) => {
+const emit = defineEmits<{
+  (e: 'addPerson'): void;
+  (e: 'update:people', people: Person[]): void;
+  (e: 'removePerson', id: number): void;
+}>();
+
+const updatePerson = (updatedPerson: Person) => {
   const index = props.people.findIndex(p => p.id === updatedPerson.id);
   if (index !== -1) {
     const newPeople = [...props.people];
@@ -40,7 +55,7 @@ const updatePerson = (updatedPerson) => {
   }
 };
 
-const removePerson = (id) => {
+const removePerson = (id: number) => {
   emit('removePerson', id);
 };
 </script>
