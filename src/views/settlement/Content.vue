@@ -2,33 +2,82 @@
   <div class="settlement-container">
     <Header />
 
+    <div class="stepper-container">
+      <div class="step-item" :class="{ active: currentStep >= 1 }">
+        <div class="step-circle">1</div>
+        <span class="step-label">장소/시간</span>
+      </div>
+      <div class="step-line" :class="{ active: currentStep >= 2 }"></div>
+      <div class="step-item" :class="{ active: currentStep >= 2 }">
+        <div class="step-circle">2</div>
+        <span class="step-label">인원/금액</span>
+      </div>
+      <div class="step-line" :class="{ active: currentStep >= 3 }"></div>
+      <div class="step-item" :class="{ active: currentStep >= 3 }">
+        <div class="step-circle">3</div>
+        <span class="step-label">정산 결과</span>
+      </div>
+    </div>
+
     <main class="main-content">
-      <SettingsCard 
-        :current-day-type="settings.currentDayType"
-        :selected-pool="settings.selectedPool"
-        :base-price="settings.basePrice"
-        :pool-prices="poolPrices"
-        @update:currentDayType="settings.currentDayType = $event; changePool()"
-        @update:selectedPool="settings.selectedPool = $event; changePool()"
-        @update:basePrice="settings.basePrice = $event"
-      />
-      <PeopleCard :people="people" @addPerson="addPerson" @update:people="people = $event" @removePerson="removePerson" />
+      
+      <transition name="fade" mode="out-in">
+        <div v-if="currentStep === 1" key="step1" class="step-content">
+          <SettingsCard 
+            :current-day-type="settings.currentDayType"
+            :selected-pool="settings.selectedPool"
+            :base-price="settings.basePrice"
+            :pool-prices="poolPrices"
+            @update:currentDayType="settings.currentDayType = $event; changePool()"
+            @update:selectedPool="settings.selectedPool = $event; changePool()"
+            @update:basePrice="settings.basePrice = $event"
+          />
+          <div class="action-buttons center">
+            <button @click="goToStep(2)" class="calculate-btn full-width">
+              <span>다음 단계 (인원 설정)</span>
+              <i class="fa-solid fa-arrow-right"></i>
+              <div class="hover-effect"></div>
+            </button>
+          </div>
+        </div>
 
-      <button @click="calculate" class="calculate-btn">
-        <span>정산 결과 보기</span>
-        <i class="fa-solid fa-arrow-right"></i>
-        <div class="hover-effect"></div>
-      </button>
+        <div v-else-if="currentStep === 2" key="step2" class="step-content">
+          <PeopleCard 
+            :people="people" 
+            @addPerson="addPerson" 
+            @update:people="people = $event" 
+            @removePerson="removePerson" 
+          />
+          <div class="action-buttons row">
+            <button @click="goToStep(1)" class="secondary-btn prev-btn">
+              <i class="fa-solid fa-arrow-left"></i> 이전
+            </button>
+            
+            <button @click="calculateAndGoToResult" class="calculate-btn flex-grow">
+              <span>정산 결과 보기</span>
+              <i class="fa-solid fa-calculator"></i>
+              <div class="hover-effect"></div>
+            </button>
+          </div>
+        </div>
 
-      <ResultSection 
-        :show-result-section="results.showResultSection"
-        :member-cost-display="results.memberCostDisplay"
-        :non-member-cost-display="results.nonMemberCostDisplay"
-        :settlement-list="results.settlementList"
-        :detail-table-body="results.detailTableBody"
-        @copy-result-text="copyResultText"
-        @copy-account-text="copyText($event, '계좌가 복사되었습니다! 💳')"
-      />
+        <div v-else-if="currentStep === 3" key="step3" class="step-content">
+          <ResultSection 
+            :show-result-section="true"
+            :member-cost-display="results.memberCostDisplay"
+            :non-member-cost-display="results.nonMemberCostDisplay"
+            :settlement-list="results.settlementList"
+            :detail-table-body="results.detailTableBody"
+            @copy-result-text="copyResultText"
+            @copy-account-text="copyText($event, '계좌가 복사되었습니다! 💳')"
+          />
+          <div class="action-buttons center">
+            <button @click="goToStep(2)" class="secondary-btn restart-btn">
+              <i class="fa-solid fa-rotate-left"></i> 내용 수정하기
+            </button>
+          </div>
+        </div>
+      </transition>
 
       <Footer />
     </main>
@@ -36,8 +85,9 @@
 
   <AppToast v-if="toast.visible" :message="toast.message" :is-error="toast.isError" />
 </template>
+
 <script setup>
-import { ref, reactive, onMounted, watch } from 'vue';
+import { ref, reactive, onMounted, watch, computed } from 'vue';
 import Header from './Header.vue';
 import Footer from './Footer.vue';
 import SettingsCard from './SettingsCard.vue';
@@ -49,10 +99,12 @@ import AppToast from './AppToast.vue';
 import poolPrices from '@/data/poolPrices.json';
 import banks from '@/data/banks.json';
 
+const currentStep = ref(1);
+
 const settings = reactive({
   currentDayType: 'weekday',
-  selectedPool: 'deepstation',
-  basePrice: '44000'
+  selectedPool: 'custom',
+  basePrice: '0'
 });
 
 const people = ref([
@@ -62,7 +114,6 @@ const people = ref([
 ]);
 
 const results = reactive({
-  showResultSection: false,
   memberCostDisplay: '0원',
   nonMemberCostDisplay: '0원',
   settlementList: [],
@@ -79,6 +130,25 @@ const toast = reactive({
 let toastTimeoutId;
 
 // --- Methods ---
+
+const goToStep = (step) => {
+  if (step === 2 && currentStep.value === 1) {
+    if (!getNumericPrice(settings.basePrice)) {
+      return showToast("입장료를 입력해주세요.", true);
+    }
+  }
+  window.scrollTo({ top: 0, behavior: 'smooth' });
+  currentStep.value = step;
+};
+
+const calculateAndGoToResult = () => {
+    // 결과 페이지로 이동 전 계산 실행
+    calculate();
+    if (getNumericPrice(settings.basePrice)) {
+        goToStep(3);
+    }
+}
+
 const showToast = (msg, isError = false) => {
   toast.message = msg;
   toast.isError = isError;
@@ -116,6 +186,36 @@ const removePerson = (id) => {
   }
   people.value = people.value.filter(p => p.id !== id);
 };
+
+// --- 자동 계산 로직 개선 (Watcher) ---
+// 감시 대상: 입장료, 총 인원 수, 예약자 변경 상태
+// 주의: people 내부의 prepaid 값이 변경될 때는 트리거되지 않아야 함 (수동 수정 보존)
+const autoCalcTrigger = computed(() => JSON.stringify({
+  price: settings.basePrice,
+  count: people.value.length,
+  bookerStatus: people.value.map(p => p.isBooker) // 예약자가 누구인지 바뀌면 재계산
+}));
+
+watch(autoCalcTrigger, () => {
+  const price = getNumericPrice(settings.basePrice);
+  const totalAmount = price * people.value.length; // 총 선결제 필요 금액
+  
+  const bookers = people.value.filter(p => p.isBooker);
+  const bookerCount = bookers.length;
+
+  if (bookerCount > 0) {
+    // 1원 단위 절사 혹은 그대로 분배 (여기서는 정수로 내림 처리)
+    const splitAmount = Math.floor(totalAmount / bookerCount);
+    
+    // 예약자들에게 N분의 1 금액 할당
+    people.value.forEach(p => {
+      if (p.isBooker) {
+        p.prepaid = splitAmount;
+      }
+    });
+  }
+});
+
 
 const calculate = () => {
   const price = getNumericPrice(settings.basePrice);
@@ -175,25 +275,7 @@ const calculate = () => {
 
   results.memberCostDisplay = formatNumber(Math.round(memberCost)) + '원';
   results.nonMemberCostDisplay = formatNumber(Math.round(nonMemberCost)) + '원';
-  results.showResultSection = true;
-  
-  setTimeout(() => {
-    const resultEl = document.getElementById('resultSection');
-    if (resultEl) resultEl.scrollIntoView({ behavior: 'smooth' });
-  }, 100);
 };
-
-watch(
-  () => [settings.basePrice, people.value.length],
-  () => {
-    const price = getNumericPrice(settings.basePrice);
-    const booker = people.value.find(p => p.isBooker);
-    if (booker) {
-      booker.prepaid = price * people.value.length;
-    }
-  },
-  { deep: true }
-);
 
 const copyText = (txt, msg) => {
   const t = document.createElement("textarea");
@@ -218,8 +300,6 @@ const getCurrentShareUrl = () => {
         return window.location.href;
     }
 }
-
-
 
 const copyResultText = () => {
   if (!globalResultText) return showToast("계산 결과가 없습니다.", true);
@@ -247,7 +327,6 @@ const loadStateFromUrl = () => {
           bank: p[4] || '',
           account: p[5] || ''
       }));
-      setTimeout(calculate, 50);
       showToast("공유 정보를 불러왔습니다! 📂");
     } catch (e) {
         console.error("Failed to load state from URL:", e);
@@ -261,7 +340,127 @@ onMounted(() => {
 });
 </script>
 
-
 <style lang="scss">
 @import '@/assets/scss/pages/_settlement.scss';
+
+// /* Stepper Styles */
+// .stepper-container {
+//   display: flex;
+//   align-items: center;
+//   justify-content: center;
+//   margin-bottom: 24px;
+//   padding: 0 16px;
+// }
+
+// .step-item {
+//   display: flex;
+//   flex-direction: column;
+//   align-items: center;
+//   position: relative;
+//   z-index: 1;
+// }
+
+// .step-circle {
+//   width: 32px;
+//   height: 32px;
+//   border-radius: 50%;
+//   background-color: #e0e0e0;
+//   color: #757575;
+//   display: flex;
+//   align-items: center;
+//   justify-content: center;
+//   font-weight: bold;
+//   font-size: 14px;
+//   transition: all 0.3s ease;
+// }
+
+// .step-label {
+//   margin-top: 8px;
+//   font-size: 12px;
+//   color: #9e9e9e;
+//   font-weight: 500;
+// }
+
+// .step-line {
+//   flex-grow: 1;
+//   height: 2px;
+//   background-color: #e0e0e0;
+//   margin: -20px 8px 0;
+//   max-width: 60px;
+//   transition: all 0.3s ease;
+// }
+
+// /* Active State */
+// .step-item.active .step-circle {
+//   background-color: #3b82f6; 
+//   color: white;
+//   box-shadow: 0 0 0 4px rgba(59, 130, 246, 0.2);
+// }
+
+// .step-item.active .step-label {
+//   color: #3b82f6;
+//   font-weight: 700;
+// }
+
+// .step-line.active {
+//   background-color: #3b82f6;
+// }
+
+// /* Action Buttons Layout */
+// .action-buttons {
+//   margin-top: 24px;
+//   display: flex;
+//   gap: 12px;
+// }
+
+// .action-buttons.center {
+//   justify-content: center;
+// }
+
+// .action-buttons.row {
+//   flex-direction: row;
+// }
+
+// /* Utility classes for button layout */
+// .full-width {
+//   width: 100%;
+// }
+
+// .flex-grow {
+//   flex-grow: 1;
+// }
+
+// /* Secondary Button (Previous, Modify) */
+// .secondary-btn {
+//   padding: 0 20px; /* 좌우 패딩만 설정, 높이는 calculate-btn과 맞추기 위해 */
+//   height: 61px; /* calculate-btn의 일반적 높이 */
+//   background-color: #f3f4f6;
+//   color: #4b5563;
+//   border: none;
+//   border-radius: 12px;
+//   font-size: 1rem;
+//   font-weight: 600;
+//   cursor: pointer;
+//   display: flex;
+//   align-items: center;
+//   justify-content: center;
+//   gap: 8px;
+//   transition: background-color 0.2s;
+//   min-width: 100px;
+// }
+
+// .secondary-btn:hover {
+//   background-color: #e5e7eb;
+// }
+
+// /* Transitions */
+// .fade-enter-active,
+// .fade-leave-active {
+//   transition: opacity 0.3s ease;
+// }
+
+// .fade-enter-from,
+// .fade-leave-to {
+//   opacity: 0;
+// }
 </style>

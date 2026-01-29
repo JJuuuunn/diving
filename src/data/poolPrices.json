@@ -1,9 +1,8 @@
 {
-  "deepstation": { "name": "딥스테이션", "weekday": 44000, "weekend": 66000 },
+  "deepstation": { "name": "딥스테이션", "weekday": 48000, "weekend": 66000 },
   "paradive": { "name": "파라다이브", "weekday": 45000, "weekend": 67000 },
   "k26": { "name": "K26", "weekday": 33000, "weekend": 55000 },
   "tsn": { "name": "TSN", "weekday": 38000, "weekend": 50000 },
   "aqualine": { "name": "아쿠아라인", "weekday": 15000, "weekend": 20000 },
-  "suwon": { "name": "수원풀", "weekday": 18000, "weekend": 18000 },
-  "custom": { "name": "직접 입력", "weekday": null, "weekend": null }
+  "suwon": { "name": "수원풀", "weekday": 18000, "weekend": 18000 }
 }
