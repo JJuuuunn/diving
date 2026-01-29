@@ -1,14 +1,53 @@
+<template>
+  <div class="settlement-container">
+    <Header />
+
+    <main class="main-content">
+      <SettingsCard 
+        :current-day-type="settings.currentDayType"
+        :selected-pool="settings.selectedPool"
+        :base-price="settings.basePrice"
+        :pool-prices="poolPrices"
+        @update:currentDayType="settings.currentDayType = $event; changePool()"
+        @update:selectedPool="settings.selectedPool = $event; changePool()"
+        @update:basePrice="settings.basePrice = $event"
+      />
+      <PeopleCard :people="people" @addPerson="addPerson" @update:people="people = $event" @removePerson="removePerson" />
+
+      <button @click="calculate" class="calculate-btn">
+        <span>정산 결과 보기</span>
+        <i class="fa-solid fa-arrow-right"></i>
+        <div class="hover-effect"></div>
+      </button>
+
+      <ResultSection 
+        :show-result-section="results.showResultSection"
+        :member-cost-display="results.memberCostDisplay"
+        :non-member-cost-display="results.nonMemberCostDisplay"
+        :settlement-list="results.settlementList"
+        :detail-table-body="results.detailTableBody"
+        @copy-result-text="copyResultText"
+        @copy-account-text="copyText($event, '계좌가 복사되었습니다! 💳')"
+      />
+
+      <Footer />
+    </main>
+  </div>
+
+  <AppToast v-if="toast.visible" :message="toast.message" :is-error="toast.isError" />
+</template>
 <script setup>
 import { ref, reactive, onMounted, watch } from 'vue';
-import AppHeader from './AppHeader.vue';
+import Header from './Header.vue';
+import Footer from './Footer.vue';
 import SettingsCard from './SettingsCard.vue';
 import PeopleCard from './PeopleCard.vue';
 import ResultSection from './ResultSection.vue';
 import AppToast from './AppToast.vue';
 
 // --- State ---
-import poolPrices from '../../data/poolPrices.json';
-import banks from '../../data/banks.json';
+import poolPrices from '@/data/poolPrices.json';
+import banks from '@/data/banks.json';
 
 const settings = reactive({
   currentDayType: 'weekday',
@@ -40,9 +79,6 @@ const toast = reactive({
 let toastTimeoutId;
 
 // --- Methods ---
-
-
-
 const showToast = (msg, isError = false) => {
   toast.message = msg;
   toast.isError = isError;
@@ -221,56 +257,10 @@ const loadStateFromUrl = () => {
 };
 
 onMounted(() => {
-
-  
   loadStateFromUrl();
 });
 </script>
 
-<template>
-
-
-  <div class="settlement-container">
-    <AppHeader />
-
-    <main class="main-content">
-      <SettingsCard 
-        :current-day-type="settings.currentDayType"
-        :selected-pool="settings.selectedPool"
-        :base-price="settings.basePrice"
-        :pool-prices="poolPrices"
-        @update:currentDayType="settings.currentDayType = $event; changePool()"
-        @update:selectedPool="settings.selectedPool = $event; changePool()"
-        @update:basePrice="settings.basePrice = $event"
-      />
-      <PeopleCard :people="people" @addPerson="addPerson" @update:people="people = $event" @removePerson="removePerson" />
-
-      <button @click="calculate" class="calculate-btn">
-        <span>정산 결과 보기</span>
-        <i class="fa-solid fa-arrow-right"></i>
-        <div class="hover-effect"></div>
-      </button>
-
-      <ResultSection 
-        :show-result-section="results.showResultSection"
-        :member-cost-display="results.memberCostDisplay"
-        :non-member-cost-display="results.nonMemberCostDisplay"
-        :settlement-list="results.settlementList"
-        :detail-table-body="results.detailTableBody"
-        @copy-result-text="copyResultText"
-        @copy-account-text="copyText($event, '계좌가 복사되었습니다! 💳')"
-      />
-
-      <footer class="footer">
-        Designed for Divers 🤿<br>
-        <a href="https://github.com/JJuuuunn" target="_blank" rel="noopener noreferrer">GitHub: JJuuuunn</a> | 
-        <a href="https://www.instagram.com/jjuuuunn.hob" target="_blank" rel="noopener noreferrer">Instagram: jjuuuunn.hob</a>
-      </footer>
-    </main>
-  </div>
-
-  <AppToast v-if="toast.visible" :message="toast.message" :is-error="toast.isError" />
-</template>
 
 <style lang="scss">
 @import '@/assets/scss/pages/_settlement.scss';
