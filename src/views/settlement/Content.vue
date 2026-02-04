@@ -20,9 +20,7 @@
     </div>
 
     <main class="main-content">
-      
       <transition name="fade" mode="out-in">
-        
         <div v-if="currentStep === 1" key="step1" class="step-content">
           <SettingsCard 
             :current-day-type="settings.currentDayType"
@@ -53,7 +51,6 @@
             <button @click="goToStep(1)" class="secondary-btn prev-btn">
               <i class="fa-solid fa-arrow-left"></i> 이전
             </button>
-            
             <button @click="calculateAndGoToResult" class="calculate-btn flex-grow">
               <span>정산 결과 보기</span>
               <i class="fa-solid fa-calculator"></i>
@@ -92,15 +89,11 @@ import Footer from './Footer.vue';
 import SettingsCard from './SettingsCard.vue';
 import PeopleCard from './PeopleCard.vue';
 import ResultSection from './ResultSection.vue';
-
-// 전역 토스트 훅 사용
 import { useToast } from '@/composables/useToast';
-
-// --- State ---
 import poolPricesRaw from '@/data/poolPrices.json';
 import banks from '@/data/banks.json';
 
-// --- Type Definitions (타입 정의) ---
+// --- 타입 정의 ---
 interface Person {
   id: number;
   name: string;
@@ -129,22 +122,19 @@ interface Settlement {
   account: string;
 }
 
-// JSON 데이터를 타입에 맞춰 캐스팅
 const poolPrices = poolPricesRaw as PoolPrices;
-
 const { triggerToast } = useToast();
 const currentStep = ref(1);
 
 const settings = reactive({
-  currentDayType: 'weekday', // 'weekday' | 'weekend'
+  currentDayType: 'weekday',
   selectedPool: 'custom',
   basePrice: '0'
 });
 
 const people = ref<Person[]>([
   { id: 1, name: '예약자 1', isBooker: true, isMember: true, prepaid: 0, bank: banks[0], account: '' },
-  { id: 2, name: '참석자 2', isBooker: false, isMember: false, prepaid: 0, bank: banks[0], account: '' },
-  { id: 3, name: '참석자 3', isBooker: false, isMember: false, prepaid: 0, bank: banks[0], account: '' }
+  { id: 2, name: '참석자 2', isBooker: false, isMember: false, prepaid: 0, bank: banks[0], account: '' }
 ]);
 
 const results = reactive({
@@ -156,278 +146,181 @@ const results = reactive({
 
 let globalResultText = "";
 
-// --- Methods ---
-
-const showToast = (msg: string, isError: boolean = false) => {
-  triggerToast(msg, isError);
-};
+// --- 유틸리티 메서드 ---
+const showToast = (msg: string, isError: boolean = false) => triggerToast(msg, isError);
+const formatNumber = (n: number | string) => n ? n.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",") : '0';
+const getNumericPrice = (formattedPrice: string | number) => Number(String(formattedPrice).replace(/,/g, '')) || 0;
 
 const goToStep = (step: number) => {
-  if (step === 2 && currentStep.value === 1) {
-    if (!getNumericPrice(settings.basePrice)) {
-      return showToast("입장료를 입력해주세요.", true);
-    }
-  }
-  
+  if (step === 2 && !getNumericPrice(settings.basePrice)) return showToast("입장료를 입력해주세요.", true);
   window.scrollTo({ top: 0, behavior: 'smooth' });
   currentStep.value = step;
 };
 
-// 정산하기 및 3단계로 이동
-const calculateAndGoToResult = () => {
-    calculate();
-    // 입장료가 있으면 3단계로 이동
-    if (getNumericPrice(settings.basePrice)) {
-        goToStep(3);
-    }
-}
-
 const changePool = () => {
-  // 'custom'이 아니고, 해당 키가 데이터에 존재하면 가격 업데이트
   if (settings.selectedPool !== 'custom' && poolPrices[settings.selectedPool]) {
-    // currentDayType은 'weekday' 또는 'weekend'라고 가정 (타입 단언 필요 시 as keyof PoolInfo)
     const newPrice = poolPrices[settings.selectedPool][settings.currentDayType as keyof PoolInfo];
     settings.basePrice = formatNumber(newPrice);
   }
 };
-
-const formatNumber = (n: number | string) => {
-  if (!n && n !== 0) return '';
-  return n.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",");
-};
-
-const getNumericPrice = (formattedPrice: string | number) => {
-    return Number(String(formattedPrice).replace(/,/g, '')) || 0;
-}
 
 const addPerson = () => {
   people.value.push({ id: Date.now(), name: `참석자 ${people.value.length + 1}`, isBooker: false, isMember: true, prepaid: 0, bank: banks[0], account: '' });
 };
 
 const removePerson = (id: number) => {
-  if (people.value.length <= 2) {
-    showToast("최소 2명(예약자 1명, 참석자 1명)은 유지해야 합니다.", true);
-    return;
-  }
+  if (people.value.length <= 2) return showToast("최소 2명은 유지해야 합니다.", true);
   people.value = people.value.filter(p => p.id !== id);
 };
 
-// --- 자동 계산 로직 (Watcher) ---
+// --- [1] 선결제 금액 자동 배분 (예약자 회원 면제 로직) ---
 const autoCalcTrigger = computed(() => JSON.stringify({
   price: settings.basePrice,
-  count: people.value.length,
-  bookerStatus: people.value.map(p => p.isBooker)
+  people: people.value.map(p => ({ isBooker: p.isBooker, isMember: p.isMember }))
 }));
 
 watch(autoCalcTrigger, () => {
   const price = getNumericPrice(settings.basePrice);
-  const totalAmount = price * people.value.length; // 총 선결제 필요 금액
   
-  const bookers = people.value.filter(p => p.isBooker);
-  const bookerCount = bookers.length;
+  // 수영장에 실제로 결제할 인원 = (참석자 전원) + (회원이 아닌 예약자)
+  // 예약자이면서 회원인 사람은 결제 총액 계산 인원에서 제외됨
+  const paidParticipants = people.value.filter(p => !p.isBooker || (p.isBooker && !p.isMember));
+  const totalAmount = price * paidParticipants.length; 
 
-  if (bookerCount > 0) {
-    const splitAmount = Math.floor(totalAmount / bookerCount);
-    
-    // 예약자들에게 N분의 1 금액 할당
+  const bookers = people.value.filter(p => p.isBooker);
+  if (bookers.length > 0) {
+    const splitAmount = Math.floor(totalAmount / bookers.length);
+    const remainder = totalAmount % bookers.length;
     people.value.forEach(p => {
       if (p.isBooker) {
-        p.prepaid = splitAmount;
+        p.prepaid = (p.id === bookers[0].id) ? splitAmount + remainder : splitAmount;
+      } else {
+        p.prepaid = 0;
       }
     });
   }
 });
 
-// 결과 텍스트 생성 로직 분리
+// --- [2] 정산 결과 계산 및 송금 플랜 생성 ---
+const calculate = () => {
+  const price = getNumericPrice(settings.basePrice);
+  if (!price) return;
+
+  const allMembers = people.value.filter(p => p.isMember);
+  const memberAttendees = people.value.filter(p => p.isMember && !p.isBooker);
+  
+  // 1. 단가 계산: 참석자 중 회원들의 입장료 합계를 전체 회원이 N분의 1
+  const nonMemberCost = price;
+  const memberCost = allMembers.length > 0 
+    ? (memberAttendees.length * price) / allMembers.length 
+    : 0;
+
+  // 2. 개인별 잔액(Balance) 계산
+  const detailedResults = people.value.map(p => {
+    const cost = p.isMember ? memberCost : nonMemberCost;
+    // balance: (실제 지불한 돈) - (최종 부담금) -> (+)면 받을 돈, (-)면 줄 돈
+    const balance = getNumericPrice(p.prepaid) - cost; 
+    return { ...p, myCost: cost, balance };
+  });
+
+  // 3. 송금 플랜 생성 (대표 예약자 시스템)
+  const bookers = detailedResults.filter(p => p.isBooker);
+  const primaryBooker = bookers[0]; 
+  const transactions: Settlement[] = [];
+
+  detailedResults.forEach(p => {
+    if (p.id === primaryBooker.id) return;
+
+    // 더 내야 하는 사람(참석자 등) -> 대표 예약자에게 송금
+    if (p.balance < -10) {
+      transactions.push({
+        from: p.name,
+        to: primaryBooker.name,
+        amount: Math.floor(Math.abs(p.balance) / 10) * 10,
+        bank: primaryBooker.bank,
+        account: primaryBooker.account
+      });
+    } 
+    // 돌려받아야 하는 사람(다른 예약자) -> 대표 예약자가 환급
+    else if (p.isBooker && p.balance > 10) {
+      transactions.push({
+        from: primaryBooker.name,
+        to: p.name,
+        amount: Math.floor(p.balance / 10) * 10,
+        bank: p.bank,
+        account: p.account
+      });
+    }
+  });
+
+  results.settlementList = transactions;
+  results.detailTableBody = detailedResults;
+  results.memberCostDisplay = formatNumber(Math.round(memberCost)) + '원';
+  results.nonMemberCostDisplay = formatNumber(Math.round(nonMemberCost)) + '원';
+
+  // 공유 텍스트 생성
+  let poolName = settings.selectedPool === 'custom' ? '직접 입력' : (poolPrices[settings.selectedPool]?.name || settings.selectedPool);
+  let dayLabel = settings.currentDayType === 'weekday' ? '평일' : '주말';
+  globalResultText = generateResultText(poolName, dayLabel, memberCost, nonMemberCost, transactions);
+};
+
+const calculateAndGoToResult = () => {
+    calculate();
+    if (getNumericPrice(settings.basePrice)) goToStep(3);
+}
+
 const generateResultText = (poolName: string, day: string, mCost: number, nmCost: number, txs: Settlement[]) => {
   let text = `🤿 [다이빙 정산 결과]\n📍 ${poolName} (${day})\n▪️ 회원: ${formatNumber(Math.round(mCost))}원\n▪️ 비회원: ${formatNumber(Math.round(nmCost))}원\n\n💸 [송금 플랜]\n`;
-  
-  if (!txs.length) text += `✅ 정산할 내역이 없습니다 (모두 완료)\n`;
+  if (!txs.length) text += `✅ 정산할 내역이 없습니다.\n`;
   else {
     txs.forEach(t => {
-      const accInfos = [t.bank, t.account].filter(Boolean);
-      const accText = accInfos.join(' ');
-      text += `${t.from} ➡️ ${t.to} : ${formatNumber(t.amount)}원\n${accText ? `(계좌: ${accText})\n` : ''}`;
+      text += `${t.from} ➡️ ${t.to} : ${formatNumber(t.amount)}원\n(계좌: ${t.bank} ${t.account})\n\n`;
     });
   }
   return text;
 };
 
-const calculate = () => {
-  const price = getNumericPrice(settings.basePrice);
-  if (!price) {
-    return showToast("입장료를 입력해주세요.", true);
-  }
-
-  // [Refactor] DOM 접근 제거 -> 데이터 기반 풀장 이름 조회
-  let displayPoolName = '';
-  if (settings.selectedPool === 'custom') {
-    displayPoolName = '직접 입력';
-  } else {
-    const poolInfo = poolPrices[settings.selectedPool];
-    displayPoolName = poolInfo ? poolInfo.name : settings.selectedPool;
-  }
-
-  const dayLabel = settings.currentDayType === 'weekday' ? '평일' : '주말';
-
-  const members = people.value.filter(p => p.isMember);
-  const memberCost = members.length ? (members.filter(p => !p.isBooker).length * price) / members.length : 0;
-  const nonMemberCost = price;
-
-  let debtors: Person[] = [];
-  let creditors: Person[] = [];
-  
-  const detailedResults = people.value.map(p => {
-    const cost = p.isMember ? memberCost : nonMemberCost;
-    const balance = getNumericPrice(p.prepaid) - cost;
-    if (balance < -10) debtors.push({ ...p, balance });
-    else if (balance > 10) creditors.push({ ...p, balance });
-    return { ...p, myCost: cost, balance };
-  });
-
-  debtors.sort((a, b) => (a.balance || 0) - (b.balance || 0));
-  creditors.sort((a, b) => (b.balance || 0) - (a.balance || 0));
-
-  const transactions: Settlement[] = [];
-  let d = 0, c = 0;
-
-  while (d < debtors.length && c < creditors.length) {
-    let amount = Math.min(Math.abs(debtors[d].balance!), creditors[c].balance!);
-    amount = Math.floor(amount / 10) * 10;
-    
-    if (amount > 0) {
-      transactions.push({ 
-        from: debtors[d].name, 
-        to: creditors[c].name, 
-        amount, 
-        bank: creditors[c].bank, 
-        account: creditors[c].account 
-      });
-      
-      debtors[d].balance! += amount;
-      creditors[c].balance! -= amount;
-    }
-    
-    if (Math.abs(debtors[d].balance!) < 10) d++;
-    if (creditors[c].balance! < 10) c++;
-  }
-  
-  results.settlementList = transactions;
-  results.detailTableBody = detailedResults;
-
-  // 텍스트 생성 로직 호출
-  globalResultText = generateResultText(displayPoolName, dayLabel, memberCost, nonMemberCost, transactions);
-
-  results.memberCostDisplay = formatNumber(Math.round(memberCost)) + '원';
-  results.nonMemberCostDisplay = formatNumber(Math.round(nonMemberCost)) + '원';
-};
-
-// [수정] 최신 Clipboard API 사용 및 구형 방식 폴백 적용
+// --- 클립보드 및 공유 로직 ---
 const copyText = async (txt: string, msg: string) => {
   try {
-    // 1. 최신 방식
-    if (navigator.clipboard && navigator.clipboard.writeText) {
-      await navigator.clipboard.writeText(txt);
-      triggerToast(msg);
-    } else {
-      throw new Error('Clipboard API unavailable');
-    }
+    await navigator.clipboard.writeText(txt);
+    triggerToast(msg);
   } catch (err) {
-    // 2. 구형 방식 (Fallback)
-    try {
-      const t = document.createElement("textarea");
-      t.value = txt;
-      t.style.position = "fixed";
-      t.style.left = "-9999px";
-      document.body.appendChild(t);
-      t.select();
-      
-      const successful = document.execCommand('copy'); 
-      document.body.removeChild(t);
-      
-      if (successful) {
-        triggerToast(msg);
-      } else {
-        triggerToast("복사에 실패했습니다.", true);
-      }
-    } catch (fallbackErr) {
-      console.error("Copy failed:", fallbackErr);
-      triggerToast("복사에 실패했습니다.", true);
-    }
+    const t = document.createElement("textarea");
+    t.value = txt; document.body.appendChild(t);
+    t.select(); document.execCommand('copy');
+    document.body.removeChild(t);
+    triggerToast(msg);
   }
 };
-
-const getCurrentShareUrl = () => {
-    // 타입에 맞춰 매핑
-    const peopleMinified = people.value.map(p => [
-      p.name, 
-      p.isBooker ? 1 : 0, 
-      p.isMember ? 1 : 0, 
-      getNumericPrice(p.prepaid), 
-      p.bank, 
-      p.account
-    ]);
-    const state = [settings.selectedPool, getNumericPrice(settings.basePrice), peopleMinified, settings.currentDayType];
-    try {
-        return location.origin + location.pathname + '?d=' + btoa(encodeURIComponent(JSON.stringify(state)));
-    } catch (e) {
-        return window.location.href;
-    }
-}
 
 const copyResultText = () => {
-  if (!globalResultText) return showToast("계산 결과가 없습니다.", true);
-  const finalText = globalResultText + `\n🔗 상세 내역 확인:\n${getCurrentShareUrl()}`;
-  
-  if (navigator.share) {
-      navigator.share({ title: '다이빙 정산', text: finalText }).catch(() => {
-        copyText(finalText, "내용이 복사되었습니다! 📋");
-      });
-  } else {
-      copyText(finalText, "내용이 복사되었습니다! 📋");
-  }
+  const url = location.origin + location.pathname + '?d=' + btoa(encodeURIComponent(JSON.stringify([
+    settings.selectedPool, getNumericPrice(settings.basePrice), 
+    people.value.map(p => [p.name, p.isBooker ? 1 : 0, p.isMember ? 1 : 0, getNumericPrice(p.prepaid), p.bank, p.account]),
+    settings.currentDayType
+  ])));
+  const finalText = globalResultText + `\n🔗 상세 내역:\n${url}`;
+  if (navigator.share) navigator.share({ title: '다이빙 정산', text: finalText });
+  else copyText(finalText, "내용이 복사되었습니다! 📋");
 };
 
-const loadStateFromUrl = () => {
+onMounted(() => {
   const urlParams = new URLSearchParams(window.location.search);
   const encodedData = urlParams.get('d') || urlParams.get('data');
   if (encodedData) {
     try {
       const [pool, price, peopleArr, savedDayType] = JSON.parse(decodeURIComponent(atob(encodedData)));
-      
-      // 1. 데이터 복원
       settings.selectedPool = pool;
       settings.basePrice = formatNumber(price);
       if (savedDayType) settings.currentDayType = savedDayType;
-      
-      // any 타입으로 들어오는 배열 데이터를 Person 타입에 맞게 매핑
       people.value = (peopleArr as any[]).map((p, idx) => ({
-          id: idx + Date.now(),
-          name: p[0],
-          isBooker: !!p[1],
-          isMember: !!p[2],
-          prepaid: Number(p[3]),
-          bank: p[4] || '',
-          account: p[5] || ''
+          id: idx + Date.now(), name: p[0], isBooker: !!p[1], isMember: !!p[2], prepaid: Number(p[3]), bank: p[4] || '', account: p[5] || ''
       }));
-      
-      // 2. 복원된 데이터로 즉시 계산 수행
       calculate();
-      
-      // 3. 결과 화면(3단계)으로 바로 이동
       currentStep.value = 3;
-      
-      showToast("공유 정보를 불러왔습니다! 📂");
-      
-    } catch (e) {
-        console.error("Failed to load state from URL:", e);
-        showToast("정보를 불러오는데 실패했습니다.", true);
-    }
+    } catch (e) { console.error(e); }
   }
-};
-
-onMounted(() => {
-  loadStateFromUrl();
 });
 </script>
 
