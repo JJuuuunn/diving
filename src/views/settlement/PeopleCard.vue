@@ -11,51 +11,23 @@
     </div>
     <div class="people-list">
       <PersonCard
-        v-for="person in people"
-        :key="person.id"
-        :person="person"
+        v-for="(_, index) in people"
+        :key="people[index].id"
+        v-model="people[index]"
         :can-be-deleted="people.length > 2"
-        @update:person="updatePerson"
-        @remove="removePerson"
+        @remove="emit('removePerson', $event)"
       />
     </div>
   </section>
 </template>
 
 <script setup lang="ts">
+import type { Person } from '@/types/settlement';
 import PersonCard from './PersonCard.vue';
 
-// Person 타입 정의 (임시, 실제로는 types.ts에서 import 권장)
-interface Person {
-  id: number;
-  name: string;
-  isBooker: boolean;
-  isMember: boolean;
-  prepaid: number;
-  bank: string;
-  account: string;
-}
-
-const props = defineProps<{
-  people: Person[];
-}>();
-
+const people = defineModel<Person[]>({ required: true });
 const emit = defineEmits<{
   (e: 'addPerson'): void;
-  (e: 'update:people', people: Person[]): void;
   (e: 'removePerson', id: number): void;
 }>();
-
-const updatePerson = (updatedPerson: Person) => {
-  const index = props.people.findIndex(p => p.id === updatedPerson.id);
-  if (index !== -1) {
-    const newPeople = [...props.people];
-    newPeople[index] = updatedPerson;
-    emit('update:people', newPeople);
-  }
-};
-
-const removePerson = (id: number) => {
-  emit('removePerson', id);
-};
 </script>
