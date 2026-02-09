@@ -1,8 +1,8 @@
 {
     "meta": {
-        "title": "Diver Personality Type Indecator (DPTI)",
+        "title": "Diver Personality Type Indicator (DPTI)",
         "description": "다이버 성향 테스트: 당신은 어떤 유형의 다이버인가요?",
-        "version": "1.0.0",
+        "version": "1.3.0",
         "total_questions": 20
     },
     "types_definition": {
@@ -180,11 +180,11 @@
             "question": "새 장비를 살 때 나는?",
             "options": [
                 {
-                    "text": "스펙표, 소재, 무게, 가격 대비 성능을 엑셀 돌리듯 비교한다.",
+                    "text": "스펙표, 소재, 무게, 가격 대비 성능을 비교한다.",
                     "value": "T"
                 },
                 {
-                    "text": "디자인, 색감, 착용했을 때의 '간지'와 느낌을 본다.",
+                    "text": "디자인, 색감, 착용했을 때의 느낌(간지)을 본다.",
                     "value": "F"
                 }
             ]
@@ -192,14 +192,14 @@
         {
             "id": 12,
             "category": "Style",
-            "question": "버디가 '오늘 다이빙 어땠어?'라고 물으면?",
+            "question": "버디가 '오늘 다이빙 어떠냐'고 물으면?",
             "options": [
                 {
-                    "text": "수온은 26도였고, 시야는 10m 정도 터진 것 같아. (사실 정보)",
+                    "text": "수온 26도, 시야 10m 정도로 괜찮았어. (정보)",
                     "value": "T"
                 },
                 {
-                    "text": "물이 엄청 포근하고 햇빛 들어오는데 진짜 예뻤어. (감각 정보)",
+                    "text": "물이 포근하고 햇빛이 들어와서 정말 예뻤어. (감각)",
                     "value": "F"
                 }
             ]
@@ -207,14 +207,14 @@
         {
             "id": 13,
             "category": "Style",
-            "question": "새로운 기술(예: 마우스필, 핀킥)을 배울 때 선호하는 방식은?",
+            "question": "새로운 기술을 배울 때 선호하는 방식은?",
             "options": [
                 {
-                    "text": "원리와 메커니즘을 먼저 이론적으로 이해해야 몸이 움직인다.",
+                    "text": "원리와 메커니즘을 이론적으로 먼저 이해해야 한다.",
                     "value": "T"
                 },
                 {
-                    "text": "'이런 느낌으로 쑥~' 하는 강사님의 시범을 보고 느낌을 따라 한다.",
+                    "text": "강사님의 시범을 보고 그 '느낌'을 따라 한다.",
                     "value": "F"
                 }
             ]
@@ -222,14 +222,14 @@
         {
             "id": 14,
             "category": "Style",
-            "question": "다이빙 컴퓨터(시계)를 고를 때 가장 중요한 기준은?",
+            "question": "다이빙 컴퓨터를 고를 때 가장 중요한 기준은?",
             "options": [
                 {
-                    "text": "로그 데이터가 얼마나 상세히 나오는지, 앱 연동성은 좋은지",
+                    "text": "로그 데이터의 상세함과 앱 연동성",
                     "value": "T"
                 },
                 {
-                    "text": "화면이 직관적인지, 평소에 차고 다녀도 예쁜지",
+                    "text": "시인성이 좋은 화면과 평상시 착용 디자인",
                     "value": "F"
                 }
             ]
@@ -240,11 +240,11 @@
             "question": "자신의 다이빙 영상을 모니터링할 때 주로 보는 것은?",
             "options": [
                 {
-                    "text": "핀킥의 각도, 스트림라인(유선형) 자세, 하강 속도",
+                    "text": "핀킥 각도, 스트림라인, 하강 속도 등 기술적 요소",
                     "value": "T"
                 },
                 {
-                    "text": "전체적인 물속 분위기, 영상의 색감, 내가 여유로워 보이는지",
+                    "text": "전체적인 분위기와 색감, 내가 얼마나 여유로워 보이는지",
                     "value": "F"
                 }
             ]
@@ -255,11 +255,11 @@
             "question": "다이빙 투어를 간다면 선호하는 스타일은?",
             "options": [
                 {
-                    "text": "시끌벅적하게 여러 명이 가서 다 같이 노는 게 재밌다.",
+                    "text": "여러 명이 북적거리며 다 같이 노는 게 좋다.",
                     "value": "G"
                 },
                 {
-                    "text": "마음 맞는 버디 1명과 조용히, 혹은 혼자 집중하는 게 좋다.",
+                    "text": "마음 맞는 버디 혹은 혼자 조용히 집중하는 게 좋다.",
                     "value": "P"
                 }
             ]
@@ -270,11 +270,11 @@
             "question": "물속에서 버디와 눈이 마주쳤을 때?",
             "options": [
                 {
-                    "text": "손 흔들고 장난치거나 하트를 날린다.",
+                    "text": "손을 흔들거나 하트를 날리며 교감한다.",
                     "value": "G"
                 },
                 {
-                    "text": "가볍게 OK 사인만 주고받고 각자 다이빙에 집중한다.",
+                    "text": "가볍게 OK 사인만 주고 각자 다이빙에 집중한다.",
                     "value": "P"
                 }
             ]
@@ -282,14 +282,14 @@
         {
             "id": 18,
             "category": "Social",
-            "question": "다이빙 투어의 저녁 식사 시간, 내가 선호하는 분위기는?",
+            "question": "다이빙 후 저녁 식사 시간, 선호하는 분위기는?",
             "options": [
                 {
-                    "text": "다 같이 모여서 오늘 다이빙 얘기하고 술 한잔하며 떠들썩하게!",
+                    "text": "다 같이 모여 술 한잔하며 떠들썩하게 대화하기",
                     "value": "G"
                 },
                 {
-                    "text": "조용히 맛있는 거 먹고 일찍 들어가서 푹 쉬거나 내 시간 갖기",
+                    "text": "조용히 맛있는 거 먹고 일찍 쉬거나 개인 시간 갖기",
                     "value": "P"
                 }
             ]
@@ -300,11 +300,11 @@
             "question": "다이빙 풀장에 연습하러 갈 때 나는?",
             "options": [
                 {
-                    "text": "단톡방에 '이번 주 가실 분?' 하고 벙개를 주최하거나 참여한다.",
+                    "text": "단톡방에 벙개를 주최하거나 적극적으로 참여한다.",
                     "value": "G"
                 },
                 {
-                    "text": "이미 약속된 버디 1명에게만 조용히 연락해서 다녀온다.",
+                    "text": "약속된 버디와만 조용히 연락해서 다녀온다.",
                     "value": "P"
                 }
             ]
@@ -315,146 +315,244 @@
             "question": "물속에서 멋진 광경을 봤을 때 반응은?",
             "options": [
                 {
-                    "text": "주변 사람들을 막 불러서 손가락질하며 같이 보라고 한다.",
+                    "text": "주변 사람들을 막 불러서 같이 보자고 손짓한다.",
                     "value": "G"
                 },
                 {
-                    "text": "일단 나부터 조용히 감상하고, 나중에 나가서 말해준다.",
+                    "text": "일단 나부터 조용히 감상하고 나중에 말해준다.",
                     "value": "P"
                 }
             ]
         }
     ],
+    "results_definition": [
+        {
+            "type_code": "ECFG",
+            "title": "파도 타는 모험가",
+            "animal": "Dolphin",
+            "animal_kr": "돌고래",
+            "description": "에너지가 넘치고 사교적이며, 새로운 다이빙 포인트를 탐험하는 것을 가장 즐깁니다.",
+            "tagline": "바다는 넓고, 당신의 호기심은 그보다 더 넓습니다.",
+            "best_match": "EHFG",
+            "worst_match": "ICTP"
+        },
+        {
+            "type_code": "ECFP",
+            "title": "한계 돌파자",
+            "animal": "Marlin",
+            "animal_kr": "청새치",
+            "description": "자신의 기술 향상과 한계 도전에 집중하며, 목표를 달성할 때 큰 쾌감을 느낍니다.",
+            "tagline": "기록은 깨지기 위해 존재하고, 당신은 그걸 증명하는 사람입니다.",
+            "best_match": "ECTP",
+            "worst_match": "IHFG"
+        },
+        {
+            "type_code": "ECTG",
+            "title": "해저 사령관",
+            "animal": "Orca",
+            "animal_kr": "범고래",
+            "description": "치밀한 계획과 리더십을 바탕으로 팀의 안전과 탐험을 동시에 이끄는 브레인 다이버입니다.",
+            "tagline": "모두가 즐기는 다이빙 뒤엔 항상 당신의 계산이 있습니다.",
+            "best_match": "ICTG",
+            "worst_match": "IHFP"
+        },
+        {
+            "type_code": "ECTP",
+            "title": "심해 분석가",
+            "animal": "Octopus",
+            "animal_kr": "문어",
+            "description": "장비와 이론에 해박하며, 누구보다 객관적인 데이터로 자신의 다이빙을 분석합니다.",
+            "tagline": "감이 아니라 데이터로 잠수하는 사람.",
+            "best_match": "ECFP",
+            "worst_match": "IHFG"
+        },
+        {
+            "type_code": "EHFG",
+            "title": "산호초 분위기 메이커",
+            "animal": "Clownfish",
+            "animal_kr": "클라운피쉬",
+            "description": "아름다운 바다 풍경을 사랑하고, 그 감동을 동료들과 나누는 것에서 큰 행복을 얻습니다.",
+            "tagline": "당신이 들어가면, 그 다이빙은 이미 즐거워졌습니다.",
+            "best_match": "ECFG",
+            "worst_match": "ICTP"
+        },
+        {
+            "type_code": "EHFP",
+            "title": "바다의 예술가",
+            "animal": "Manta Ray",
+            "animal_kr": "만타레이",
+            "description": "자유로운 영혼의 소유자로, 물속의 흐름에 몸을 맡기고 시각적인 아름다움을 추구합니다.",
+            "tagline": "당신에게 다이빙은 스포츠가 아니라 장면입니다.",
+            "best_match": "IHFP",
+            "worst_match": "ICTG"
+        },
+        {
+            "type_code": "EHTG",
+            "title": "꼼꼼한 가이드",
+            "animal": "Seahorse",
+            "animal_kr": "해마",
+            "description": "주변 환경과 동료들을 세심하게 살피며, 평온하고 안전한 다이빙 환경을 선호합니다.",
+            "tagline": "모두가 편안한 건, 당신이 조용히 챙기고 있기 때문입니다.",
+            "best_match": "IHTG",
+            "worst_match": "ECFP"
+        },
+        {
+            "type_code": "EHTP",
+            "title": "평화로운 관찰자",
+            "animal": "Sea Turtle",
+            "animal_kr": "바다거북",
+            "description": "느긋하고 인내심이 강하며, 조용히 바다 생태계를 관찰하며 마음의 평화를 얻습니다.",
+            "tagline": "천천히, 깊게, 그리고 오래 — 당신의 속도가 바다의 속도입니다.",
+            "best_match": "IHTP",
+            "worst_match": "ECTG"
+        },
+        {
+            "type_code": "ICFG",
+            "title": "열정적인 수행자",
+            "animal": "Seal",
+            "animal_kr": "물개",
+            "description": "자신의 내면 감각에 집중하면서도 동료들과 함께 연습하며 성장하는 것을 좋아합니다.",
+            "tagline": "말은 적어도, 성장은 누구보다 빠른 다이버.",
+            "best_match": "ECFG",
+            "worst_match": "IHTP"
+        },
+        {
+            "type_code": "ICFP",
+            "title": "푸른 심연의 구도자",
+            "animal": "Whale",
+            "animal_kr": "고래",
+            "description": "혼자만의 고요한 시간을 소중히 여기며, 자신의 한계를 넘어서는 깊은 수심에 도전합니다.",
+            "tagline": "조용한 사람일수록 더 깊이 내려갑니다.",
+            "best_match": "ECFP",
+            "worst_match": "EHFG"
+        },
+        {
+            "type_code": "ICTG",
+            "title": "완벽주의 버디",
+            "animal": "Lobster",
+            "animal_kr": "랍스터",
+            "description": "체계적이고 원칙적입니다. 동료의 안전을 가장 확실하게 책임지는 든든한 다이버입니다.",
+            "tagline": "당신이 버디면, 그 다이빙은 이미 안전합니다.",
+            "best_match": "ECTG",
+            "worst_match": "EHFP"
+        },
+        {
+            "type_code": "ICTP",
+            "title": "심해 전략가",
+            "animal": "Sea Snake",
+            "animal_kr": "바다뱀",
+            "description": "논리적이고 치밀합니다. 감정에 휘둘리지 않고 완벽한 다이빙 경로와 기술을 설계합니다.",
+            "tagline": "한 번의 다이빙에도 당신은 설계를 합니다.",
+            "best_match": "ECTP",
+            "worst_match": "EHFG"
+        },
+        {
+            "type_code": "IHFG",
+            "title": "따뜻한 동행자",
+            "animal": "Starfish",
+            "animal_kr": "불가사리",
+            "description": "타인에 대한 배려가 깊으며, 물속에서의 유대감과 정서적 교감을 중요하게 생각합니다.",
+            "tagline": "당신과 함께한 다이빙은 이상하게 오래 기억에 남습니다.",
+            "best_match": "EHFG",
+            "worst_match": "ECFP"
+        },
+        {
+            "type_code": "IHFP",
+            "title": "몽상 유영자",
+            "animal": "Pufferfish",
+            "animal_kr": "복어",
+            "description": "풍부한 상상력과 감수성을 가졌습니다. 물속에서 느끼는 모든 감각을 소중히 여깁니다.",
+            "tagline": "당신은 깊이를 재기보다, 순간을 느끼는 사람입니다.",
+            "best_match": "EHFP",
+            "worst_match": "ECTG"
+        },
+        {
+            "type_code": "IHTG",
+            "title": "정교한 조율사",
+            "animal": "Jellyfish",
+            "animal_kr": "해파리",
+            "description": "자신의 신체 변화를 민감하게 체크하며, 수온과 부력 등 환경과의 조화를 추구합니다.",
+            "tagline": "작은 변화도 놓치지 않는 감각의 다이버.",
+            "best_match": "EHTG",
+            "worst_match": "ECFP"
+        },
+        {
+            "type_code": "IHTP",
+            "title": "은둔의 철학자",
+            "animal": "Squid",
+            "animal_kr": "오징어",
+            "description": "남들과는 다른 독창적인 시선을 가졌습니다. 자신만의 세계에서 고요하게 힐링합니다.",
+            "tagline": "고요한 물속에서 당신은 가장 선명해집니다.",
+            "best_match": "EHTP",
+            "worst_match": "ECFG"
+        }
+    ],
     "image_generation": {
-        "common_style_prompt": "cute stylized sea creature character, pixar-style 3D render, soft toy-like texture, smooth plastic-clay material feel, centered full body, symmetrical composition, minimal clean design, lots of negative space, soft lighting, soft shadows under character, subtle depth of field, gentle underwater atmosphere, tiny floating bubbles, soft gradient background, no clothes, no accessories, no diving gear, no props, no extra objects, no frame, no border, no card layout, no text, no letters, no logos",
-        "personality_types": [
+        "common_style_prompt": "cute stylized sea creature character, pixar-style 3D render, soft toy-like texture, smooth plastic-clay material feel, rounded friendly shapes, non-threatening silhouette, clear readable silhouette, centered full body, minimal clean design, lots of negative space, soft lighting, soft ambient occlusion, soft shadow under character, subtle depth of field, gentle underwater atmosphere, soft gradient background, no diving gear, no text, no props",
+        "prompts": [
             {
                 "type_code": "ECFG",
-                "title_kr": "파도 타는 모험가",
-                "animal": "Dolphin",
-                "animal_kr": "돌고래",
-                "traits": "에너지 넘치고 모험을 즐기며 도전을 두려워하지 않는 직관형",
-                "image_prompt": "an adorable stylized dolphin character, bright friendly eyes, playful confident expression, dynamic forward swimming pose, energetic and adventurous mood, soft gradient background in bright turquoise blue"
+                "image_prompt": "adorable stylized dolphin, bright friendly eyes, playful confident expression, dynamic forward swimming pose, energetic adventurous mood, bright turquoise blue background"
             },
             {
-                "type_code": "ESFG",
-                "title_kr": "산호초 분위기 메이커",
-                "animal": "Clownfish",
-                "animal_kr": "클라운피쉬",
-                "traits": "사교적이고 밝으며 감정 표현이 풍부한 분위기 메이커",
-                "image_prompt": "an adorable stylized clownfish character, round body, big sparkling eyes, cheerful smile, slightly tilted playful pose, friendly and social mood, soft gradient background in light aqua blue"
+                "type_code": "ECFP",
+                "image_prompt": "adorable stylized marlin, long pointed bill, determined sharp eyes, sleek streamlined body leaning forward, dynamic fast swimming pose with slight motion curve, ambitious competitive mood, bold coral orange background"
             },
             {
-                "type_code": "ICLT",
-                "title_kr": "심해 분석가",
-                "animal": "Octopus",
-                "animal_kr": "문어",
-                "traits": "관찰력이 뛰어나고 전략적인 조용한 사고형",
-                "image_prompt": "an adorable stylized octopus character, slightly oversized head, thoughtful half-closed eyes, gently floating with tentacles drifting, intelligent and analytical mood, soft gradient background in lavender purple"
+                "type_code": "ECTG",
+                "image_prompt": "adorable stylized orca, sleek black and white body, calm confident eyes, strong upright pose with slightly raised head, composed leader-like presence, deep ocean blue background"
+            },
+            {
+                "type_code": "ECTP",
+                "image_prompt": "adorable stylized octopus, oversized head, thoughtful curious eyes, gently floating with tentacles softly spread, intelligent analytical mood, lavender purple background"
+            },
+            {
+                "type_code": "EHFG",
+                "image_prompt": "adorable stylized clownfish, round body, big sparkling eyes, cheerful smile, friendly social mood, light aqua blue background"
+            },
+            {
+                "type_code": "EHFP",
+                "image_prompt": "adorable stylized manta ray, wide wing-like fins flowing, joyful gentle eyes, graceful upward swooping pose, artistic dreamy mood, peach pink background"
+            },
+            {
+                "type_code": "EHTG",
+                "image_prompt": "adorable stylized seahorse, gently curled tail, kind attentive eyes, slightly leaning forward as if watching over others, caring guide-like presence, soft golden yellow background"
+            },
+            {
+                "type_code": "EHTP",
+                "image_prompt": "adorable stylized sea turtle, big calm observant eyes, relaxed gentle smile, slow gliding pose with head slightly turned as if watching surroundings, tranquil peaceful mood, mint green background"
             },
             {
                 "type_code": "ICFG",
-                "title_kr": "푸른 심연의 유영자",
-                "animal": "Whale",
-                "animal_kr": "고래",
-                "traits": "차분하고 깊이 있으며 감정이 풍부한 안정형",
-                "image_prompt": "an adorable stylized whale character, soft rounded body, serene eyes, slow graceful downward pose, calm and introspective atmosphere, soft gradient background in deep ocean blue"
+                "image_prompt": "adorable stylized seal, chubby cute proportions, bright playful eyes, spinning joyful pose, fun-loving energetic mood, bright aqua background"
             },
             {
-                "type_code": "ESTP",
-                "title_kr": "조류 추격자",
-                "animal": "Tuna",
-                "animal_kr": "참치",
-                "traits": "속도감 있고 대담하며 행동 중심적인 타입",
-                "image_prompt": "an adorable stylized tuna character, sleek athletic body, sharp focused eyes, fast forward swimming pose, high energy and action-driven mood, soft gradient background in coral orange"
+                "type_code": "ICFP",
+                "image_prompt": "adorable stylized whale, soft rounded body, serene wise eyes, slow graceful pose, introspective deep calm atmosphere, deep blue background"
             },
             {
-                "type_code": "ISFH",
-                "title_kr": "잔잔한 활공자",
-                "animal": "Sea Turtle",
-                "animal_kr": "바다거북",
-                "traits": "평화롭고 인내심 있으며 주변을 편안하게 만드는 존재",
-                "image_prompt": "an adorable stylized sea turtle character, big calm eyes, relaxed smile, wide flippers stretched like wings, slow peaceful glide pose, tranquil and healing mood, soft gradient background in mint green"
+                "type_code": "ICTG",
+                "image_prompt": "adorable stylized lobster, sturdy rounded claws held close to body, protective dependable eyes, stable grounded pose, guardian-like calm and responsible mood, muted deep blue background"
             },
             {
-                "type_code": "ENFP",
-                "title_kr": "바다 위를 나는 예술가",
-                "animal": "Manta Ray",
-                "animal_kr": "만타레이",
-                "traits": "감수성이 풍부하고 자유로운 표현가",
-                "image_prompt": "an adorable stylized manta ray character, elegant wing-like fins flowing outward, joyful eyes, graceful upward swooping pose, artistic and expressive mood, soft gradient background in peach pink"
+                "type_code": "ICTP",
+                "image_prompt": "cute stylized sea snake, smooth ribbon-like body forming a precise elegant S-curve, sharp intelligent observant eyes, composed calculating mood, deep navy blue background"
             },
             {
-                "type_code": "ESFP",
-                "title_kr": "물장난 스타",
-                "animal": "Seal",
-                "animal_kr": "물개",
-                "traits": "장난기 많고 즉흥적이며 분위기를 즐기는 타입",
-                "image_prompt": "an adorable stylized seal character, chubby cute proportions, bright mischievous eyes, playful spinning pose, fun-loving and adaptable mood, soft gradient background in bright aqua"
+                "type_code": "IHFG",
+                "image_prompt": "adorable stylized starfish, soft rounded arms, gentle warm smile, supportive comforting presence, soft mint background"
             },
             {
-                "type_code": "ISFJ",
-                "title_kr": "따뜻한 받침대",
-                "animal": "Starfish",
-                "animal_kr": "불가사리",
-                "traits": "다정하고 배려심 많으며 주변을 안정시키는 존재",
-                "image_prompt": "an adorable stylized starfish character, soft rounded arms, gentle smile, relaxed floating pose, warm and supportive presence, calm and kind mood, soft gradient background in soft mint"
+                "type_code": "IHFP",
+                "image_prompt": "adorable stylized pufferfish, slightly puffed round body, big dreamy eyes, whimsical soft mood, pastel pink background"
             },
             {
-                "type_code": "ENTJ",
-                "title_kr": "심해 지휘관",
-                "animal": "Marlin",
-                "animal_kr": "청새치",
-                "traits": "목표 지향적이고 추진력이 강한 리더형",
-                "image_prompt": "an adorable stylized marlin character, long pointed bill, determined sharp eyes, powerful straight swimming pose, ambitious and goal-driven mood, soft gradient background in bold coral orange"
+                "type_code": "IHTG",
+                "image_prompt": "adorable stylized jellyfish, softly glowing bell top, long flowing tentacles, peaceful drifting atmosphere, soft lavender background"
             },
             {
-                "type_code": "INFP",
-                "title_kr": "몽상 유영자",
-                "animal": "Pufferfish",
-                "animal_kr": "복어",
-                "traits": "상상력이 풍부하고 감정이 깊은 부드러운 성향",
-                "image_prompt": "an adorable stylized pufferfish character, slightly puffed round body, big dreamy eyes, slow drifting pose, soft whimsical mood, soft gradient background in pastel pink"
-            },
-            {
-                "type_code": "ESFJ",
-                "title_kr": "떼 유영 동료",
-                "animal": "Sardine",
-                "animal_kr": "정어리",
-                "traits": "공동체를 중시하고 협력적이며 따뜻한 타입",
-                "image_prompt": "an adorable stylized sardine character, small sleek body, friendly smile, slightly angled group-swim inspired pose, cooperative and social energy, soft gradient background in light turquoise"
-            },
-            {
-                "type_code": "ISTJ",
-                "title_kr": "해저 설계자",
-                "animal": "Crab",
-                "animal_kr": "꽃게",
-                "traits": "꼼꼼하고 체계적이며 신뢰감 있는 성향",
-                "image_prompt": "an adorable stylized crab character, small sturdy claws, focused eyes, careful sideways pose near seabed level, precise and methodical mood, soft gradient background in muted blue"
-            },
-            {
-                "type_code": "ISFP",
-                "title_kr": "물결 따라 흐르는 영혼",
-                "animal": "Jellyfish",
-                "animal_kr": "해파리",
-                "traits": "섬세하고 평화로우며 흐름에 몸을 맡기는 타입",
-                "image_prompt": "an adorable stylized jellyfish character, soft glowing bell top, long flowing tentacles, gently drifting downward, peaceful and flowy atmosphere, soft gradient background in soft lavender"
-            },
-            {
-                "type_code": "INTP",
-                "title_kr": "호기심 탐험가",
-                "animal": "Axolotl",
-                "animal_kr": "우파루파",
-                "traits": "호기심 많고 독창적이며 자기만의 세계가 뚜렷함",
-                "image_prompt": "an adorable stylized axolotl character, frilly external gills, big curious eyes, upright floating pose while observing surroundings, quirky and independent mood, soft gradient background in cool blue-purple"
-            },
-            {
-                "type_code": "INTJ",
-                "title_kr": "침묵의 전략가",
-                "animal": "Sea Snake",
-                "animal_kr": "바다뱀",
-                "traits": "관찰력이 뛰어나고 치밀하며 계산적인 성향",
-                "image_prompt": "a cute stylized sea snake character, no arms or legs, long smooth body gently curved in an S-shape, expressive intelligent eyes, calm poised floating pose, mysterious and strategic mood, soft gradient background in deep navy blue"
+                "type_code": "IHTP",
+                "image_prompt": "adorable stylized squid, soft rounded head, long gently flowing tentacles drifting downward, big quiet reflective eyes, slightly curled inward floating pose, dreamy introspective philosophical mood, deep indigo blue background"
             }
         ]
     }
