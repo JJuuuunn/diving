@@ -53,8 +53,8 @@ const menuItems = [
     title: '문제 은행',
     desc: '다이빙 이론 시험 대비 (오픈 예정)',
     icon: bookIcon,
-    route: '',
-    active: false,
+    route: RouterName.Dpti,
+    active: true,
   },
   {
     title: '아이디어 로그',

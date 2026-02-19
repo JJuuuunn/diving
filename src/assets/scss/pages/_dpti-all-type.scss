@@ -1,0 +1,139 @@
+
+.all-types-container {
+    background: var(--page-card-bg);
+    border: 1px solid var(--page-card-border);
+    box-shadow: var(--page-card-shadow);
+    border-radius: 2rem;
+    padding: 2rem 1.5rem;
+
+    .dark & { background: rgba(15, 23, 42, 0.7); }
+}
+
+.header-row {
+    display: flex;
+    align-items: center;
+    margin-bottom: 2rem;
+    position: relative;
+
+    .back-btn {
+        position: absolute;
+        left: 0;
+        background: transparent;
+        border: none;
+        color: var(--slate-500);
+        font-size: 0.95rem;
+        font-weight: 700;
+        cursor: pointer;
+        display: flex;
+        align-items: center;
+        gap: 0.5rem;
+        transition: color 0.2s;
+        
+        &:hover { color: var(--ocean-600); }
+        .dark & {
+            color: var(--slate-400);
+            &:hover { color: var(--ocean-400); }
+        }
+    }
+
+    h2 {
+        flex-grow: 1;
+        text-align: center;
+        color: var(--page-text-primary);
+        font-size: 1.4rem;
+        margin: 0;
+        font-weight: 800;
+    }
+}
+
+.types-grid {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 1rem;
+
+    @media (min-width: 640px) {
+        grid-template-columns: repeat(3, 1fr);
+        gap: 1.5rem;
+    }
+}
+
+.type-card {
+    background: var(--white);
+    border: 1px solid var(--slate-200);
+    border-radius: 1.25rem;
+    padding: 1.5rem 1rem;
+    text-align: center;
+    cursor: pointer;
+    transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.02);
+
+    .dark & {
+        background: var(--slate-800);
+        border-color: var(--slate-700);
+    }
+
+    &:hover {
+        transform: translateY(-5px);
+        box-shadow: 0 10px 20px rgba(14, 165, 233, 0.15);
+        border-color: var(--ocean-300);
+
+        .dark & {
+            border-color: var(--ocean-500);
+            box-shadow: 0 10px 20px rgba(0, 0, 0, 0.4);
+        }
+        
+        .animal-icon { transform: scale(1.1); }
+    }
+
+    .card-inner {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        height: 100%;
+    }
+
+    .animal-icon {
+        font-size: 2.5rem;
+        color: var(--ocean-500);
+        margin-bottom: 0.75rem;
+        transition: transform 0.3s ease;
+        .dark & { color: var(--ocean-400); }
+    }
+
+    .badge-wrapper {
+        margin-bottom: 0.75rem;
+
+        .type-code {
+            display: inline-block;
+            background: var(--ocean-50);
+            color: var(--ocean-600);
+            font-size: 0.75rem;
+            padding: 0.25rem 0.6rem;
+            border-radius: 1rem;
+            font-weight: 800;
+            letter-spacing: 0.05em;
+
+            .dark & {
+                background: rgba(14, 165, 233, 0.15);
+                color: var(--ocean-300);
+            }
+        }
+    }
+
+    .animal-name {
+        font-size: 1.1rem;
+        color: var(--slate-800);
+        margin: 0 0 0.5rem 0;
+        font-weight: 800;
+        .dark & { color: var(--white); }
+    }
+
+    .tagline {
+        font-size: 0.8rem;
+        color: var(--slate-500);
+        margin: 0;
+        line-height: 1.4;
+        word-break: keep-all;
+        .dark & { color: var(--slate-400); }
+    }
+}
