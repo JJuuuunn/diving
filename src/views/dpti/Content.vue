@@ -4,10 +4,14 @@
             <transition name="slide-fade" mode="out-in">
                 <DptiIntro v-if="currentStep === 'intro'" @start="startTest" />
 
-                <DptiStep v-else-if="currentStep === 'test'" 
+                <DptiStep
+                    v-else-if="currentStep === 'test'"
                     :question="questions[currentIndex]"
-                    :progress="progressPercentage" 
-                    @select="handleAnswer" />
+                    :progress="progressPercentage"
+                    :currentIndex="currentIndex"
+                    @select="handleAnswer"
+                    @prev="prevStep"
+                />
 
                 <DptiLoading v-else-if="currentStep === 'loading'" />
             </transition>
@@ -40,6 +44,15 @@ const startTest = (): void => {
     currentStep.value = 'test';
 };
 
+const prevStep = (): void => {
+    if (currentIndex.value > 0) {
+        currentIndex.value--; // 인덱스 감소
+        answers.value.pop();  // 가장 최근에 저장된 답변 제거
+    } else {
+        currentStep.value = 'intro'; // 첫 질문에서 뒤로가면 인트로로
+    }
+};
+
 const handleAnswer = (val: string): void => {
     answers.value.push({
         category: questions[currentIndex.value].category,
@@ -58,7 +71,7 @@ const calculateAndRedirect = (): void => {
 
     const counts: Record<string, Record<string, number>> = { Focus: {}, Purpose: {}, Style: {}, Social: {} };
     const totals: Record<string, number> = { Focus: 0, Purpose: 0, Style: 0, Social: 0 };
-    
+
     answers.value.forEach((ans: DptiAnswer) => {
         counts[ans.category][ans.value] = (counts[ans.category][ans.value] || 0) + 1;
         totals[ans.category]++;

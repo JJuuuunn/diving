@@ -1,7 +1,6 @@
 <template>
     <div class="intro-container animate-fade-in">
         <div class="hero-section">
-            <div class="badge">DPTI v1.3.0</div>
             <h1 class="main-title">
                 당신은 어떤 유형의<br />
                 <span>다이버</span>인가요?
