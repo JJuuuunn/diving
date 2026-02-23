@@ -8,23 +8,19 @@
                     </button>
                     <h2>다이버 유형 도감</h2>
                 </div>
-                
+
                 <div class="types-grid">
-                    <div 
-                        v-for="type in allTypes" 
-                        :key="type.type_code" 
-                        class="type-card" 
-                        @click="goToResult(type.type_code)"
-                    >
+                    <div v-for="type in allTypes" :key="type.type_code" class="type-card"
+                        @click="goToResult(type.type_code)">
                         <div class="card-inner">
-                            <div class="animal-icon">
-                                <i class="fas fa-water"></i>
-                            </div>
-                            
                             <div class="badge-wrapper">
                                 <span class="type-code">{{ type.type_code }}</span>
                             </div>
-                            
+
+                            <div class="animal-icon">
+                                <img :src="getAnimalImageUrl(type)" :alt="type.animal_kr" class="animal-type-img" />
+                            </div>
+
                             <h3 class="animal-name">{{ type.animal_kr }}</h3>
                             <p class="tagline">"{{ type.tagline }}"</p>
                         </div>
@@ -43,6 +39,14 @@ import { RouterName } from '@/mappings/enum';
 
 const router = useRouter();
 const allTypes = dptiData.results_definition as DptiResultDefinition[];
+
+const getAnimalImageUrl = (type: DptiResultDefinition) => {
+    const code = type.type_code.toUpperCase();
+
+    const imageNumber = 1;
+
+    return new URL(`/src/assets/icons/DPTI_${code}_${imageNumber}.png`, import.meta.url).href;
+};
 
 const goBack = () => {
     if (window.history.length > 2) {

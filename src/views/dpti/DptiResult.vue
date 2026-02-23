@@ -10,7 +10,12 @@
                     </h1>
 
                     <div class="animal-icon">
-                        <i class="fas fa-water"></i>
+                        <!-- <i class="fas fa-water"></i> -->
+                        <img
+                            :src="animalImageUrl"
+                            :alt="result.animal_kr"
+                            class="animal-img"
+                            @error="(e) => (e.target as HTMLImageElement).src = '/path/to/fallback-image.png'" />
                     </div>
 
                     <p class="description">{{ result.description }}</p>
@@ -19,22 +24,30 @@
                         <h3 class="analysis-title">나의 다이빙 성향 밸런스</h3>
                         <div class="trait-row">
                             <span class="trait-label" :class="{ active: scores.Focus >= 50 }">팀워크 (E)</span>
-                            <div class="trait-bar"><div class="trait-fill" :style="{ width: scores.Focus + '%' }"></div></div>
+                            <div class="trait-bar">
+                                <div class="trait-fill" :style="{ width: scores.Focus + '%' }"></div>
+                            </div>
                             <span class="trait-label" :class="{ active: scores.Focus < 50 }">마이웨이 (I)</span>
                         </div>
                         <div class="trait-row">
                             <span class="trait-label" :class="{ active: scores.Purpose >= 50 }">인생샷 (C)</span>
-                            <div class="trait-bar"><div class="trait-fill" :style="{ width: scores.Purpose + '%' }"></div></div>
+                            <div class="trait-bar">
+                                <div class="trait-fill" :style="{ width: scores.Purpose + '%' }"></div>
+                            </div>
                             <span class="trait-label" :class="{ active: scores.Purpose < 50 }">힐링 (H)</span>
                         </div>
                         <div class="trait-row">
                             <span class="trait-label" :class="{ active: scores.Style >= 50 }">계획파 (T)</span>
-                            <div class="trait-bar"><div class="trait-fill" :style="{ width: scores.Style + '%' }"></div></div>
+                            <div class="trait-bar">
+                                <div class="trait-fill" :style="{ width: scores.Style + '%' }"></div>
+                            </div>
                             <span class="trait-label" :class="{ active: scores.Style < 50 }">흐름파 (F)</span>
                         </div>
                         <div class="trait-row">
                             <span class="trait-label" :class="{ active: scores.Social >= 50 }">뒷풀이 (G)</span>
-                            <div class="trait-bar"><div class="trait-fill" :style="{ width: scores.Social + '%' }"></div></div>
+                            <div class="trait-bar">
+                                <div class="trait-fill" :style="{ width: scores.Social + '%' }"></div>
+                            </div>
                             <span class="trait-label" :class="{ active: scores.Social < 50 }">휴식 (P)</span>
                         </div>
                     </div>
@@ -86,6 +99,14 @@ const result = computed<DptiResultDefinition | null>(() => {
     return resultsDefinition.find(res => res.type_code === typeCode.value) || null;
 });
 
+const animalImageUrl = computed(() => {
+    if (!result.value) return '';
+    
+    const imageNumber = 1;
+
+    return new URL(`/src/assets/icons/DPTI_${result.value.type_code.toUpperCase()}_${imageNumber}.png`, import.meta.url).href;
+});
+
 const getAnimalName = (code: string): string => {
     const match = resultsDefinition.find(r => r.type_code === code);
     return match ? match.animal_kr : code;
@@ -93,10 +114,10 @@ const getAnimalName = (code: string): string => {
 
 const goToBuddyResult = (code: string) => {
     if (!code) return;
-    router.push({ 
-        name: RouterName.DptiResult, 
+    router.push({
+        name: RouterName.DptiResult,
         params: { code: code },
-        query: {} 
+        query: {}
     });
 };
 
