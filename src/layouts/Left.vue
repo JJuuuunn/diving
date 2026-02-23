@@ -6,25 +6,20 @@
           <span class="logo-icon" v-html="divingMaskIcon"></span>
           <span class="logo-text">JJuuuunn Diving</span>
         </RouterLink>
-        
         <button class="close-btn" @click="$emit('close')">&times;</button>
       </header>
 
       <nav class="sidebar-nav">
         <ul>
-          <li>
-            <RouterLink :to="{ name: RouterName.Main }" custom v-slot="{ href, navigate, isExactActive }">
-              <a :href="href" @click="navigate(); $emit('close')" :class="{ 'router-link-exact-active': isExactActive }">
-                <span class="icon" v-html="homeIcon"></span>
-                <span>Home</span>
-              </a>
-            </RouterLink>
-          </li>
-          <li>
-            <RouterLink :to="{ name: RouterName.Settlement }" custom v-slot="{ href, navigate, isActive }">
-              <a :href="href" @click="navigate(); $emit('close')" :class="{ 'router-link-active': isActive }">
-                <span class="icon" v-html="calculatorIcon"></span>
-                <span>Settlement</span>
+          <li v-for="item in activeMenuItems" :key="item.label">
+            <RouterLink :to="{ name: item.route }" custom v-slot="{ href, navigate, isActive, isExactActive }">
+              <a 
+                :href="href" 
+                @click="navigate(); $emit('close')" 
+                :class="{ 'router-link-active': item.route === RouterName.Main ? isExactActive : isActive }"
+              >
+                <span class="icon" v-html="item.icon"></span>
+                <span>{{ item.label }}</span>
               </a>
             </RouterLink>
           </li>
@@ -44,28 +39,22 @@
 </template>
 
 <script setup lang="ts">
-import { ref, watch } from 'vue';
+import { ref, watch, computed } from 'vue';
 import { RouterName } from '@/mappings/enum';
-/* SVG를 raw string으로 가져옴 */
+import { MENU_ITEMS } from '@/mappings/menu'; // 중앙 관리 데이터
 import divingMaskIcon from '@/assets/icons/diving-mask.svg?raw';
-import homeIcon from '@/assets/icons/home.svg?raw';
-import calculatorIcon from '@/assets/icons/calculator.svg?raw';
 import DarkModeToggle from '@/components/DarkModeToggle.vue';
 
-defineProps<{
-  isOpen: boolean;
-}>();
+defineProps<{ isOpen: boolean }>();
+const emit = defineEmits(['close']);
 
-defineEmits(['close']);
+// 활성화된 메뉴만 필터링
+const activeMenuItems = computed(() => MENU_ITEMS.filter(item => item.active));
 
+// 테마 관리 로직
 const isDay = ref(localStorage.getItem('isDay') === 'true');
-
 const applyTheme = (isDayMode: boolean) => {
-  if (isDayMode) {
-    document.body.classList.remove('dark');
-  } else {
-    document.body.classList.add('dark');
-  }
+  isDayMode ? document.body.classList.remove('dark') : document.body.classList.add('dark');
 };
 
 watch(isDay, (newValue) => {
@@ -74,6 +63,6 @@ watch(isDay, (newValue) => {
 }, { immediate: true });
 </script>
 
-<style lang="scss">
+<style lang="scss" scoped>
 @import '@/assets/scss/layout/_sidebar.scss';
 </style>

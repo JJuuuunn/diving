@@ -4,8 +4,7 @@
 
 .dpti-container {
     max-width: 42rem;
-    margin-left: auto;
-    margin-right: auto;
+    margin: 0 auto;
     padding: 1rem;
     min-height: 100vh;
     display: flex;
@@ -22,6 +21,7 @@
     justify-content: center;
 }
 
+// 트랜지션 효과
 .slide-fade-enter-active { transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1); }
 .slide-fade-leave-active { transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1); }
 .slide-fade-enter-from { opacity: 0; transform: translateY(20px) scale(0.98); }
@@ -34,22 +34,6 @@
 
     .hero-section {
         margin-bottom: 4rem;
-
-        .badge {
-            display: inline-block;
-            padding: 0.5rem 1rem;
-            background: var(--ocean-100);
-            color: var(--ocean-700);
-            border-radius: 20px;
-            font-size: 0.85rem;
-            font-weight: 600;
-            margin-bottom: 1.5rem;
-
-            .dark & {
-                background: rgba(14, 165, 233, 0.15);
-                color: var(--ocean-300);
-            }
-        }
 
         .main-title {
             font-size: 2.5rem;
@@ -78,18 +62,11 @@
         transition: transform 0.2s;
 
         &:hover { transform: translateY(-3px); }
-        .dark & { box-shadow: 0 4px 15px rgba(0, 0, 0, 0.4); }
-    }
-
-    .info-text {
-        margin-top: 1rem;
-        font-size: 0.9rem;
-        color: var(--slate-400);
-        .dark & { color: var(--slate-500); }
+        body.dark & { box-shadow: 0 4px 20px rgba(0, 0, 0, 0.5); }
     }
 }
 
-/* 2. Step */
+/* 2. Step (질문 페이지) */
 .step-card {
     .progress-container {
         background: var(--slate-200);
@@ -97,33 +74,47 @@
         border-radius: 3px;
         margin-bottom: 2rem;
         overflow: hidden;
-
-        .dark & { background: var(--slate-700); }
+        body.dark & { background: var(--slate-800); } // 배경을 더 어둡게
 
         .progress-bar {
             background: var(--ocean-500);
             height: 100%;
             transition: width 0.4s ease;
-            .dark & { background: var(--ocean-400); }
+            body.dark & { background: var(--ocean-400); }
         }
     }
 
-    .question-header {
-        text-align: center;
-        margin-bottom: 3rem;
+    .step-header {
+        display: flex;
+        align-items: center;
+        position: relative;
+        margin-bottom: 1rem;
+
+        .back-step-btn {
+            position: absolute;
+            left: 0;
+            background: transparent;
+            border: none;
+            color: var(--slate-500);
+            font-size: 0.9rem;
+            cursor: pointer;
+            body.dark & { color: var(--slate-400); }
+            &:hover { color: var(--ocean-500); }
+        }
 
         .category {
+            margin: 0 auto;
             color: var(--ocean-600);
             font-weight: 700;
-            letter-spacing: 0.1em;
-            .dark & { color: var(--ocean-400); }
+            body.dark & { color: var(--ocean-400); }
         }
+    }
 
-        .question-text {
-            color: var(--text-color);
-            margin-top: 1rem;
-            word-break: keep-all;
-        }
+    .question-text {
+        color: var(--page-text-primary);
+        text-align: center;
+        margin-bottom: 3rem;
+        word-break: keep-all;
     }
 
     .option-btn {
@@ -132,21 +123,16 @@
         margin-bottom: 1rem;
         border: 1px solid var(--page-card-border);
         background: var(--page-card-bg);
-        color: var(--text-color);
+        color: var(--page-text-primary);
         border-radius: 1rem;
         cursor: pointer;
         transition: all 0.2s ease;
-        font-family: var(--font-family);
 
         &:hover {
             border-color: var(--ocean-400);
             background: var(--ocean-50);
             transform: translateY(-2px);
-
-            .dark & {
-                background: rgba(14, 165, 233, 0.1); 
-                border-color: var(--ocean-500);
-            }
+            body.dark & { background: rgba(14, 165, 233, 0.1); }
         }
     }
 }
@@ -154,49 +140,16 @@
 /* 3. Loading */
 .loading-container {
     text-align: center;
-
-    .ocean-animation {
-        position: relative;
-        height: 150px;
-        margin-bottom: 2rem;
-
-        .diver-icon {
-            font-size: 3rem;
-            color: var(--ocean-500);
-            animation: float 2s ease-in-out infinite;
-            .dark & { color: var(--ocean-400); }
-        }
-
-        .bubble {
-            position: absolute;
-            background: var(--ocean-200);
-            border-radius: 50%;
-            bottom: 0;
-            opacity: 0;
-            animation: rise 2s infinite;
-
-            .dark & { background: rgba(56, 189, 248, 0.3); }
-
-            &:nth-child(1) { left: 45%; width: 10px; height: 10px; animation-delay: 0s; }
-            &:nth-child(2) { left: 55%; width: 15px; height: 15px; animation-delay: 0.5s; }
-            &:nth-child(3) { left: 50%; width: 8px; height: 8px; animation-delay: 1.2s; }
-        }
+    .diver-icon {
+        font-size: 3rem;
+        color: var(--ocean-500);
+        animation: float 2s ease-in-out infinite;
     }
-
-    .loading-text {
-        color: var(--page-text-primary);
-        font-size: 1.5rem;
-        margin-bottom: 0.5rem;
-    }
+    .loading-text { color: var(--page-text-primary); font-size: 1.5rem; }
     .sub-text { color: var(--page-text-secondary); }
 }
 
 @keyframes float {
-    0%, 100% { transform: translateY(0) rotate(0); }
-    50% { transform: translateY(-20px) rotate(10deg); }
-}
-@keyframes rise {
-    0% { transform: translateY(0); opacity: 0; }
-    50% { opacity: 0.6; }
-    100% { transform: translateY(-100px); opacity: 0; }
+    0%, 100% { transform: translateY(0); }
+    50% { transform: translateY(-20px); }
 }

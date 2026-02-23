@@ -33,7 +33,3 @@ const closeSidebar = () => {
   isSidebarOpen.value = false;
 };
 </script>
-
-<style lang="scss">
-@import '@/assets/scss/main.scss';
-</style>

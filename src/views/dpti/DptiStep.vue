@@ -4,8 +4,18 @@
             <div class="progress-bar" :style="{ width: progress + '%' }"></div>
         </div>
 
-        <div class="question-header">
+        <div class="step-header">
+            <button 
+                v-if="currentIndex > 0" 
+                class="back-step-btn" 
+                @click="$emit('prev')"
+            >
+                <i class="fas fa-chevron-left"></i> 이전 질문
+            </button>
             <span class="category">{{ question.category }}</span>
+        </div>
+
+        <div class="question-header">
             <h2 class="question-text">{{ question.question }}</h2>
         </div>
 
@@ -24,7 +34,11 @@ import type { DptiQuestion } from '@/types/dpti';
 defineProps<{
     question: DptiQuestion;
     progress: number;
+    currentIndex: number; // 현재 인덱스를 받아와서 0일 때는 뒤로가기 숨김
 }>();
 
-defineEmits<{ (e: 'select', value: string): void }>();
+defineEmits<{ 
+    (e: 'select', value: string): void;
+    (e: 'prev'): void; // 이전 단계 이벤트 추가
+}>();
 </script>
