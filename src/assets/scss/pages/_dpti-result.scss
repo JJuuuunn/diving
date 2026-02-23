@@ -239,12 +239,34 @@
     .modal-btns {
         display: flex;
         gap: 0.8rem;
-        button { flex: 1; height: 3.2rem; }
-        .confirm-btn { background: var(--ocean-500); color: white; }
+        
+        button { 
+            flex: 1; 
+            height: 3.2rem; 
+            border-radius: 0.8rem; // [수정] 다른 버튼들과 동일하게 곡률 적용
+            font-weight: 700;
+            cursor: pointer;
+            border: none;
+            transition: all 0.2s ease;
+            
+            &:active { transform: scale(0.96); }
+        }
+
+        .confirm-btn { 
+            background: var(--ocean-500); 
+            color: white; 
+            &:hover { background: var(--ocean-600); }
+        }
+
         .cancel-btn { 
             background: var(--slate-100); 
-            color: var(--slate-600); 
-            .dark & { background: var(--slate-700); color: var(--slate-300); }
+            color: var(--slate-600);
+            .dark & { 
+                background: var(--slate-700); 
+                color: var(--slate-300); 
+                &:hover { background: var(--slate-600); }
+            }
+            &:hover { background: var(--slate-200); }
         }
     }
 }
