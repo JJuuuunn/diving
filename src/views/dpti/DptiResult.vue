@@ -170,7 +170,8 @@ const generateCanvas = async () => {
     return await html2canvas(captureArea.value, { 
         scale: 2, 
         useCORS: true, 
-        backgroundColor: '#ffffff' 
+        backgroundColor: null,
+        logging: false 
     });
 };
 
