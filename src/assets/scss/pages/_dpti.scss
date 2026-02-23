@@ -66,6 +66,86 @@
     }
 }
 
+/* =========================================
+   Intro - History Section
+   ========================================= */
+.history-section {
+    margin-top: 4rem;
+    text-align: left;
+    width: 100%;
+    max-width: 32rem; // 인트로 콘텐츠와 정렬
+    margin-left: auto;
+    margin-right: auto;
+
+    .section-title {
+        font-size: 1.1rem;
+        font-weight: 800;
+        color: var(--page-text-primary);
+        margin-bottom: 1.25rem;
+        display: flex;
+        align-items: center;
+        gap: 0.6rem;
+        
+        i { color: var(--ocean-500); }
+    }
+
+    .history-list {
+        display: flex;
+        flex-direction: column;
+        gap: 0.75rem;
+    }
+
+    .history-item {
+        background: var(--page-card-bg);
+        border: 1px solid var(--page-card-border);
+        padding: 1.2rem 1.5rem;
+        border-radius: 1.25rem;
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        cursor: pointer;
+        transition: all 0.25s cubic-bezier(0.4, 0, 0.2, 1);
+
+        &:hover {
+            transform: translateX(8px);
+            border-color: var(--ocean-300);
+            background: var(--ocean-50);
+            box-shadow: 0 4px 12px rgba(14, 165, 233, 0.1);
+            
+            body.dark & { 
+                background: rgba(14, 165, 233, 0.05);
+                border-color: var(--ocean-700);
+            }
+        }
+
+        .item-info {
+            .user-name {
+                font-size: 0.8rem;
+                color: var(--slate-500);
+                margin-bottom: 0.2rem;
+                display: block;
+            }
+            .result-type {
+                font-size: 1.05rem;
+                font-weight: 700;
+                color: var(--page-text-primary);
+                .animal { color: var(--ocean-600); body.dark & { color: var(--ocean-400); } }
+            }
+        }
+
+        .view-icon {
+            color: var(--slate-300);
+            font-size: 0.9rem;
+            transition: transform 0.2s;
+        }
+
+        &:hover .view-icon {
+            transform: translateX(3px);
+            color: var(--ocean-500);
+        }
+    }
+}
+
 /* 2. Step (질문 페이지) */
 .step-card {
     .progress-container {
