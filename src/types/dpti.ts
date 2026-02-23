@@ -32,3 +32,10 @@ export interface DptiScores {
     Style: number;
     Social: number;
 }
+
+export interface DptiHistoryItem {
+    userName: string;
+    result: DptiResultDefinition;
+    scores: DptiScores;
+    date?: string;
+}
