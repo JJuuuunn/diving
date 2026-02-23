@@ -106,13 +106,14 @@
         font-size: 0.85rem;
         font-weight: 600;
         color: var(--slate-400);
-        width: 4.5rem;
+        width: 3.7rem;
+        text-align: center;
         &.active { 
             color: var(--ocean-600); 
             .dark & { color: var(--ocean-400); } 
         }
-        &:first-child { text-align: right; }
-        &:last-child { text-align: left; }
+        // &:first-child { text-align: right; }
+        // &:last-child { text-align: left; }
     }
 
     .trait-bar {
