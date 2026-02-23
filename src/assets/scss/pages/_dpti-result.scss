@@ -9,7 +9,10 @@
     .tagline {
         color: var(--ocean-600);
         font-weight: 600;
-        .dark & { color: var(--ocean-400); }
+
+        .dark & {
+            color: var(--ocean-400);
+        }
     }
 
     .title {
@@ -19,14 +22,26 @@
 
         .animal {
             color: var(--ocean-500);
-            .dark & { color: var(--ocean-400); }
+
+            .dark & {
+                color: var(--ocean-400);
+            }
         }
     }
-    
+
     .animal-icon {
-        font-size: 3rem;
-        color: var(--ocean-400);
-        margin: 1.5rem 0;
+        width: 100%; // 원하는 크기
+        max-width: 300px; // 너무 크지 않게 제한
+        margin: 0 auto;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+
+        .animal-img {
+            width: 100%;
+            height: 100%;
+            object-fit: contain; // 비율 유지
+        }
     }
 
     .description {
@@ -45,7 +60,7 @@
             padding: 1rem;
             border-radius: 1rem;
             font-size: 0.9rem;
-            
+
             &.clickable {
                 cursor: pointer;
                 transition: transform 0.2s, box-shadow 0.2s;
@@ -54,7 +69,9 @@
                     transform: translateY(-3px);
                     box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
 
-                    .dark & { box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3); }
+                    .dark & {
+                        box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
+                    }
                 }
             }
 
@@ -65,11 +82,14 @@
                 font-weight: 600;
             }
 
-            strong { font-size: 1.1rem; }
+            strong {
+                font-size: 1.1rem;
+            }
 
             &.best {
                 background: var(--ocean-100);
                 color: var(--ocean-900);
+
                 .dark & {
                     background: rgba(14, 165, 233, 0.15);
                     color: var(--ocean-300);
@@ -79,6 +99,7 @@
             &.worst {
                 background: var(--slate-100);
                 color: var(--slate-600);
+
                 .dark & {
                     background: var(--slate-800);
                     color: var(--slate-400);
@@ -94,14 +115,19 @@
     padding: 1.5rem;
     margin: 2rem 0;
 
-    .dark & { background: rgba(30, 41, 59, 0.5); }
+    .dark & {
+        background: rgba(30, 41, 59, 0.5);
+    }
 
     .analysis-title {
         font-size: 1rem;
         color: var(--slate-700);
         margin-bottom: 1.5rem;
         font-weight: 700;
-        .dark & { color: var(--slate-200); }
+
+        .dark & {
+            color: var(--slate-200);
+        }
     }
 
     .trait-row {
@@ -110,21 +136,33 @@
         justify-content: space-between;
         margin-bottom: 1rem;
         gap: 0.75rem;
-        &:last-child { margin-bottom: 0; }
+
+        &:last-child {
+            margin-bottom: 0;
+        }
     }
 
     .trait-label {
         font-size: 0.8rem;
         font-weight: 600;
         color: var(--slate-400);
-        width: 4.5rem; 
+        width: 4.5rem;
 
         &.active {
             color: var(--ocean-600);
-            .dark & { color: var(--ocean-400); }
+
+            .dark & {
+                color: var(--ocean-400);
+            }
         }
-        &:first-child { text-align: right; }
-        &:last-child { text-align: left; }
+
+        &:first-child {
+            text-align: right;
+        }
+
+        &:last-child {
+            text-align: left;
+        }
     }
 
     .trait-bar {
@@ -135,7 +173,9 @@
         overflow: hidden;
         position: relative;
 
-        .dark & { background: var(--slate-700); }
+        .dark & {
+            background: var(--slate-700);
+        }
 
         .trait-fill {
             height: 100%;
@@ -162,10 +202,16 @@
         width: 100%;
         transition: background-color 0.2s;
 
-        &:hover { background: var(--ocean-600); }
+        &:hover {
+            background: var(--ocean-600);
+        }
+
         .dark & {
             background: var(--ocean-600);
-            &:hover { background: var(--ocean-500); }
+
+            &:hover {
+                background: var(--ocean-500);
+            }
         }
     }
 
@@ -192,6 +238,7 @@
         .dark & {
             border-color: var(--slate-700);
             color: var(--slate-400);
+
             &:hover {
                 background: var(--slate-800);
                 color: var(--slate-200);
@@ -213,7 +260,7 @@
         justify-content: center;
         gap: 0.5rem;
         transition: all 0.2s ease;
-        
+
         &:hover {
             background: var(--ocean-200);
             transform: translateY(-2px);
@@ -224,9 +271,13 @@
             color: var(--ocean-300);
             border-color: rgba(14, 165, 233, 0.3);
 
-            &:hover { background: rgba(14, 165, 233, 0.25); }
+            &:hover {
+                background: rgba(14, 165, 233, 0.25);
+            }
         }
 
-        i { font-size: 1.1rem; }
+        i {
+            font-size: 1.1rem;
+        }
     }
 }

@@ -1,4 +1,3 @@
-
 .all-types-container {
     background: var(--page-card-bg);
     border: 1px solid var(--page-card-border);
@@ -6,7 +5,9 @@
     border-radius: 2rem;
     padding: 2rem 1.5rem;
 
-    .dark & { background: rgba(15, 23, 42, 0.7); }
+    .dark & {
+        background: rgba(15, 23, 42, 0.7);
+    }
 }
 
 .header-row {
@@ -28,11 +29,17 @@
         align-items: center;
         gap: 0.5rem;
         transition: color 0.2s;
-        
-        &:hover { color: var(--ocean-600); }
+
+        &:hover {
+            color: var(--ocean-600);
+        }
+
         .dark & {
             color: var(--slate-400);
-            &:hover { color: var(--ocean-400); }
+
+            &:hover {
+                color: var(--ocean-400);
+            }
         }
     }
 
@@ -64,8 +71,10 @@
     padding: 1.5rem 1rem;
     text-align: center;
     cursor: pointer;
-    transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+    transition: all 0.25s cubic-bezier(0.4, 0, 0.2, 1);
     box-shadow: 0 2px 4px rgba(0, 0, 0, 0.02);
+    display: flex;
+    flex-direction: column;
 
     .dark & {
         background: var(--slate-800);
@@ -81,23 +90,18 @@
             border-color: var(--ocean-500);
             box-shadow: 0 10px 20px rgba(0, 0, 0, 0.4);
         }
-        
-        .animal-icon { transform: scale(1.1); }
+
+        .animal-icon {
+            transform: scale(1.1); // 호버 시 이미지 확대
+        }
     }
 
     .card-inner {
         display: flex;
         flex-direction: column;
         align-items: center;
+        justify-content: space-between;
         height: 100%;
-    }
-
-    .animal-icon {
-        font-size: 2.5rem;
-        color: var(--ocean-500);
-        margin-bottom: 0.75rem;
-        transition: transform 0.3s ease;
-        .dark & { color: var(--ocean-400); }
     }
 
     .badge-wrapper {
@@ -120,12 +124,36 @@
         }
     }
 
+    .animal-icon {
+        width: 100%;
+        aspect-ratio: 1 / 1;
+        margin: 0 auto 1rem;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        transition: transform 0.3s ease;
+
+        .animal-type-img {
+            width: 100%;
+            height: 100%;
+            object-fit: contain;
+            filter: drop-shadow(0 4px 8px rgba(0, 0, 0, 0.1));
+
+            .dark & {
+                filter: drop-shadow(0 4px 12px rgba(0, 0, 0, 0.4));
+            }
+        }
+    }
+
     .animal-name {
         font-size: 1.1rem;
         color: var(--slate-800);
         margin: 0 0 0.5rem 0;
         font-weight: 800;
-        .dark & { color: var(--white); }
+
+        .dark & {
+            color: var(--white);
+        }
     }
 
     .tagline {
@@ -133,7 +161,10 @@
         color: var(--slate-500);
         margin: 0;
         line-height: 1.4;
-        word-break: keep-all;
-        .dark & { color: var(--slate-400); }
+        word-break: keep-all; // 단어 단위 줄바꿈으로 가독성 향상
+
+        .dark & {
+            color: var(--slate-400);
+        }
     }
 }
