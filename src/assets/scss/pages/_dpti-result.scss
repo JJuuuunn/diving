@@ -7,10 +7,15 @@
     box-shadow: var(--page-card-shadow);
     overflow: hidden;
     border-radius: 2rem;
-    padding: 3rem 2rem;
+    padding: 3rem 2rem 2rem; // 하단 여백 축소
     text-align: center;
     position: relative;
     box-sizing: border-box;
+    
+    // 🌟 480px 너비 고정 (캡쳐 시 일정한 비율 유지)
+    width: 100%;
+    max-width: 480px; 
+    margin: 0 auto; 
 
     .dark & {
         box-shadow: 0 10px 40px rgba(0, 0, 0, 0.4);
@@ -78,7 +83,10 @@
     background: var(--slate-50);
     border-radius: 1.5rem;
     padding: 1.5rem;
-    margin: 2.5rem 0;
+    
+    // 🌟 상하단 마진 조정 (아래 여백 제거)
+    margin-top: 2rem;
+    margin-bottom: 0; 
     box-sizing: border-box;
 
     .dark & { 
@@ -132,7 +140,7 @@
     }
 }
 
-// 3. 버튼 그룹 (이미지 모드 대응으로 변경됨)
+// 3. 버튼 그룹
 .action-buttons {
     display: flex;
     flex-direction: column;
@@ -281,18 +289,21 @@
 .animate-fade-in { animation: fadeIn 0.6s ease-out; }
 @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
 
-// 6. 이미지 모드 전용 스타일 (새로 추가됨)
+// 6. 이미지 모드 전용 스타일
 .image-mode-card {
     margin-bottom: 2rem;
     text-align: center;
 
     .generated-img {
+        // 🌟 만들어진 이미지가 화면 너비에 맞게 자동으로 줄어들도록 설정
         width: 100%;
-        height: auto;
-        border-radius: 2rem; // 원본 카드와 동일한 곡률
+        max-width: 480px;
+        margin: 0 auto; 
+        height: auto; // 화면 비율에 맞춰 핏(Fit)
+        border-radius: 2rem; 
         box-shadow: var(--page-card-shadow);
         display: block;
-        pointer-events: auto; // 사용자가 상호작용 가능하도록 보장
+        pointer-events: auto; 
         
         .dark & {
             box-shadow: 0 10px 40px rgba(0, 0, 0, 0.4);

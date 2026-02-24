@@ -145,15 +145,23 @@ const animalImageUrl = computed(() => {
 const generateAndSetImage = async () => {
     await nextTick();
     
-    // 폰트/이미지가 확실히 렌더링되도록 약간의 지연 시간을 줌
     setTimeout(async () => {
         if (!captureArea.value) return;
         try {
             const canvas = await html2canvas(captureArea.value, { 
-                scale: 2, 
+                scale: 3, // 해상도 3배 (960px로 또렷하게 저장됨)
                 useCORS: true, 
                 backgroundColor: null,
-                logging: false 
+                logging: false,
+                // 🌟 핵심: 캡처 전용 복제 DOM에서 너비를 480px로 강제 고정
+                onclone: (clonedDoc) => {
+                    const el = clonedDoc.querySelector('.result-card') as HTMLElement;
+                    if (el) {
+                        el.style.width = '480px';
+                        el.style.maxWidth = '480px';
+                        el.style.margin = '0'; // 캡처 시 잘림 방지
+                    }
+                }
             });
             capturedImageUrl.value = canvas.toDataURL('image/png');
         } catch (e) {
