@@ -78,19 +78,33 @@
 </template>
 
 <script setup lang="ts">
+// 1. Vue 및 생태계 코어 (Core & Hooks)
 import { ref, computed, onMounted, nextTick } from 'vue';
 import { useRoute, useRouter } from 'vue-router';
+import { useClipboardItems, useShare } from '@vueuse/core';
+
+// 2. 외부 라이브러리 (Third-party)
 import html2canvas from 'html2canvas';
+
+// 3. 내부 상태 관리 및 컴포저블 (Stores & Composables)
 import { useDptiStore } from '@/stores/dpti';
 import { useToast } from '@/composables/useToast';
-import dptiData from '@/data/dpti.json';
+
+// 4. 타입 및 상수 (Types & Enums)
 import type { DptiResultDefinition, DptiScores } from '@/types/dpti';
 import { RouterName } from '@/mappings/enum';
+
+// 5. 정적 데이터 (Static Data)
+import dptiData from '@/data/dpti.json';
 
 const route = useRoute();
 const router = useRouter();
 const dptiStore = useDptiStore();
 const { triggerToast } = useToast();
+
+// VueUse 훅 초기화
+const { copy: copyToClipboard, isSupported: isClipboardSupported } = useClipboardItems();
+const { share, isSupported: isShareSupported } = useShare();
 
 const captureArea = ref<HTMLElement | null>(null);
 const nameInput = ref<HTMLInputElement | null>(null);
@@ -101,14 +115,9 @@ const savedUserName = ref(""); // 신규 저장용
 
 // --- 이름 데이터 복원 로직 ---
 const displayUserName = computed(() => {
-    // 1. 쿼리 스트링(?name=...) 확인 (히스토리 진입 시)
     const queryName = route.query.name as string;
     if (queryName) return queryName;
-    
-    // 2. 신규 테스트 후 모달로 입력한 이름 확인
     if (savedUserName.value) return savedUserName.value;
-    
-    // 3. 기본값
     return "익명의 다이버";
 });
 
@@ -140,13 +149,10 @@ const animalImageUrl = computed(() => {
 onMounted(async () => {
     const fromTest = window.history.state?.fromTest;
     
-    // 신규 테스트 진입 시에만 이름 입력 모달 오픈
     if (fromTest && result.value && hasScores.value) {
         isModalOpen.value = true;
         await nextTick();
         nameInput.value?.focus();
-        
-        // 새로고침 시 모달 중복 방지
         window.history.replaceState({ ...window.history.state, fromTest: false }, '');
     }
 });
@@ -156,7 +162,7 @@ const closeModal = () => { isModalOpen.value = false; };
 
 const confirmSave = () => {
     const finalName = userNameInput.value.trim() || "익명의 다이버";
-    savedUserName.value = finalName; // 현재 화면 반영
+    savedUserName.value = finalName; 
     
     if (result.value) {
         dptiStore.saveToHistory(finalName, result.value, scores.value);
@@ -191,23 +197,59 @@ const downloadImageOnly = async () => {
     } finally { isCapturing.value = false; }
 };
 
+// 🌟 수정된 이미지 복사 로직 (VueUse + Promise 래핑 + Fallback 적용)
 const copyImageToClipboard = async () => {
     if (isCapturing.value) return;
     isCapturing.value = true;
+
     try {
-        const canvas = await generateCanvas();
-        if (!canvas) return;
-        canvas.toBlob(async (blob) => {
-            if (!blob) return;
+        // 1. 캔버스 생성 및 Blob 변환을 Promise로 래핑
+        const makeImagePromise = new Promise<Blob>(async (resolve, reject) => {
             try {
-                const data = [new ClipboardItem({ [blob.type]: blob })];
-                await navigator.clipboard.write(data);
-                triggerToast("이미지가 클립보드에 복사되었습니다! 🌊");
+                const canvas = await generateCanvas();
+                if (!canvas) {
+                    reject(new Error("캔버스를 생성할 수 없습니다."));
+                    return;
+                }
+                
+                canvas.toBlob((blob) => {
+                    if (blob) resolve(blob);
+                    else reject(new Error("Blob 변환에 실패했습니다."));
+                }, 'image/png');
             } catch (err) {
-                triggerToast("복사를 지원하지 않는 브라우저입니다.", true);
+                reject(err);
             }
-        }, 'image/png');
-    } finally { isCapturing.value = false; }
+        });
+
+        // 2. 클립보드 복사 지원 시 시도
+        if (isClipboardSupported.value) {
+            // Safari/모바일 끊김 방지를 위해 Promise 객체 자체를 전달
+            const item = new ClipboardItem({ 'image/png': makeImagePromise });
+            await copyToClipboard([item]);
+            triggerToast("이미지가 클립보드에 복사되었습니다! 🌊");
+        } 
+        // 3. 클립보드 미지원(인앱 등) 시 Web Share API로 모바일 네이티브 공유 창 띄우기
+        else if (isShareSupported.value) {
+            const blob = await makeImagePromise;
+            const file = new File([blob], `DPTI_${displayUserName.value}.png`, { type: 'image/png' });
+            
+            await share({
+                title: '나의 다이빙 성향',
+                text: `${displayUserName.value}님의 다이빙 성향 테스트 결과입니다!`,
+                files: [file]
+            });
+            // 공유 성공 시 토스트는 생략하거나 변경 가능
+        } else {
+            triggerToast("이 기기에서는 이미지 복사 및 공유를 지원하지 않습니다.", true);
+        }
+        
+    } catch (err) {
+        console.error("Copy/Share error:", err);
+        // 사용자가 공유 창을 닫았거나 권한이 없는 경우
+        triggerToast("이미지 처리가 취소되었거나 실패했습니다.", true);
+    } finally { 
+        isCapturing.value = false; 
+    }
 };
 
 const goToTest = () => router.push({ name: RouterName.Dpti });
