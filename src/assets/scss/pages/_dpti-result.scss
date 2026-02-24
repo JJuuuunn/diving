@@ -113,8 +113,6 @@
             color: var(--ocean-600); 
             .dark & { color: var(--ocean-400); } 
         }
-        // &:first-child { text-align: right; }
-        // &:last-child { text-align: left; }
     }
 
     .trait-bar {
@@ -134,14 +132,14 @@
     }
 }
 
-// 3. 버튼 그룹
+// 3. 버튼 그룹 (이미지 모드 대응으로 변경됨)
 .action-buttons {
     display: flex;
     flex-direction: column;
     gap: 0.8rem;
     margin-top: 2rem;
 
-    button {
+    button, .download-btn {
         padding: 1rem;
         border-radius: 0.8rem;
         font-weight: 700;
@@ -153,26 +151,17 @@
         transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
         border: none;
         font-size: 1rem;
-        &:active { transform: scale(0.97); }
+        text-decoration: none; // a 태그용
+        &:active:not(:disabled) { transform: scale(0.97); }
     }
 
-    .copy-img {
+    .download-btn {
         background: var(--ocean-600);
         color: white;
         box-shadow: 0 4px 12px rgba(14, 165, 233, 0.2);
+        
         &:hover:not(:disabled) { background: var(--ocean-700); }
         &:disabled { opacity: 0.6; cursor: wait; }
-    }
-
-    .download {
-        background: var(--slate-100);
-        color: var(--slate-600);
-        border: 1px solid var(--slate-200);
-        .dark & { 
-            background: var(--slate-800); 
-            color: var(--slate-300); 
-            border-color: var(--slate-700); 
-        }
     }
 
     .sub-buttons {
@@ -245,7 +234,7 @@
         button { 
             flex: 1; 
             height: 3.2rem; 
-            border-radius: 0.8rem; // [수정] 다른 버튼들과 동일하게 곡률 적용
+            border-radius: 0.8rem; 
             font-weight: 700;
             cursor: pointer;
             border: none;
@@ -291,3 +280,40 @@
 
 .animate-fade-in { animation: fadeIn 0.6s ease-out; }
 @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
+
+// 6. 이미지 모드 전용 스타일 (새로 추가됨)
+.image-mode-card {
+    margin-bottom: 2rem;
+    text-align: center;
+
+    .generated-img {
+        width: 100%;
+        height: auto;
+        border-radius: 2rem; // 원본 카드와 동일한 곡률
+        box-shadow: var(--page-card-shadow);
+        display: block;
+        pointer-events: auto; // 사용자가 상호작용 가능하도록 보장
+        
+        .dark & {
+            box-shadow: 0 10px 40px rgba(0, 0, 0, 0.4);
+        }
+    }
+
+    .save-guide {
+        margin-top: 1.5rem;
+        font-size: 0.9rem;
+        color: var(--ocean-600);
+        font-weight: 600;
+        background: rgba(14, 165, 233, 0.1);
+        padding: 1rem;
+        border-radius: 1rem;
+        animation: fadeInDown 0.5s ease-out;
+        
+        .dark & {
+            color: var(--ocean-300);
+            background: rgba(14, 165, 233, 0.15);
+        }
+        
+        i { margin-right: 0.4rem; }
+    }
+}
