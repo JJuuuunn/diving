@@ -2,7 +2,8 @@
     <div class="dpti-container">
         <main class="dpti-main-content">
             <div v-if="result" class="result-container animate-fade-in">
-                <div class="result-card" ref="captureArea">
+                
+                <div v-show="!capturedImageUrl" class="result-card" ref="captureArea">
                     <div class="user-capture-badge">
                         Diver. {{ displayUserName }}
                     </div>
@@ -29,23 +30,30 @@
                             <span class="trait-label" :class="{ active: scores[key] < 50 }">{{ val.right }}</span>
                         </div>
                     </div>
+                </div>
 
-                    <div class="action-buttons" data-html2canvas-ignore>
-                        <button class="share-btn copy-img" @click="copyImageToClipboard" :disabled="isCapturing">
-                            <i class="fas" :class="isCapturing ? 'fa-spinner fa-spin' : 'fa-copy'"></i>
-                            {{ isCapturing ? '처리 중...' : '결과 이미지 복사' }}
-                        </button>
-                        
-                        <button class="download" @click="downloadImageOnly" :disabled="isCapturing">
-                            <i class="fas fa-download"></i> 이미지 저장
-                        </button>
+                <div v-if="capturedImageUrl" class="image-mode-card animate-fade-in">
+                    <img :src="capturedImageUrl" alt="DPTI 결과 이미지" class="generated-img" />
+                    <p class="save-guide">
+                        <i class="fas fa-hand-pointer"></i>
+                        이미지를 꾹 누르거나 우클릭해서 복사/저장해보세요!
+                    </p>
+                </div>
+                
+                <div class="action-buttons">
+                    <a v-if="capturedImageUrl" :href="capturedImageUrl" :download="`DPTI_${displayUserName}.png`" class="download-btn">
+                        <i class="fas fa-download"></i> 기기에 파일로 저장
+                    </a>
+                    <button v-else class="download-btn" disabled>
+                        <i class="fas fa-spinner fa-spin"></i> 이미지 생성 중...
+                    </button>
 
-                        <div class="sub-buttons">
-                            <button class="retry-btn" @click="goToTest">다시 테스트하기</button>
-                            <button class="all-types-btn" @click="goToAllTypes">전체 유형 보기</button>
-                        </div>
+                    <div class="sub-buttons">
+                        <button class="retry-btn" @click="goToTest">다시 테스트하기</button>
+                        <button class="all-types-btn" @click="goToAllTypes">전체 유형 보기</button>
                     </div>
                 </div>
+
             </div>
 
             <div v-else class="error-container">
@@ -81,11 +89,13 @@
 import { ref, computed, onMounted, nextTick } from 'vue';
 import { useRoute, useRouter } from 'vue-router';
 import html2canvas from 'html2canvas';
+
 import { useDptiStore } from '@/stores/dpti';
 import { useToast } from '@/composables/useToast';
-import dptiData from '@/data/dpti.json';
+
 import type { DptiResultDefinition, DptiScores } from '@/types/dpti';
 import { RouterName } from '@/mappings/enum';
+import dptiData from '@/data/dpti.json';
 
 const route = useRoute();
 const router = useRouter();
@@ -94,25 +104,20 @@ const { triggerToast } = useToast();
 
 const captureArea = ref<HTMLElement | null>(null);
 const nameInput = ref<HTMLInputElement | null>(null);
-const isCapturing = ref(false);
 const isModalOpen = ref(false);
-const userNameInput = ref(""); // 모달 입력용
-const savedUserName = ref(""); // 신규 저장용
+const userNameInput = ref(""); 
+const savedUserName = ref(""); 
 
-// --- 이름 데이터 복원 로직 ---
+// 추가된 상태값 (이미지 렌더링용)
+const capturedImageUrl = ref<string | null>(null);
+
 const displayUserName = computed(() => {
-    // 1. 쿼리 스트링(?name=...) 확인 (히스토리 진입 시)
     const queryName = route.query.name as string;
     if (queryName) return queryName;
-    
-    // 2. 신규 테스트 후 모달로 입력한 이름 확인
     if (savedUserName.value) return savedUserName.value;
-    
-    // 3. 기본값
     return "익명의 다이버";
 });
 
-// --- 데이터 파싱 ---
 const resultsDefinition = dptiData.results_definition as DptiResultDefinition[];
 const result = computed(() => resultsDefinition.find(res => res.type_code === route.params.code) || null);
 const hasScores = computed(() => !!route.query.f);
@@ -136,78 +141,68 @@ const animalImageUrl = computed(() => {
     return new URL(`/src/assets/icons/DPTI_${result.value.type_code.toUpperCase()}_1.png`, import.meta.url).href;
 });
 
+// --- 이미지 자동 캡처 로직 ---
+const generateAndSetImage = async () => {
+    await nextTick();
+    
+    setTimeout(async () => {
+        if (!captureArea.value) return;
+        try {
+            const canvas = await html2canvas(captureArea.value, { 
+                scale: 3, // 해상도 3배 (960px로 또렷하게 저장됨)
+                useCORS: true, 
+                backgroundColor: null,
+                logging: false,
+                // 🌟 핵심: 캡처 전용 복제 DOM에서 너비를 480px로 강제 고정
+                onclone: (clonedDoc) => {
+                    const el = clonedDoc.querySelector('.result-card') as HTMLElement;
+                    if (el) {
+                        el.style.width = '480px';
+                        el.style.maxWidth = '480px';
+                        el.style.margin = '0'; // 캡처 시 잘림 방지
+                    }
+                }
+            });
+            capturedImageUrl.value = canvas.toDataURL('image/png');
+        } catch (e) {
+            console.error(e);
+            triggerToast("결과 이미지를 생성하는 데 실패했습니다.", true);
+        }
+    }, 400); 
+};
+
 // --- LifeCycle ---
 onMounted(async () => {
     const fromTest = window.history.state?.fromTest;
     
-    // 신규 테스트 진입 시에만 이름 입력 모달 오픈
     if (fromTest && result.value && hasScores.value) {
         isModalOpen.value = true;
         await nextTick();
         nameInput.value?.focus();
-        
-        // 새로고침 시 모달 중복 방지
         window.history.replaceState({ ...window.history.state, fromTest: false }, '');
+    } else {
+        // 모달을 안 띄울 경우 바로 이미지 생성 시작
+        generateAndSetImage();
     }
 });
 
 // --- Methods ---
-const closeModal = () => { isModalOpen.value = false; };
+const closeModal = () => { 
+    isModalOpen.value = false; 
+    generateAndSetImage(); // 취소해도 익명으로 이미지 생성
+};
 
 const confirmSave = () => {
     const finalName = userNameInput.value.trim() || "익명의 다이버";
-    savedUserName.value = finalName; // 현재 화면 반영
+    savedUserName.value = finalName; 
     
     if (result.value) {
         dptiStore.saveToHistory(finalName, result.value, scores.value);
         triggerToast("성공적으로 저장되었습니다.");
     }
-    closeModal();
-};
-
-const generateCanvas = async () => {
-    if (!captureArea.value) return null;
-    return await html2canvas(captureArea.value, { 
-        scale: 2, 
-        useCORS: true, 
-        backgroundColor: null,
-        logging: false 
-    });
-};
-
-const downloadImageOnly = async () => {
-    isCapturing.value = true;
-    try {
-        const canvas = await generateCanvas();
-        if (canvas) {
-            const link = document.createElement('a');
-            link.href = canvas.toDataURL('image/png');
-            link.download = `DPTI_${displayUserName.value}.png`;
-            link.click();
-            triggerToast("이미지 파일이 저장되었습니다.");
-        }
-    } catch (e) {
-        triggerToast("저장에 실패했습니다.", true);
-    } finally { isCapturing.value = false; }
-};
-
-const copyImageToClipboard = async () => {
-    if (isCapturing.value) return;
-    isCapturing.value = true;
-    try {
-        const canvas = await generateCanvas();
-        if (!canvas) return;
-        canvas.toBlob(async (blob) => {
-            if (!blob) return;
-            try {
-                const data = [new ClipboardItem({ [blob.type]: blob })];
-                await navigator.clipboard.write(data);
-                triggerToast("이미지가 클립보드에 복사되었습니다! 🌊");
-            } catch (err) {
-                triggerToast("복사를 지원하지 않는 브라우저입니다.", true);
-            }
-        }, 'image/png');
-    } finally { isCapturing.value = false; }
+    
+    isModalOpen.value = false;
+    generateAndSetImage(); // 이름 세팅 완료 후 이미지 생성
 };
 
 const goToTest = () => router.push({ name: RouterName.Dpti });
