@@ -17,6 +17,18 @@
         <button class="suggest-btn" @click="openSuggestModal">
           🏥 내가 아는 발급 성공 병원 제보하기
         </button>
+
+        <!-- 🔄 실시간 동기화 캐시 새로고침 버튼 -->
+        <button 
+          class="sync-btn" 
+          :class="{ loading: isLoadingData }"
+          :disabled="isLoadingData" 
+          @click="forceRefreshHospitals"
+          title="구글 스프레드시트에서 최신 정보 실시간 동기화"
+        >
+          <span class="sync-icon">🔄</span>
+          <span>{{ isLoadingData ? '동기화 중...' : isCachedData ? `동기화 완료 (${lastSyncTimeStr})` : '실시간 동기화' }}</span>
+        </button>
       </div>
 
       <!-- 실시간 API 폴백 활성화 시 경고 배지 -->
@@ -598,6 +610,13 @@ const rawHospitals = ref<Hospital[]>([]);
 const isLoadingData = ref(false);
 const isFallbackMode = ref(false);
 
+const CACHE_KEY = 'medical_hospitals_cache';
+const CACHE_TIME_KEY = 'medical_hospitals_cache_time';
+const CACHE_TTL = 10 * 60 * 1000; // 10분 (ms 단위)
+
+const isCachedData = ref(false);
+const lastSyncTimeStr = ref('');
+
 // 개별 병원 카드 아코디언 상태 관리 (key: hospitalId, value: isOpen)
 const openedReviews = ref<Record<string, boolean>>({});
 
@@ -611,16 +630,44 @@ onMounted(async () => {
 });
 
 // 비동기 구글 시트 REST API 로드 및 예외 발생 시 로컬 캐시 폴백 처리
-const loadHospitalsData = async () => {
+const loadHospitalsData = async (force = false) => {
   if (!GOOGLE_SHEET_API_URL) {
     // API 주소가 제공되지 않았을 때는 은은하게 즉시 로컬 JSON 로드 (폴백 경고 배지는 미표시)
     rawHospitals.value = hospitalsData as Hospital[];
     isFallbackMode.value = false;
+    isCachedData.value = false;
     return;
+  }
+
+  // 1. 강제 갱신이 아니고 캐시가 유효한 경우 로컬스토리지에서 즉각 로드
+  if (!force) {
+    const cachedDataStr = localStorage.getItem(CACHE_KEY);
+    const cachedTimeStr = localStorage.getItem(CACHE_TIME_KEY);
+    
+    if (cachedDataStr && cachedTimeStr) {
+      const cachedTime = parseInt(cachedTimeStr, 10);
+      const now = Date.now();
+      
+      if (now - cachedTime < CACHE_TTL) {
+        try {
+          const parsed = JSON.parse(cachedDataStr);
+          if (Array.isArray(parsed)) {
+            rawHospitals.value = parsed as Hospital[];
+            isFallbackMode.value = false;
+            isCachedData.value = true;
+            updateLastSyncTimeText(cachedTime);
+            return;
+          }
+        } catch (e) {
+          console.warn('캐시 데이터 파싱 실패. API 호출을 재시도합니다.', e);
+        }
+      }
+    }
   }
 
   isLoadingData.value = true;
   isFallbackMode.value = false;
+  isCachedData.value = false;
 
   try {
     const url = `${GOOGLE_SHEET_API_URL}?origin=${encodeURIComponent(window.location.origin)}`;
@@ -631,6 +678,11 @@ const loadHospitalsData = async () => {
     const data = await response.json();
     if (Array.isArray(data)) {
       rawHospitals.value = data as Hospital[];
+      // 2. 캐시 스토리지 갱신
+      localStorage.setItem(CACHE_KEY, JSON.stringify(data));
+      const now = Date.now();
+      localStorage.setItem(CACHE_TIME_KEY, String(now));
+      updateLastSyncTimeText(now);
     } else {
       throw new Error('API 리턴 포맷이 배열 형식이 아닙니다.');
     }
@@ -642,6 +694,20 @@ const loadHospitalsData = async () => {
   } finally {
     isLoadingData.value = false;
   }
+};
+
+const updateLastSyncTimeText = (timestamp: number) => {
+  const diffMinutes = Math.floor((Date.now() - timestamp) / 60000);
+  if (diffMinutes <= 0) {
+    lastSyncTimeStr.value = '방금 전';
+  } else {
+    lastSyncTimeStr.value = `${diffMinutes}분 전`;
+  }
+};
+
+const forceRefreshHospitals = async () => {
+  if (isLoadingData.value) return;
+  await loadHospitalsData(true);
 };
 
 // 클립보드 주소 복사
@@ -850,6 +916,9 @@ const submitReview = async (hospitalId: string) => {
         targetHospital.reviews.unshift(newReview);
       }
       
+      // 캐시 스토리지 갱신
+      localStorage.setItem(CACHE_KEY, JSON.stringify(rawHospitals.value));
+      
       form.successMessage = '🎉 후기가 스프레드시트에 실시간 등록되었습니다!';
       setTimeout(() => {
         toggleReviewForm(hospitalId);
@@ -921,6 +990,9 @@ const submitHospitalSuggestion = async () => {
     
     const resData = await response.json();
     if (resData.status === 'success') {
+      // 신규 제보 성공 시 캐시 시간을 초기화하여 다음 로드 시 최신 데이터가 반영되도록 유도
+      localStorage.removeItem(CACHE_TIME_KEY);
+      
       suggestForm.value.successMessage = '🎉 제보가 안전하게 완료되었습니다! 관리자 검수(active 전환) 후 리스트에 정식 노출됩니다.';
       setTimeout(() => {
         closeSuggestModal();

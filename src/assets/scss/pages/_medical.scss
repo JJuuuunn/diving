@@ -1597,6 +1597,61 @@
       }
     }
   }
+
+  .sync-btn {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5rem;
+    background: rgba(139, 92, 246, 0.1);
+    border: 1px solid rgba(139, 92, 246, 0.3);
+    color: #8b5cf6;
+    font-weight: 600;
+    padding: 0.75rem 1.5rem;
+    border-radius: 50px;
+    cursor: pointer;
+    font-size: 0.95rem;
+    transition: all 0.25s ease;
+    backdrop-filter: blur(4px);
+
+    .sync-icon {
+      display: inline-block;
+      transition: transform 0.6s cubic-bezier(0.34, 1.56, 0.64, 1);
+    }
+
+    &:hover:not(:disabled) {
+      background: rgba(139, 92, 246, 0.2);
+      border-color: #8b5cf6;
+      transform: translateY(-2px);
+      box-shadow: 0 4px 12px rgba(139, 92, 246, 0.15);
+
+      .sync-icon {
+        transform: rotate(360deg);
+      }
+    }
+
+    &:disabled {
+      cursor: not-allowed;
+      opacity: 0.7;
+    }
+
+    &.loading {
+      .sync-icon {
+        animation: spin 1s linear infinite;
+      }
+    }
+
+    body.dark & {
+      color: #a78bfa;
+      background: rgba(167, 139, 250, 0.1);
+      border-color: rgba(167, 139, 250, 0.2);
+
+      &:hover:not(:disabled) {
+        background: rgba(167, 139, 250, 0.2);
+        border-color: #a78bfa;
+        box-shadow: 0 4px 12px rgba(167, 139, 250, 0.2);
+      }
+    }
+  }
 }
 
 // 🏥 신규 병원 제보하기 모달 오버레이 & 콘텐츠 스타일
