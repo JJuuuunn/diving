@@ -22,7 +22,7 @@
 
                     <div v-if="hasScores" class="traits-analysis">
                         <h3 class="analysis-title">나의 다이빙 성향 밸런스</h3>
-                        <div class="trait-row" v-for="(val, key) in traitLabels" :key="key">
+                        <div class="trait-row" v-for="(val, key) in DPTI_TRAIT_LABELS" :key="key">
                             <span class="trait-label" :class="{ active: scores[key] >= 50 }">{{ val.left }}</span>
                             <div class="trait-bar">
                                 <div class="trait-fill" :style="{ width: scores[key] + '%' }"></div>
@@ -38,6 +38,24 @@
                         <i class="fas fa-hand-pointer"></i>
                         이미지를 꾹 누르거나 우클릭해서 복사/저장해보세요!
                     </p>
+                </div>
+
+                <!-- 탐색용 인터랙티브 궁합 영역 -->
+                <div class="interactive-match-info">
+                    <h3 class="match-title">
+                        <i class="fas fa-heartbeat"></i> 나의 버디 매칭 궁합 🌊
+                    </h3>
+                    <p class="match-subtitle">버디를 클릭해서 매칭 성향 결과도 확인해보세요!</p>
+                    <div class="match-boxes">
+                        <button class="match-box-btn best" @click="goToBuddyResult(result.best_match)">
+                            <span class="badge">최고의 버디</span>
+                            <span class="animal-name">{{ getAnimalName(result.best_match) }}</span>
+                        </button>
+                        <button class="match-box-btn worst" @click="goToBuddyResult(result.worst_match)">
+                            <span class="badge">주의할 버디</span>
+                            <span class="animal-name">{{ getAnimalName(result.worst_match) }}</span>
+                        </button>
+                    </div>
                 </div>
                 
                 <div class="action-buttons">
@@ -86,30 +104,29 @@
 </template>
 
 <script setup lang="ts">
-import { ref, computed, onMounted, nextTick } from 'vue';
+import { ref, computed, onMounted, nextTick, watch } from 'vue';
 import { useRoute, useRouter } from 'vue-router';
-import html2canvas from 'html2canvas';
 
 import { useDptiStore } from '@/stores/dpti';
 import { useToast } from '@/composables/useToast';
+import { useCapture } from '@/composables/useCapture';
 
 import type { DptiResultDefinition, DptiScores } from '@/types/dpti';
 import { RouterName } from '@/mappings/enum';
+import { DPTI_TRAIT_LABELS } from '@/mappings/dpti';
 import dptiData from '@/data/dpti.json';
 
 const route = useRoute();
 const router = useRouter();
 const dptiStore = useDptiStore();
 const { triggerToast } = useToast();
+const { capturedImageUrl, captureElement } = useCapture();
 
 const captureArea = ref<HTMLElement | null>(null);
 const nameInput = ref<HTMLInputElement | null>(null);
 const isModalOpen = ref(false);
 const userNameInput = ref(""); 
 const savedUserName = ref(""); 
-
-// 추가된 상태값 (이미지 렌더링용)
-const capturedImageUrl = ref<string | null>(null);
 
 const displayUserName = computed(() => {
     const queryName = route.query.name as string;
@@ -129,13 +146,6 @@ const scores = computed<DptiScores>(() => ({
     Social: Number(route.query.c) || 0
 }));
 
-const traitLabels: Record<keyof DptiScores, { left: string, right: string }> = {
-    Focus: { left: '팀워크', right: '마이웨이' },
-    Purpose: { left: '인생샷', right: '힐링' },
-    Style: { left: '계획파', right: '흐름파' },
-    Social: { left: '뒷풀이', right: '휴식' }
-};
-
 const animalImageUrl = computed(() => {
     if (!result.value) return '';
     return new URL(`/src/assets/icons/DPTI_${result.value.type_code.toUpperCase()}_1.png`, import.meta.url).href;
@@ -146,27 +156,9 @@ const generateAndSetImage = async () => {
     await nextTick();
     
     setTimeout(async () => {
-        if (!captureArea.value) return;
-        try {
-            const canvas = await html2canvas(captureArea.value, { 
-                scale: 3, // 해상도 3배 (960px로 또렷하게 저장됨)
-                useCORS: true, 
-                backgroundColor: null,
-                logging: false,
-                // 🌟 핵심: 캡처 전용 복제 DOM에서 너비를 480px로 강제 고정
-                onclone: (clonedDoc) => {
-                    const el = clonedDoc.querySelector('.result-card') as HTMLElement;
-                    if (el) {
-                        el.style.width = '480px';
-                        el.style.maxWidth = '480px';
-                        el.style.margin = '0'; // 캡처 시 잘림 방지
-                    }
-                }
-            });
-            capturedImageUrl.value = canvas.toDataURL('image/png');
-        } catch (e) {
-            console.error(e);
-            triggerToast("결과 이미지를 생성하는 데 실패했습니다.", true);
+        if (captureArea.value) {
+            // 캡처 컴포저블이 이제 글로벌 Pinia 스토어를 직접 구독하므로, 컴포넌트는 오직 캡처 영역 레퍼런스만 넘겨주면 됩니다.
+            await captureElement(captureArea.value, 480, 3);
         }
     }, 400); 
 };
@@ -186,6 +178,25 @@ onMounted(async () => {
     }
 });
 
+// 동일한 라우트에서 파라미터(params.code)만 변경될 경우 컴포넌트가 재사용되므로
+// 상태를 초기화하고 이미지를 재생성해 줍니다.
+watch(
+    () => route.params.code,
+    async (newCode) => {
+        if (!newCode) return;
+        
+        // 1. 화면을 최상단으로 스크롤
+        window.scrollTo({ top: 0, behavior: 'smooth' });
+        
+        // 2. 기존 이미지 초기화 (DOM에 result-card가 다시 떠서 새로 캡처할 수 있도록 함)
+        capturedImageUrl.value = null;
+        
+        // 3. 새 결과 기준 이미지 캡처 실행
+        await generateAndSetImage();
+    }
+);
+
+
 // --- Methods ---
 const closeModal = () => { 
     isModalOpen.value = false; 
@@ -203,6 +214,20 @@ const confirmSave = () => {
     
     isModalOpen.value = false;
     generateAndSetImage(); // 이름 세팅 완료 후 이미지 생성
+};
+
+const getAnimalName = (code: string): string => {
+    const match = resultsDefinition.find(r => r.type_code === code);
+    return match ? match.animal_kr : code;
+};
+
+const goToBuddyResult = (code: string) => {
+    if (!code) return;
+    router.push({ 
+        name: RouterName.DptiResult, 
+        params: { code: code },
+        query: {} 
+    });
 };
 
 const goToTest = () => router.push({ name: RouterName.Dpti });
