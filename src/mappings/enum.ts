@@ -5,5 +5,7 @@ export enum RouterName {
   Dpti = '다이버 성향 테스트',
   DptiResult = '다이버 성향 결과',
   DptiAllTypes = '다이버 성향 모든 유형',
+  Logbook = '다이빙 로그북',
   NotFound = 'NotFound'
 }
+

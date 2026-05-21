@@ -31,12 +31,12 @@ export const MENU_ITEMS: MenuItem[] = [
         active: true,
     },
     {
-        title: '문제 은행',
-        label: 'Ideas',
-        desc: '다이빙 이론 시험 대비 (오픈 예정)',
-        icon: divingMaskIcon,
-        route: '',
-        active: false,
+        title: '다이빙 로그북',
+        label: 'Logbook',
+        desc: '나의 다이빙 기록을 기록하고 공유하기',
+        icon: bookIcon,
+        route: RouterName.Logbook,
+        active: true,
     },
     {
         title: '아이디어 로그',

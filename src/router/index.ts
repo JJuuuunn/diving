@@ -1,13 +1,4 @@
 import { createRouter, createWebHistory } from 'vue-router'
-import Home from '@/views/Home.vue'
-
-import SettlementContent from '@/views/settlement/Content.vue'
-
-import DptiContent from '@/views/dpti/Content.vue'
-import DptiAllTypes from '@/views/dpti/DptiAllTypes.vue'
-import DptiResult from '@/views/dpti/DptiResult.vue'
-
-import NotFound from '@/views/NotFound.vue'
 import { RouterName } from '@/mappings/enum'
 
 const routes = [
@@ -17,12 +8,12 @@ const routes = [
       {
         path: '', 
         name: RouterName.Main,
-        component: Home
+        component: () => import('@/views/Home.vue')
       },
       {
         path: 'settlement',
         name: RouterName.Settlement,
-        component: SettlementContent
+        component: () => import('@/views/settlement/SettlementMain.vue')
       },
       {
         path: 'dpti',
@@ -30,26 +21,32 @@ const routes = [
           {
             path: '',
             name: RouterName.Dpti,
-            component: DptiContent
+            component: () => import('@/views/dpti/DptiMain.vue')
           },
           {
             path: 'result/:code',
             name: RouterName.DptiResult,
-            component: DptiResult
+            component: () => import('@/views/dpti/DptiResult.vue')
           },
           {
             path: 'all-types',
             name: RouterName.DptiAllTypes,
-            component: DptiAllTypes
+            component: () => import('@/views/dpti/DptiAllTypes.vue')
           }
         ]
+      },
+      {
+        path: 'logbook',
+        name: RouterName.Logbook,
+        component: () => import('@/views/logbook/LogbookMain.vue')
       }
     ]
   },
+
   {
     path: '/:pathMatch(.*)*',
     name: RouterName.NotFound,
-    component: NotFound
+    component: () => import('@/views/NotFound.vue')
   }
 ]
 
