@@ -56,6 +56,33 @@
       </div>
     </div>
 
+    <!-- 상태 필터 바 -->
+    <div class="status-filter-bar fade-in-up delay">
+      <span class="filter-label">🔍 발급 상태 필터:</span>
+      <div class="filter-chips">
+        <label class="filter-chip" :class="{ active: selectedStatuses.includes('active') }">
+          <input type="checkbox" value="active" v-model="selectedStatuses" />
+          <span class="chip-dot active"></span>
+          정상 발급 중
+        </label>
+        <label class="filter-chip" :class="{ active: selectedStatuses.includes('paused') }">
+          <input type="checkbox" value="paused" v-model="selectedStatuses" />
+          <span class="chip-dot paused"></span>
+          임시 중단
+        </label>
+        <label class="filter-chip" :class="{ active: selectedStatuses.includes('pending') }">
+          <input type="checkbox" value="pending" v-model="selectedStatuses" />
+          <span class="chip-dot pending"></span>
+          검수 대기
+        </label>
+        <label class="filter-chip" :class="{ active: selectedStatuses.includes('inactive') }">
+          <input type="checkbox" value="inactive" v-model="selectedStatuses" />
+          <span class="chip-dot inactive"></span>
+          발급 불가
+        </label>
+      </div>
+    </div>
+
     <!-- GPS 오류 혹은 로딩 상태 표시 -->
     <div v-if="geoHelper.error.value" class="geo-error-alert fade-in-up">
       ⚠️ {{ geoHelper.error.value }}
@@ -95,11 +122,17 @@
               🚗 내 위치에서 {{ hospital.distance }} km
             </span>
             <!-- 상태 배지 노출 -->
-            <span v-if="hospital.status === 'paused'" class="status-chip paused">
+            <span v-if="hospital.status === 'active'" class="status-chip active">
+              <span class="dot"></span> 정상 발급 중
+            </span>
+            <span v-else-if="hospital.status === 'paused'" class="status-chip paused">
               <span class="dot"></span> 발급 임시 중단
             </span>
-            <span v-else class="status-chip active">
-              <span class="dot"></span> 정상 발급 중
+            <span v-else-if="hospital.status === 'pending'" class="status-chip pending">
+              <span class="dot"></span> 검수 대기 중
+            </span>
+            <span v-else-if="hospital.status === 'inactive'" class="status-chip inactive">
+              <span class="dot"></span> 발급 불가
             </span>
           </div>
           <span class="update-badge">최근 확인: {{ formatDate(hospital.lastUpdated) }}</span>
@@ -518,6 +551,7 @@ const GOOGLE_SHEET_API_URL = (import.meta.env.VITE_GOOGLE_SHEET_API_URL as strin
  
 
 const searchQuery = ref('');
+const selectedStatuses = ref<string[]>(['active', 'paused']);
 const showGuideModal = ref(false);
 
 // 병원 제보 모달 관련 상태 (방안 B)
@@ -623,8 +657,8 @@ const copyAddress = (address: string) => {
 const filteredHospitals = computed<ExtendedHospital[]>(() => {
   const query = searchQuery.value.trim().toLowerCase();
   
-  // inactive 상태인 병원은 제외
-  let list = rawHospitals.value.filter(h => h.status !== 'inactive');
+  // 선택된 상태 목록에 부합하는 병원만 필터링
+  let list = rawHospitals.value.filter(h => h.status && selectedStatuses.value.includes(h.status));
   
   if (query) {
     list = list.filter(h => 

@@ -106,10 +106,10 @@ function doGet(e) {
       const hospitalId = String(row[idIdx]);
       const statusValue = String(row[statusIdx]).toLowerCase();
       
-      // ⚠️ 제보되었으나 승인 대기(pending) 또는 비활성화(inactive) 상태인 병원은 클라이언트에 유출하지 않음
-      if (statusValue === "pending" || statusValue === "inactive") {
-        return;
-      }
+      // ⚠️ 제보되었으나 승인 대기(pending) 또는 비활성화(inactive) 상태인 병원도 클라이언트 필터 구현을 위해 반환합니다.
+      // if (statusValue === "pending" || statusValue === "inactive") {
+      //   return;
+      // }
       
       // 태그 파싱 (콤마 분할)
       let tagsArray = [];
