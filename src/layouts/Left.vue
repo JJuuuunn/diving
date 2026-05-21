@@ -39,11 +39,12 @@
 </template>
 
 <script setup lang="ts">
-import { ref, watch, computed } from 'vue';
+import { computed } from 'vue';
 import { RouterName } from '@/mappings/enum';
 import { MENU_ITEMS } from '@/mappings/menu'; // 중앙 관리 데이터
 import divingMaskIcon from '@/assets/icons/diving-mask.svg?raw';
 import DarkModeToggle from '@/components/DarkModeToggle.vue';
+import { useThemeStore } from '@/stores/theme';
 
 defineProps<{ isOpen: boolean }>();
 const emit = defineEmits(['close']);
@@ -51,16 +52,14 @@ const emit = defineEmits(['close']);
 // 활성화된 메뉴만 필터링
 const activeMenuItems = computed(() => MENU_ITEMS.filter(item => item.active));
 
-// 테마 관리 로직
-const isDay = ref(localStorage.getItem('isDay') === 'true');
-const applyTheme = (isDayMode: boolean) => {
-  isDayMode ? document.body.classList.remove('dark') : document.body.classList.add('dark');
-};
-
-watch(isDay, (newValue) => {
-  localStorage.setItem('isDay', String(newValue));
-  applyTheme(newValue);
-}, { immediate: true });
+// 테마 관리 로직 (Pinia 및 VueUse 기반 선언적 상태 관리로 전환)
+const themeStore = useThemeStore();
+const isDay = computed({
+  get: () => !themeStore.isDark,
+  set: (val) => {
+    themeStore.isDark = !val;
+  }
+});
 </script>
 
 <style lang="scss" scoped>
