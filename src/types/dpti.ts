@@ -34,8 +34,9 @@ export interface DptiScores {
 }
 
 export interface DptiHistoryItem {
+    id: number;
     userName: string;
     result: DptiResultDefinition;
     scores: DptiScores;
-    date?: string;
+    date: string;
 }
