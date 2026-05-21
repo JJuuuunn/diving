@@ -498,7 +498,7 @@
   }
 
   /* 선택(Active) 상태 */
-  .pool-card.active .pool-logo-wrapper {
+  &.active .pool-logo-wrapper {
     background-color: var(--ocean-100);
     border-color: var(--ocean-300);
 
@@ -513,16 +513,6 @@
       .custom-icon {
         color: var(--ocean-300);
       }
-    }
-  }
-
-  /* 선택(Active) 상태 */
-  &.active .pool-logo-wrapper {
-    background-color: var(--ocean-600);
-
-    .dark & {
-      background-color: var(--slate-600);
-      color: var(--ocean-300);
     }
   }
 
@@ -1271,17 +1261,17 @@
     opacity: 0.05;
     transition: opacity 0.2s;
     transform: rotate(-15deg);
+
+    .dark & {
+      color: var(--white);
+      opacity: 0.03;
+    }
   }
 
   &:hover .bg-icon {
     opacity: 0.1;
-  }
 
-  &.non-member-cost .bg-icon .dark & {
-    color: var(--white);
-    opacity: 0.03;
-
-    &:hover {
+    .dark & {
       opacity: 0.05;
     }
   }

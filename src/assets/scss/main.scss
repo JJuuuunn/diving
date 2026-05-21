@@ -15,6 +15,5 @@
 @import 'layout/sidebar';
 
 // 5. Pages (Specific page styles)
-@import 'pages/home';
-@import 'pages/settlement';
-@import 'pages/not-found';
+// Page-level styles are now loaded lazily inside their respective view components.
+
