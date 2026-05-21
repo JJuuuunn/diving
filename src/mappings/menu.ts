@@ -4,6 +4,7 @@ import homeIcon from '@/assets/icons/home.svg?raw';
 import calculatorIcon from '@/assets/icons/calculator.svg?raw';
 import bookIcon from '@/assets/icons/book.svg?raw';
 import divingMaskIcon from '@/assets/icons/diving-mask.svg?raw';
+import hospitalIcon from '@/assets/icons/hospital.svg?raw';
 
 export const MENU_ITEMS: MenuItem[] = [
     {
@@ -39,12 +40,20 @@ export const MENU_ITEMS: MenuItem[] = [
         active: true,
     },
     {
-        title: '아이디어 로그',
-        label: 'Ideas',
-        desc: '새로운 기능 구상 중...',
-        icon: divingMaskIcon,
-        route: '',
-        active: false,
+        title: '다이빙 문제 은행',
+        label: 'Quiz',
+        desc: '다이빙 물리, 생리 및 특수기체 이론 퀴즈 도전하기',
+        icon: bookIcon,
+        route: RouterName.QuizDashboard,
+        active: true,
+    },
+    {
+        title: '메디컬 스탬프 파인더',
+        label: 'Medical',
+        desc: '대회 참가에 필수적인 메디컬 스탬프 발급 병원 찾기 (내 주변 정렬)',
+        icon: hospitalIcon,
+        route: RouterName.MedicalFinder,
+        active: true,
     },
     {
         title: '아이디어 로그',

@@ -87,8 +87,8 @@ import { formatNumber, getNumericPrice } from '@/utils/formatter';
 import { serializeSettlement, deserializeSettlement } from '@/utils/serialization';
 
 // 컴포넌트 임포트
-import Header from './Header.vue';
-import Footer from './Footer.vue';
+import Header from '@/components/Header.vue';
+import Footer from '@/components/Footer.vue';
 import SettingsCard from './SettingsCard.vue';
 import PeopleCard from './PeopleCard.vue';
 import ResultSection from './ResultSection.vue';

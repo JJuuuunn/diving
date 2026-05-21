@@ -20,19 +20,20 @@
     </div>
 
     <!-- 고정 시각 디자인 템플릿 영역 (캡처용) -->
-    <div class="log-card-visual" ref="captureRef">
+    <div class="log-card-visual" :class="{ 'is-freediving': log.type === 'freediving' }" ref="captureRef">
       <!-- 헤더 메타 -->
       <div class="card-header-meta">
         <div class="loc-info">
           <h4 class="loc-title">📍 {{ log.location }}</h4>
           <span class="date-label">📅 {{ log.date }}</span>
         </div>
-        <div class="stamp-logo">
-          <i class="fa-solid fa-water"></i> DIVE LOG
+        <div class="stamp-logo" :class="{ 'freediving-stamp': log.type === 'freediving' }">
+          <i class="fa-solid" :class="log.type === 'freediving' ? 'fa-fish' : 'fa-water'"></i> 
+          {{ log.type === 'freediving' ? 'FREE DIVE' : 'DIVE LOG' }}
         </div>
       </div>
 
-      <!-- 계기판 그리드 -->
+      <!-- 계기판 그리드 (스쿠버 / 프리다이빙 공통 + 일부 라벨 차이) -->
       <div class="metrics-grid">
         <div class="metric-cell">
           <div class="cell-icon"><i class="fa-solid fa-arrows-up-down"></i></div>
@@ -40,9 +41,11 @@
           <div class="cell-value">{{ log.maxDepth }}<span>m</span></div>
         </div>
         <div class="metric-cell">
-          <div class="cell-icon"><i class="fa-solid fa-stopwatch"></i></div>
-          <span class="cell-label">Dive Time</span>
-          <div class="cell-value">{{ log.diveTime }}<span>min</span></div>
+          <div class="cell-icon">
+            <i class="fa-solid" :class="log.type === 'freediving' ? 'fa-hourglass-half' : 'fa-stopwatch'"></i>
+          </div>
+          <span class="cell-label">{{ log.type === 'freediving' ? 'Dive Count' : 'Dive Time' }}</span>
+          <div class="cell-value">{{ log.diveTime }}<span>{{ log.type === 'freediving' ? 'times' : 'min' }}</span></div>
         </div>
         <div class="metric-cell">
           <div class="cell-icon"><i class="fa-solid fa-temperature-half"></i></div>
@@ -51,8 +54,8 @@
         </div>
       </div>
 
-      <!-- 기압 데이터 및 소모 게이지 -->
-      <div class="metrics-grid">
+      <!-- 스쿠버다이빙 전용 기압 데이터 및 소모 게이지 -->
+      <div v-if="log.type === 'scuba'" class="metrics-grid">
         <div class="metric-cell">
           <span class="cell-label">Entry PSI</span>
           <div class="cell-value">{{ log.entryPsi }}<span>bar</span></div>
@@ -60,7 +63,7 @@
         <div class="metric-cell">
           <span class="cell-label">Consumption</span>
           <div class="cell-value" style="color: #f43f5e;">
-            {{ log.entryPsi - log.exitPsi }}<span>bar</span>
+            {{ (log.entryPsi ?? 0) - (log.exitPsi ?? 0) }}<span>bar</span>
           </div>
         </div>
         <div class="metric-cell">
@@ -69,15 +72,37 @@
         </div>
       </div>
 
+      <!-- 프리다이빙 전용 무호흡 상세 대시보드 -->
+      <div v-else class="metrics-grid">
+        <div class="metric-cell">
+          <div class="cell-icon"><i class="fa-solid fa-stopwatch"></i></div>
+          <span class="cell-label">Apnea Time</span>
+          <div class="cell-value">{{ log.apneaTime || '00:00' }}</div>
+        </div>
+        <div class="metric-cell">
+          <div class="cell-icon"><i class="fa-solid fa-person-swimming"></i></div>
+          <span class="cell-label">Discipline</span>
+          <div class="cell-value text-highlight">{{ log.discipline }}</div>
+        </div>
+        <div class="metric-cell">
+          <div class="cell-icon"><i class="fa-solid fa-weight-hanging"></i></div>
+          <span class="cell-label">Weight / EQ</span>
+          <div class="cell-value small-text">
+            {{ log.weight }}<span>kg</span> 
+            <span class="eq-badge">{{ log.eqType }}</span>
+          </div>
+        </div>
+      </div>
+
       <!-- 다이어리 노트 -->
       <div class="log-notes-section">
-        {{ log.notes || '기록된 로그 내용이 없습니다. 물속에서의 멋진 경험을 남겨보세요!' }}
+        {{ log.notes || (log.type === 'freediving' ? '기록된 로그 내용이 없습니다. 고요한 수중의 평온함을 남겨보세요!' : '기록된 로그 내용이 없습니다. 물속에서의 멋진 경험을 남겨보세요!') }}
       </div>
 
       <!-- 푸터 버디 & 서명 -->
       <div class="card-footer-buddy">
         <div class="buddy-info">
-          <span class="label">Buddy Diver</span>
+          <span class="label">{{ log.type === 'freediving' ? 'Safety Buddy' : 'Buddy Diver' }}</span>
           <div class="value">👤 {{ log.buddyName || '익명의 버디' }}</div>
         </div>
         

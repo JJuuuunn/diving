@@ -39,6 +39,31 @@ const routes = [
         path: 'logbook',
         name: RouterName.Logbook,
         component: () => import('@/views/logbook/LogbookMain.vue')
+      },
+      {
+        path: 'quiz',
+        children: [
+          {
+            path: '',
+            name: RouterName.QuizDashboard,
+            component: () => import('@/views/quiz/QuizDashboard.vue')
+          },
+          {
+            path: 'play/:setId',
+            name: RouterName.QuizPlay,
+            component: () => import('@/views/quiz/QuizPlay.vue')
+          },
+          {
+            path: 'result',
+            name: RouterName.QuizResult,
+            component: () => import('@/views/quiz/QuizResult.vue')
+          }
+        ]
+      },
+      {
+        path: 'medical',
+        name: RouterName.MedicalFinder,
+        component: () => import('@/views/medical/MedicalFinder.vue')
       }
     ]
   },

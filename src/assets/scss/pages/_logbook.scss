@@ -200,6 +200,58 @@
   }
 }
 
+// 스쿠버 / 프리다이빙 세그먼티드 슬라이드 탭
+.diving-type-tabs {
+  display: flex;
+  background: rgba(15, 23, 42, 0.5);
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  border-radius: 12px;
+  padding: 4px;
+  margin-bottom: 24px;
+  gap: 4px;
+
+  .tab-btn {
+    flex: 1;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+    background: transparent;
+    border: none;
+    border-radius: 8px;
+    color: #94a3b8;
+    padding: 10px 16px;
+    font-size: 0.9rem;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.25s ease;
+
+    i {
+      font-size: 1rem;
+      transition: transform 0.25s ease;
+    }
+
+    &:hover {
+      color: #f8fafc;
+      background: rgba(255, 255, 255, 0.03);
+
+      i {
+        transform: scale(1.1);
+      }
+    }
+
+    &.is-active {
+      background: linear-gradient(135deg, #0ea5e9 0%, #0284c7 100%);
+      color: white;
+      box-shadow: 0 4px 12px rgba(2, 132, 199, 0.25);
+
+      &:hover {
+        background: linear-gradient(135deg, #38bdf8 0%, #0ea5e9 100%);
+      }
+    }
+  }
+}
+
 // 캔버스 드로잉 모달 오버레이
 .canvas-signature-modal {
   position: fixed;
@@ -435,6 +487,48 @@
     flex-direction: column;
     gap: 24px;
     background: linear-gradient(180deg, rgba(30, 41, 59, 0.4) 0%, rgba(15, 23, 42, 0.8) 100%);
+
+    &.is-freediving {
+      background: linear-gradient(180deg, rgba(13, 148, 136, 0.2) 0%, rgba(15, 23, 42, 0.85) 100%);
+      border-bottom: 3px solid #0d9488;
+
+      .stamp-logo.freediving-stamp {
+        background: rgba(13, 148, 136, 0.15);
+        border-color: rgba(13, 148, 136, 0.3);
+        color: #2dd4bf;
+      }
+
+      .metrics-grid {
+        .metric-cell {
+          border-color: rgba(13, 148, 136, 0.15);
+
+          .cell-icon {
+            color: #2dd4bf;
+          }
+
+          .text-highlight {
+            color: #2dd4bf;
+            font-weight: 800;
+            letter-spacing: 0.05em;
+          }
+
+          .eq-badge {
+            background: rgba(13, 148, 136, 0.2);
+            color: #2dd4bf;
+            border: 1px solid rgba(13, 148, 136, 0.3);
+            font-size: 0.75rem;
+            padding: 1px 6px;
+            border-radius: 6px;
+            margin-left: 6px;
+            font-family: system-ui;
+          }
+
+          .small-text {
+            font-size: 1.1rem;
+          }
+        }
+      }
+    }
 
     .card-header-meta {
       display: flex;
