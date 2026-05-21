@@ -328,3 +328,141 @@
         i { margin-right: 0.4rem; }
     }
 }
+
+// 7. 탐색용 인터랙티브 궁합 영역 스타일
+.interactive-match-info {
+    margin-top: 2rem;
+    width: 100%;
+    max-width: 480px;
+    margin-left: auto;
+    margin-right: auto;
+    padding: 1.75rem 1.5rem;
+    background: var(--page-card-bg);
+    border: 1px solid var(--page-card-border);
+    border-radius: 2rem;
+    box-shadow: var(--page-card-shadow);
+    text-align: left;
+    box-sizing: border-box;
+    animation: fadeInDown 0.6s ease-out;
+
+    .dark & {
+        box-shadow: 0 10px 40px rgba(0, 0, 0, 0.4);
+    }
+
+    .match-title {
+        font-size: 1.15rem;
+        font-weight: 800;
+        color: var(--page-text-primary);
+        margin: 0 0 0.4rem 0;
+        display: flex;
+        align-items: center;
+        gap: 0.5rem;
+
+        i {
+            color: #ef4444; // 하트 색상 포인트
+            animation: pulse 1.5s infinite;
+        }
+    }
+
+    .match-subtitle {
+        font-size: 0.8rem;
+        color: var(--page-text-secondary);
+        margin: 0 0 1.25rem 0;
+    }
+
+    .match-boxes {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+        gap: 0.8rem;
+    }
+
+    .match-box-btn {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+        width: 100%;
+        padding: 1.25rem 0.75rem;
+        border-radius: 1.25rem;
+        border: 1px solid transparent;
+        background: var(--slate-50);
+        cursor: pointer;
+        transition: all 0.25s cubic-bezier(0.4, 0, 0.2, 1);
+        text-align: center;
+        box-sizing: border-box;
+        gap: 0.5rem;
+
+        .dark & {
+            background: rgba(30, 41, 59, 0.4);
+            border-color: rgba(255, 255, 255, 0.03);
+        }
+
+        .badge {
+            font-size: 0.75rem;
+            font-weight: 800;
+            padding: 0.3rem 0.75rem;
+            border-radius: 2rem;
+            display: inline-block;
+        }
+
+        .animal-name {
+            font-size: 1.05rem;
+            font-weight: 800;
+            color: var(--page-text-primary);
+        }
+
+        &.best {
+            .badge {
+                background: var(--ocean-100);
+                color: var(--ocean-700);
+                .dark & {
+                    background: rgba(14, 165, 233, 0.2);
+                    color: var(--ocean-300);
+                }
+            }
+
+            &:hover {
+                transform: translateY(-2px);
+                border-color: var(--ocean-300);
+                background: var(--ocean-50);
+                box-shadow: 0 4px 12px rgba(14, 165, 233, 0.1);
+
+                .dark & {
+                    background: rgba(14, 165, 233, 0.1);
+                    border-color: var(--ocean-800);
+                    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
+                }
+            }
+        }
+
+        &.worst {
+            .badge {
+                background: var(--slate-200);
+                color: var(--slate-600);
+                .dark & {
+                    background: var(--slate-800);
+                    color: var(--slate-400);
+                }
+            }
+
+            &:hover {
+                transform: translateY(-2px);
+                border-color: var(--slate-300);
+                background: var(--slate-100);
+                box-shadow: 0 4px 12px rgba(148, 163, 184, 0.1);
+
+                .dark & {
+                    background: rgba(255, 255, 255, 0.08);
+                    border-color: var(--slate-700);
+                    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
+                }
+            }
+        }
+    }
+}
+
+@keyframes pulse {
+    0% { transform: scale(1); }
+    50% { transform: scale(1.15); }
+    100% { transform: scale(1); }
+}
