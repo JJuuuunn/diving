@@ -974,7 +974,38 @@ const submitHospitalSuggestion = async () => {
     // 만약 GOOGLE_SHEET_API_URL이 비어 있다면 (로컬 캐시/HMR 테스트 시뮬레이션)
     if (!GOOGLE_SHEET_API_URL) {
       await new Promise(resolve => setTimeout(resolve, 800));
-      suggestForm.value.successMessage = '🎉 [로컬 테스트] 성공적으로 병원이 제보되었습니다! 관리자 검토 대기 상태로 등록됩니다.';
+      
+      const dummyId = 'h_dummy_' + Date.now();
+      const kstDateStr = dayjs().format('YYYY-MM-DD');
+      const newHospital: Hospital = {
+        id: dummyId,
+        name: nameVal,
+        address: addressVal,
+        tel: suggestForm.value.tel.trim() || '정보 없음',
+        fee: suggestForm.value.fee.trim() || '변동성 (로컬 제보 테스트)',
+        lat: 37.5665,
+        lng: 126.9780,
+        status: 'pending',
+        lastUpdated: kstDateStr,
+        tags: suggestForm.value.tags.trim() 
+          ? suggestForm.value.tags.split(',').map(t => t.trim()) 
+          : ['로컬테스트'],
+        tips: suggestForm.value.tips.trim() || '로컬 환경에서 제보 시뮬레이션된 병원입니다.',
+        reviews: []
+      };
+      
+      rawHospitals.value.unshift(newHospital);
+      localStorage.setItem(CACHE_KEY, JSON.stringify(rawHospitals.value));
+      const now = Date.now();
+      localStorage.setItem(CACHE_TIME_KEY, String(now));
+      updateLastSyncTimeText(now);
+      isCachedData.value = true;
+      
+      if (!selectedStatuses.value.includes('pending')) {
+        selectedStatuses.value.push('pending');
+      }
+      
+      suggestForm.value.successMessage = '🎉 [로컬 테스트] 성공적으로 병원이 제보되었습니다! 즉시 캐시 및 목록에 등록되어 바로 확인하실 수 있습니다.';
       setTimeout(() => {
         closeSuggestModal();
       }, 1500);
@@ -996,10 +1027,42 @@ const submitHospitalSuggestion = async () => {
     
     const resData = await response.json();
     if (resData.status === 'success') {
-      // 신규 제보 성공 시 캐시 시간을 초기화하여 다음 로드 시 최신 데이터가 반영되도록 유도
-      localStorage.removeItem(CACHE_TIME_KEY);
+      const inserted = resData.insertedData;
       
-      suggestForm.value.successMessage = '🎉 제보가 안전하게 완료되었습니다! 관리자 검수(active 전환) 후 리스트에 정식 노출됩니다.';
+      // 1. 제보 완료된 병원 객체를 Hospital 규격에 맞추어 실시간 조립
+      const newHospital: Hospital = {
+        id: inserted.id,
+        name: nameVal,
+        address: addressVal,
+        tel: suggestForm.value.tel.trim() || '정보 없음',
+        fee: suggestForm.value.fee.trim() || '변동성 (제보 검수 대기)',
+        lat: 0,
+        lng: 0,
+        status: 'pending',
+        lastUpdated: inserted.date,
+        tags: suggestForm.value.tags.trim() 
+          ? suggestForm.value.tags.split(',').map(t => t.trim()) 
+          : ['다이버제보'],
+        tips: suggestForm.value.tips.trim() || '사용자가 제안한 신규 발급 가능 병원입니다.',
+        reviews: []
+      };
+      
+      // 2. 프론트엔드 리스트 맨 앞에 제보 병원 즉시 삽입
+      rawHospitals.value.unshift(newHospital);
+      
+      // 3. 로컬 캐시와 타임스탬프 실시간 갱신 저장
+      localStorage.setItem(CACHE_KEY, JSON.stringify(rawHospitals.value));
+      const now = Date.now();
+      localStorage.setItem(CACHE_TIME_KEY, String(now));
+      updateLastSyncTimeText(now);
+      isCachedData.value = true;
+      
+      // 4. 제보 완료 후 병원을 즉시 볼 수 있게 'pending(검수 대기)' 필터 칩 자동 활성화
+      if (!selectedStatuses.value.includes('pending')) {
+        selectedStatuses.value.push('pending');
+      }
+      
+      suggestForm.value.successMessage = '🎉 제보가 안전하게 완료되었습니다! 즉석에서 캐시 및 목록에 등록되어 바로 확인하실 수 있습니다.';
       setTimeout(() => {
         closeSuggestModal();
       }, 1500);
