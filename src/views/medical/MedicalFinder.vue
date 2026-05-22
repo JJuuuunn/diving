@@ -612,7 +612,7 @@ const isFallbackMode = ref(false);
 
 const CACHE_KEY = 'medical_hospitals_cache';
 const CACHE_TIME_KEY = 'medical_hospitals_cache_time';
-const CACHE_TTL = 10 * 60 * 1000; // 10분 (ms 단위)
+const CACHE_TTL = 24 * 60 * 60 * 1000; // 24시간(1일) (ms 단위)
 
 const isCachedData = ref(false);
 const lastSyncTimeStr = ref('');
@@ -700,8 +700,14 @@ const updateLastSyncTimeText = (timestamp: number) => {
   const diffMinutes = Math.floor((Date.now() - timestamp) / 60000);
   if (diffMinutes <= 0) {
     lastSyncTimeStr.value = '방금 전';
-  } else {
+  } else if (diffMinutes < 60) {
     lastSyncTimeStr.value = `${diffMinutes}분 전`;
+  } else if (diffMinutes < 1440) {
+    const hours = Math.floor(diffMinutes / 60);
+    lastSyncTimeStr.value = `${hours}시간 전`;
+  } else {
+    const days = Math.floor(diffMinutes / 1440);
+    lastSyncTimeStr.value = `${days}일 전`;
   }
 };
 
