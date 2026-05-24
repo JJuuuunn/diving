@@ -15,7 +15,7 @@
             "H": "Healing (힐링형)"
         },
         "Style": {
-            "T": "Theory/Logic (이론분석형)",
+            "T": "Tech/Logic (분석형)",
             "F": "Feel (감각형)"
         },
         "Social": {
@@ -421,8 +421,8 @@
             "title": "푸른 심연의 구도자",
             "animal": "Whale",
             "animal_kr": "고래",
-            "description": "혼자만의 고요한 시간을 소중히 여기며, 자신의 한계를 넘어서는 깊은 수심과 무호흡의 고요함에 도전합니다.",
-            "tagline": "조용한 사람일수록 더 깊고 고요하게 내려갑니다.",
+            "description": "혼자만의 고요한 시간을 소중히 여기며, 자신의 한계를 넘어서는 깊은 수심에 도전합니다.",
+            "tagline": "조용한 사람일수록 더 깊이 내려갑니다.",
             "best_match": "ECFP",
             "worst_match": "EHFG"
         },
@@ -471,7 +471,7 @@
             "title": "정교한 조율사",
             "animal": "Jellyfish",
             "animal_kr": "해파리",
-            "description": "자신의 호흡과 심박수, 신체 변화를 민감하게 체크하며, 수온과 부력 등 환경과의 완벽한 조화를 추구합니다.",
+            "description": "자신의 신체 변화를 민감하게 체크하며, 수온과 부력 등 환경과의 조화를 추구합니다.",
             "tagline": "작은 변화도 놓치지 않는 감각의 다이버.",
             "best_match": "EHTG",
             "worst_match": "ECFP"

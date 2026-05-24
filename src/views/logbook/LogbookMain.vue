@@ -46,10 +46,8 @@
             </div>
             <div class="form-group">
               <label for="date">📅 다이빙 일시</label>
-              <input 
-                id="date" 
+              <CustomDatePicker 
                 v-model="form.date" 
-                type="date" 
               />
             </div>
           </div>
@@ -57,19 +55,22 @@
           <div class="form-row">
             <div class="form-group">
               <label for="maxDepth">🌊 최대 수심 (m)</label>
-              <input 
+              <CustomNumberInput 
                 id="maxDepth" 
-                v-model.number="form.maxDepth" 
-                type="number" 
+                v-model="form.maxDepth" 
+                :min="0" 
+                :step="0.1" 
                 placeholder="0.0"
               />
             </div>
             <div class="form-group">
               <label for="temp">🌡️ 수온 (℃)</label>
-              <input 
+              <CustomNumberInput 
                 id="temp" 
-                v-model.number="form.temp" 
-                type="number" 
+                v-model="form.temp" 
+                :min="-10" 
+                :max="50" 
+                :step="1" 
                 placeholder="0"
               />
             </div>
@@ -79,10 +80,11 @@
           <div v-if="form.type === 'scuba'" class="form-row">
             <div class="form-group">
               <label for="diveTime">⏱️ 다이빙 시간 (분)</label>
-              <input 
+              <CustomNumberInput 
                 id="diveTime" 
-                v-model.number="form.diveTime" 
-                type="number" 
+                v-model="form.diveTime" 
+                :min="0" 
+                :step="1" 
                 placeholder="0"
               />
             </div>
@@ -100,19 +102,23 @@
           <div v-if="form.type === 'scuba'" class="form-row">
             <div class="form-group">
               <label for="entryPsi">🏁 입수 기압 (bar)</label>
-              <input 
+              <CustomNumberInput 
                 id="entryPsi" 
-                v-model.number="form.entryPsi" 
-                type="number" 
+                v-model="form.entryPsi" 
+                :min="0" 
+                :max="350" 
+                :step="5" 
                 placeholder="200"
               />
             </div>
             <div class="form-group">
               <label for="exitPsi">🏳️ 출수 기압 (bar)</label>
-              <input 
+              <CustomNumberInput 
                 id="exitPsi" 
-                v-model.number="form.exitPsi" 
-                type="number" 
+                v-model="form.exitPsi" 
+                :min="0" 
+                :max="350" 
+                :step="5" 
                 placeholder="50"
               />
             </div>
@@ -131,33 +137,33 @@
             </div>
             <div class="form-group">
               <label for="discipline">🏆 시도 종목</label>
-              <select id="discipline" v-model="form.discipline">
-                <option value="CWT">CWT (Constant Weight)</option>
-                <option value="FIM">FIM (Free Immersion)</option>
-                <option value="CNF">CNF (Constant No Fins)</option>
-                <option value="STA">STA (Static Apnea)</option>
-                <option value="DYN">DYN (Dynamic Apnea)</option>
-              </select>
+              <CustomSelect 
+                id="discipline" 
+                v-model="form.discipline" 
+                :options="disciplineOptions" 
+              />
             </div>
           </div>
 
           <div v-if="form.type === 'freediving'" class="form-row">
             <div class="form-group">
               <label for="weight">⚖️ 착용 웨이트 (kg)</label>
-              <input 
+              <CustomNumberInput 
                 id="weight" 
-                v-model.number="form.weight" 
-                type="number" 
+                v-model="form.weight" 
+                :min="0" 
+                :max="50" 
+                :step="0.5" 
                 placeholder="0"
               />
             </div>
             <div class="form-group">
               <label for="eqType">👂 이퀄라이징 기법</label>
-              <select id="eqType" v-model="form.eqType">
-                <option value="Frenzel">Frenzel (프렌젤)</option>
-                <option value="Valsalva">Valsalva (발살바)</option>
-                <option value="Mouthfill">Mouthfill (마우스필)</option>
-              </select>
+              <CustomSelect 
+                id="eqType" 
+                v-model="form.eqType" 
+                :options="eqTypeOptions" 
+              />
             </div>
           </div>
 
@@ -173,10 +179,11 @@
             </div>
             <div class="form-group">
               <label for="diveCount">⏱️ 세션 총 다이빙 횟수</label>
-              <input 
+              <CustomNumberInput 
                 id="diveCount" 
-                v-model.number="form.diveTime" 
-                type="number" 
+                v-model="form.diveTime" 
+                :min="0" 
+                :step="1" 
                 placeholder="예: 8"
               />
             </div>
@@ -185,11 +192,12 @@
           <div class="form-row">
             <div class="form-group full-width">
               <label for="notes">📝 다이빙 메모</label>
-              <textarea 
+              <CustomTextarea 
                 id="notes" 
                 v-model="form.notes" 
-                placeholder="오늘의 다이빙은 어떠셨나요? 본 수중 생물이나 특별했던 감상을 적어주세요."
-              ></textarea>
+                :max-length="300"
+                placeholder="오늘의 다이빙은 어떠셨나요? 본 수중 생물이나 특별했던 감상을 적어주세요. (최대 300자)"
+              />
             </div>
           </div>
 
@@ -259,8 +267,26 @@ import { useToast } from '@/composables/useToast';
 import type { DiveLog, ScubaDiveLog, FreedivingDiveLog } from '@/types/logbook';
 import Header from '@/components/Header.vue';
 import Footer from '@/components/Footer.vue';
+import CustomDatePicker from '@/components/CustomDatePicker.vue';
+import CustomNumberInput from '@/components/CustomNumberInput.vue';
+import CustomSelect from '@/components/CustomSelect.vue';
+import CustomTextarea from '@/components/CustomTextarea.vue';
 import LogCard from './LogCard.vue';
 import CanvasSignature from './CanvasSignature.vue';
+
+const disciplineOptions = [
+  { value: 'CWT', label: 'CWT (Constant Weight)' },
+  { value: 'FIM', label: 'FIM (Free Immersion)' },
+  { value: 'CNF', label: 'CNF (Constant No Fins)' },
+  { value: 'STA', label: 'STA (Static Apnea)' },
+  { value: 'DYN', label: 'DYN (Dynamic Apnea)' }
+];
+
+const eqTypeOptions = [
+  { value: 'Frenzel', label: 'Frenzel (프렌젤)' },
+  { value: 'Valsalva', label: 'Valsalva (발살바)' },
+  { value: 'Mouthfill', label: 'Mouthfill (마우스필)' }
+];
 
 const logbookStore = useLogbookStore();
 const { triggerToast } = useToast();

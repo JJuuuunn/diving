@@ -40,14 +40,17 @@
 
 <script setup lang="ts">
 import { computed } from 'vue';
+import type { SidebarProps } from '@/types/components';
 import { RouterName } from '@/mappings/enum';
 import { MENU_ITEMS } from '@/mappings/menu'; // 중앙 관리 데이터
 import divingMaskIcon from '@/assets/icons/diving-mask.svg?raw';
 import DarkModeToggle from '@/components/DarkModeToggle.vue';
 import { useThemeStore } from '@/stores/theme';
 
-defineProps<{ isOpen: boolean }>();
-const emit = defineEmits(['close']);
+const props = defineProps<SidebarProps>();
+const emit = defineEmits<{
+  (e: 'close'): void;
+}>();
 
 // 활성화된 메뉴만 필터링
 const activeMenuItems = computed(() => MENU_ITEMS.filter(item => item.active));

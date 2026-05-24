@@ -1,5 +1,5 @@
 <template>
-    <div class="intro-container animate-fade-in">
+    <div class="intro-container animate-fade-in"><section class="intro-section">
         <div class="hero-section">
             <h1 class="main-title">
                 당신은 어떤 유형의<br />
@@ -12,7 +12,7 @@
         </div>
 
         <div class="action-area">
-            <button class="start-btn" @click="$emit('start')">
+            <button class="start-btn" @click="$emit('start')" aria-label="테스트 시작하기">
                 테스트 시작하기
                 <i class="fas fa-arrow-right"></i>
             </button>
@@ -41,7 +41,7 @@
                 </div>
             </div>
         </div>
-    </div>
+    </section></div>
 </template>
 
 <script setup lang="ts">

@@ -16,11 +16,11 @@
         </div>
 
         <div class="question-header">
-            <h2 class="question-text">{{ question.question }}</h2>
+            <h2 class="question-text" aria-live="polite">{{ question.question }}</h2>
         </div>
 
         <div class="options-group">
-            <button v-for="opt in question.options" :key="opt.value" class="option-btn"
+            <button v-for="opt in question.options" :key="opt.value" class="option-btn" tabindex="0"
                 @click="$emit('select', opt.value)">
                 {{ opt.text }}
             </button>

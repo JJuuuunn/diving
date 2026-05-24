@@ -13,5 +13,9 @@ body {
 }
 
 #main-content {
-  // No special styles needed, it will take up the full space
+  transition: margin-left 0.3s ease;
+
+  @media (min-width: 1024px) {
+    margin-left: var(--sidebar-collapsed-width);
+  }
 }

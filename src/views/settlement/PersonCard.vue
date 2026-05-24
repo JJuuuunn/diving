@@ -5,16 +5,22 @@
         <input type="text" v-model="person.name" class="person-name-input" placeholder="이름">
       </div>
       <div class="person-toggles">
-        <button @click="person.isBooker = !person.isBooker" :class="['person-toggle-btn', person.isBooker ? 'booker' : 'attendee']">
-          <i v-if="person.isBooker" class="fa-solid fa-crown"></i>
-          <i v-else class="fa-solid fa-user"></i>
-          <span class="toggle-text">{{ person.isBooker ? '예약자' : '참석자' }}</span>
-        </button>
-        <button @click="person.isMember = !person.isMember" :class="['person-toggle-btn', person.isMember ? 'member' : 'non-member']">
-          <i v-if="person.isMember" class="fa-solid fa-medal"></i>
-          <i v-else class="fa-solid fa-user-slash"></i>
-          <span class="toggle-text">{{ person.isMember ? '회원' : '비회원' }}</span>
-        </button>
+        <CustomSwitch 
+          v-model="person.isBooker" 
+          active-text="예약자" 
+          inactive-text="참석자"
+          active-icon="fa-crown"
+          inactive-icon="fa-user"
+          class="switch-is-booker"
+        />
+        <CustomSwitch 
+          v-model="person.isMember" 
+          active-text="회원" 
+          inactive-text="비회원"
+          active-icon="fa-medal"
+          inactive-icon="fa-user-slash"
+          class="switch-is-member"
+        />
         <button v-if="canBeDeleted" @click="emit('remove', person.id)" class="person-remove-btn">
           <i class="fa-solid fa-xmark"></i>
         </button>
@@ -33,9 +39,12 @@
       <div class="detail-field account">
         <label class="detail-label">계좌 정보</label>
         <div class="detail-input-group">
-          <select v-model="person.bank" class="detail-input bank-select">
-            <option v-for="bankName in banks" :key="bankName" :value="bankName">{{ bankName }}</option>
-          </select>
+          <CustomSelect 
+            v-model="person.bank" 
+            :options="banks" 
+            placeholder="은행 선택"
+            class="bank-select"
+          />
           <input type="text" v-model="person.account" class="detail-input account-number" placeholder="계좌번호">
         </div>
       </div>
@@ -47,6 +56,8 @@
 import type { Person } from '@/types/settlement';
 import { formatNumber, getNumericPrice } from '@/utils/formatter';
 import banks from '@/data/banks.json';
+import CustomSelect from '@/components/CustomSelect.vue';
+import CustomSwitch from '@/components/CustomSwitch.vue';
 
 const person = defineModel<Person>({ required: true });
 const props = defineProps<{ canBeDeleted: boolean }>();

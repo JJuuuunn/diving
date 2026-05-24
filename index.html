@@ -1,15 +1,38 @@
 <!doctype html>
 <html lang="ko">
-  <head>
-    <meta charset="UTF-8" />
-    <link rel="icon" type="image/svg+xml" href="/diving.svg" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>다이빙 좋아</title>
-    <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@300;400;500;700;900&display=swap" rel="stylesheet">
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-  </head>
-  <body>
-    <div id="app"></div>
-    <script type="module" src="/src/main.ts"></script>
-  </body>
+
+<head>
+  <meta charset="UTF-8" />
+  <link rel="icon" type="image/svg+xml" href="/diving.svg" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>다이빙 좋아</title>
+  <meta name="description" content="다이빙 성향 테스트를 통해 당신에게 어울리는 바다 생물을 찾아보고, 병원 정보를 손쉽게 확인하세요.">
+  <meta name="keywords" content="다이빙, 성향 테스트, 바다 생물, 스쿠버 다이빙, 의료 병원, 스쿠버 병원">
+  <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+KR:wght@300;400;500;700;900&display=swap"
+    rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+  <meta property="og:title" content="다이빙 성향 테스트 & 병원 정보">
+  <meta property="og:description" content="다이빙 성향 테스트를 통해 당신에게 어울리는 바다 생물을 찾아보고, 병원 정보를 손쉽게 확인하세요.">
+  <meta property="og:type" content="website">
+  <meta property="og:url" content="https://yourdomain.com/">
+  <meta property="og:image" content="/assets/og-image.png">
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:title" content="다이빙 성향 테스트 & 병원 정보">
+  <meta name="twitter:description" content="다이빙 성향 테스트를 통해 당신에게 어울리는 바다 생물을 찾아보고, 병원 정보를 손쉽게 확인하세요.">
+</head>
+
+<body>
+  <script>
+    (function () {
+      const theme = localStorage.getItem('theme-mode');
+      const prefersDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
+      if (theme === 'dark' || (theme !== 'light' && prefersDark)) {
+        document.body.classList.add('dark');
+      }
+    })();
+  </script>
+  <div id="app"></div>
+  <script type="module" src="/src/main.ts"></script>
+</body>
+
 </html>

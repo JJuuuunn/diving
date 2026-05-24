@@ -102,20 +102,12 @@
 
     <!-- 스켈레톤 로딩 상태 -->
     <div class="hospital-list" v-if="isLoadingData">
-      <div v-for="n in 3" :key="n" class="hospital-card skeleton-card fade-in-up">
-        <div class="card-top">
-          <div class="skeleton-line title"></div>
-        </div>
-        <div class="card-details" style="margin-top: 1rem;">
-          <div class="skeleton-line medium" style="margin-bottom: 0.85rem;"></div>
-          <div class="skeleton-line short" style="margin-bottom: 0.85rem;"></div>
-          <div class="skeleton-line medium" style="margin-bottom: 0.85rem;"></div>
-        </div>
-        <div class="card-tips" style="margin-top: 1rem; border: none; background: rgba(0,0,0,0.02);">
-          <div class="skeleton-line medium" style="margin-bottom: 0.5rem; width: 30%;"></div>
-          <div class="skeleton-line medium"></div>
-        </div>
-      </div>
+      <CustomSkeleton 
+        v-for="n in 3" 
+        :key="n" 
+        type="card"
+        class="fade-in-up"
+      />
     </div>
 
     <!-- 병원 카드 목록 (로딩 완료) -->
@@ -300,26 +292,14 @@
                     
                     <div class="field-group success-toggle-group">
                       <label>📌 발급 결과</label>
-                      <div class="toggle-switch-wrapper">
-                        <button 
-                          type="button"
-                          class="toggle-btn success"
-                          :class="{ active: getReviewForm(hospital.id).isSuccess }"
-                          @click="getReviewForm(hospital.id).isSuccess = true"
-                          :disabled="getReviewForm(hospital.id).isSubmitting"
-                        >
-                          🟢 성공
-                        </button>
-                        <button 
-                          type="button"
-                          class="toggle-btn fail"
-                          :class="{ active: !getReviewForm(hospital.id).isSuccess }"
-                          @click="getReviewForm(hospital.id).isSuccess = false"
-                          :disabled="getReviewForm(hospital.id).isSubmitting"
-                        >
-                          🔴 실패
-                        </button>
-                      </div>
+                      <CustomSwitch 
+                        v-model="getReviewForm(hospital.id).isSuccess" 
+                        active-text="성공" 
+                        inactive-text="실패"
+                        active-icon="fa-circle-check"
+                        inactive-icon="fa-circle-xmark"
+                        :disabled="getReviewForm(hospital.id).isSubmitting"
+                      />
                     </div>
                   </div>
 
@@ -552,6 +532,8 @@ import { useGeolocation } from '@/composables/useGeolocation';
 import type { Hospital, Review } from '@/types/medical';
 import { formatDate } from '@/utils/formatter';
 import dayjs from 'dayjs';
+import CustomSwitch from '@/components/CustomSwitch.vue';
+import CustomSkeleton from '@/components/CustomSkeleton.vue';
 
 interface ExtendedHospital extends Hospital {
   distance?: number;

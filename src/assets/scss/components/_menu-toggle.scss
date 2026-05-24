@@ -27,4 +27,8 @@
     transform: scale(1.1);
     background-color: var(--menu-button-hover-bg);
   }
+
+  @media (min-width: 1024px) {
+    display: none;
+  }
 }

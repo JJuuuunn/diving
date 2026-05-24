@@ -1,0 +1,268 @@
+// ==========================================
+// 1. 글로벌 네이티브 넘버 스피너 숨김 처리
+// ==========================================
+input::-webkit-outer-spin-button,
+input::-webkit-inner-spin-button {
+  -webkit-appearance: none;
+  margin: 0;
+}
+
+input[type=number] {
+  -moz-appearance: textfield;
+}
+
+// ==========================================
+// 2. 프리미엄 숫자 입력창 (Number Stepper) 스타일
+// ==========================================
+.custom-number-input {
+  width: 100%;
+
+  .number-stepper-container {
+    display: flex;
+    align-items: center;
+    background: rgba(15, 23, 42, 0.6);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    border-radius: 12px;
+    overflow: hidden;
+    transition: all 0.25s ease;
+    box-sizing: border-box;
+
+    body:not(.dark) & {
+      background: rgba(255, 255, 255, 0.8);
+      border-color: rgba(0, 0, 0, 0.1);
+    }
+
+    // 입력 필드 포커스 시 컨테이너 전체에 글로우 포커싱 효과 적용
+    &:focus-within {
+      outline: none;
+      border-color: var(--ocean-400);
+      box-shadow: 0 0 10px rgba(56, 189, 248, 0.25);
+      background: rgba(15, 23, 42, 0.8);
+
+      body:not(.dark) & {
+        background: rgba(255, 255, 255, 1);
+        border-color: var(--ocean-500);
+        box-shadow: 0 0 10px rgba(14, 165, 233, 0.2);
+      }
+    }
+
+    // 증감 조절용 버튼
+    .stepper-btn {
+      background: transparent;
+      border: none;
+      width: 44px;
+      height: 44px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      color: var(--ocean-400);
+      font-size: 0.9rem;
+      cursor: pointer;
+      transition: all 0.2s ease;
+      user-select: none;
+
+      body:not(.dark) & {
+        color: var(--ocean-500);
+      }
+
+      &:hover:not(:disabled) {
+        background: rgba(255, 255, 255, 0.06);
+        color: var(--ocean-300);
+
+        body:not(.dark) & {
+          background: rgba(0, 0, 0, 0.04);
+          color: var(--ocean-600);
+        }
+      }
+
+      &:active:not(:disabled) {
+        transform: scale(0.92);
+      }
+
+      &:disabled {
+        opacity: 0.25;
+        cursor: not-allowed;
+        color: #475569;
+
+        body:not(.dark) & {
+          color: var(--slate-300);
+        }
+      }
+    }
+
+    // 실제 인풋 박스
+    .stepper-input {
+      flex: 1;
+      border: none;
+      background: transparent;
+      color: #f8fafc;
+      font-size: 0.95rem;
+      font-weight: 600;
+      text-align: center;
+      padding: 12px 0;
+      min-width: 50px;
+      width: 100%;
+      box-sizing: border-box;
+
+      body:not(.dark) & {
+        color: var(--slate-800);
+      }
+
+      &:focus {
+        outline: none;
+      }
+
+      &::placeholder {
+        color: #475569;
+
+        body:not(.dark) & {
+          color: var(--slate-400);
+        }
+      }
+    }
+  }
+}
+
+// ==========================================
+// 3. 프리미엄 셀렉트박스 (Custom Select) 스타일
+// ==========================================
+.custom-select {
+  position: relative;
+  width: 100%;
+
+  // 셀렉트 활성화 트리거 바
+  .select-trigger {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    width: 100%;
+    background: rgba(15, 23, 42, 0.6);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    border-radius: 12px;
+    padding: 12px 16px;
+    color: #f8fafc;
+    font-size: 0.95rem;
+    cursor: pointer;
+    transition: all 0.25s ease;
+    box-sizing: border-box;
+    user-select: none;
+
+    body:not(.dark) & {
+      background: rgba(255, 255, 255, 0.8);
+      border-color: rgba(0, 0, 0, 0.1);
+      color: var(--slate-800);
+    }
+
+    &:hover {
+      border-color: var(--ocean-400);
+      background: rgba(15, 23, 42, 0.75);
+      box-shadow: 0 0 12px rgba(56, 189, 248, 0.15);
+
+      body:not(.dark) & {
+        background: rgba(255, 255, 255, 1);
+        border-color: var(--ocean-500);
+      }
+    }
+
+    &.is-active {
+      border-color: var(--ocean-400);
+      box-shadow: 0 0 10px rgba(56, 189, 248, 0.25);
+      background: rgba(15, 23, 42, 0.8);
+
+      body:not(.dark) & {
+        background: rgba(255, 255, 255, 1);
+        border-color: var(--ocean-500);
+        box-shadow: 0 0 10px rgba(14, 165, 233, 0.2);
+      }
+    }
+
+    .select-label {
+      overflow: hidden;
+      text-overflow: ellipsis;
+      white-space: nowrap;
+
+      .placeholder {
+        color: #475569;
+
+        body:not(.dark) & {
+          color: var(--slate-400);
+        }
+      }
+    }
+
+    .select-arrow {
+      font-size: 0.8rem;
+      color: #64748b;
+      transition: transform 0.25s ease;
+
+      &.is-open {
+        transform: rotate(180deg);
+        color: var(--ocean-400);
+      }
+    }
+  }
+
+  // 드롭다운 옵션 리스트 팝업 (유리모핑)
+  .select-dropdown {
+    position: absolute;
+    top: calc(100% + 8px);
+    left: 0;
+    z-index: 1100;
+    width: 100%;
+    max-height: 240px;
+    overflow-y: auto;
+    background: rgba(15, 23, 42, 0.9);
+    backdrop-filter: blur(24px);
+    border: 1px solid rgba(255, 255, 255, 0.08);
+    border-radius: 16px;
+    padding: 6px;
+    box-shadow: 0 12px 30px rgba(0, 0, 0, 0.45);
+    box-sizing: border-box;
+    transform-origin: top center;
+    transition: all 0.2s ease;
+
+    body:not(.dark) & {
+      background: rgba(255, 255, 255, 0.96);
+      border-color: rgba(0, 0, 0, 0.07);
+      box-shadow: 0 12px 30px rgba(15, 23, 42, 0.08);
+    }
+
+    // 옵션 개별 아이템
+    .option-item {
+      padding: 10px 14px;
+      border-radius: 10px;
+      font-size: 0.9rem;
+      color: #cbd5e1;
+      cursor: pointer;
+      transition: all 0.15s ease;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      user-select: none;
+
+      body:not(.dark) & {
+        color: var(--slate-700);
+      }
+
+      &:hover:not(.is-selected) {
+        background: rgba(255, 255, 255, 0.06);
+        color: #f8fafc;
+
+        body:not(.dark) & {
+          background: rgba(0, 0, 0, 0.04);
+          color: var(--slate-900);
+        }
+      }
+
+      &.is-selected {
+        background: linear-gradient(135deg, var(--ocean-500) 0%, var(--ocean-700) 100%);
+        color: white;
+        font-weight: 600;
+
+        body:not(.dark) & {
+          background: linear-gradient(135deg, var(--ocean-500) 0%, var(--ocean-600) 100%);
+        }
+      }
+    }
+  }
+}
