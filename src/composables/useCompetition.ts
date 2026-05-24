@@ -83,21 +83,46 @@ export function useCompetition() {
     });
   });
 
-  // 가장 가까운 접수 중/접수 예정 대회를 선별하여 카운트다운 대상 지정
-  const nearestCompetition = computed((): Competition | null => {
+  // 1. 접수 마감 임박: 접수 중/접수 예정 대회 중 regEndDate가 가장 가까운 대회 선출
+  const nearestRegCompetition = computed((): Competition | null => {
+    const today = dayjs();
     const targetComps = compStore.competitions.filter((comp) => {
       const status = getCompetitionStatus(comp);
-      return status === 'registering' || status === 'upcoming';
+      return (status === 'registering' || status === 'upcoming') &&
+        dayjs(comp.regEndDate).isAfter(today);
     });
 
     if (targetComps.length === 0) return null;
 
-    // 개최일이 가장 가까운 순으로 정렬
+    // 접수 마감일이 가장 가까운 순으로 정렬
+    return [...targetComps].sort((a, b) => dayjs(a.regEndDate).diff(dayjs(b.regEndDate)))[0];
+  });
+
+  // 2. 대회 개막 임박: 아직 시작되지 않은 대회 중 startDate가 가장 가까운 대회 선출
+  const nearestCompCompetition = computed((): Competition | null => {
+    const today = dayjs();
+    const targetComps = compStore.competitions.filter((comp) => {
+      return dayjs(comp.startDate).isAfter(today);
+    });
+
+    if (targetComps.length === 0) return null;
+
+    // 대회 시작일이 가장 가까운 순으로 정렬
     return [...targetComps].sort((a, b) => dayjs(a.startDate).diff(dayjs(b.startDate)))[0];
   });
 
-  // 카운트다운 반응형 데이터 정의
-  const countdown = ref<CompetitionCountdown>({
+  // 접수 마감 카운트다운 반응형 데이터
+  const regCountdown = ref<CompetitionCountdown>({
+    title: '',
+    days: 0,
+    hours: 0,
+    minutes: 0,
+    seconds: 0,
+    isOver: true
+  });
+
+  // 대회 개막 카운트다운 반응형 데이터
+  const compCountdown = ref<CompetitionCountdown>({
     title: '',
     days: 0,
     hours: 0,
@@ -108,49 +133,49 @@ export function useCompetition() {
 
   let countdownIntervalId: number | null = null;
 
-  // 실시간으로 카운트다운을 업데이트하는 액션
+  // 밀리초를 days/hours/minutes/seconds 객체로 분해하는 순수 유틸리티
+  const msToCountdown = (diffMs: number): Pick<CompetitionCountdown, 'days' | 'hours' | 'minutes' | 'seconds'> => {
+    const totalSeconds = Math.floor(diffMs / 1000);
+    return {
+      days: Math.floor(totalSeconds / (3600 * 24)),
+      hours: Math.floor((totalSeconds % (3600 * 24)) / 3600),
+      minutes: Math.floor((totalSeconds % 3600) / 60),
+      seconds: totalSeconds % 60
+    };
+  };
+
+  // 실시간으로 두 카운트다운을 독립적으로 업데이트하는 액션
   const startCountdown = (): void => {
     if (countdownIntervalId) clearInterval(countdownIntervalId);
 
     const update = () => {
-      const comp = nearestCompetition.value;
-      if (!comp) {
-        countdown.value.isOver = true;
-        return;
-      }
-
-      // 접수 마감 시간 기준 카운트다운
-      const targetTime = dayjs(comp.regEndDate).endOf('day');
       const now = dayjs();
-      const diffMs = targetTime.diff(now);
 
-      if (diffMs <= 0) {
-        countdown.value = {
-          title: comp.title,
-          days: 0,
-          hours: 0,
-          minutes: 0,
-          seconds: 0,
-          isOver: true
-        };
-        return;
+      // --- 접수 마감 타이머 계산 ---
+      const regComp = nearestRegCompetition.value;
+      if (!regComp) {
+        regCountdown.value.isOver = true;
+      } else {
+        const diffMs = dayjs(regComp.regEndDate).endOf('day').diff(now);
+        if (diffMs <= 0) {
+          regCountdown.value = { title: regComp.title, days: 0, hours: 0, minutes: 0, seconds: 0, isOver: true };
+        } else {
+          regCountdown.value = { title: regComp.title, ...msToCountdown(diffMs), isOver: false };
+        }
       }
 
-      // 만약 duration 플러그인이 로드되어 있지 않다면 수동 밀리초 연산
-      const totalSeconds = Math.floor(diffMs / 1000);
-      const days = Math.floor(totalSeconds / (3600 * 24));
-      const hours = Math.floor((totalSeconds % (3600 * 24)) / 3600);
-      const minutes = Math.floor((totalSeconds % 3600) / 60);
-      const seconds = totalSeconds % 60;
-
-      countdown.value = {
-        title: comp.title,
-        days,
-        hours,
-        minutes,
-        seconds,
-        isOver: false
-      };
+      // --- 대회 개막 타이머 계산 ---
+      const compComp = nearestCompCompetition.value;
+      if (!compComp) {
+        compCountdown.value.isOver = true;
+      } else {
+        const diffMs = dayjs(compComp.startDate).startOf('day').diff(now);
+        if (diffMs <= 0) {
+          compCountdown.value = { title: compComp.title, days: 0, hours: 0, minutes: 0, seconds: 0, isOver: true };
+        } else {
+          compCountdown.value = { title: compComp.title, ...msToCountdown(diffMs), isOver: false };
+        }
+      }
     };
 
     update();
@@ -172,8 +197,10 @@ export function useCompetition() {
     getCompetitionStatus,
     getDDay,
     filteredCompetitions,
-    nearestCompetition,
-    countdown,
+    nearestRegCompetition,
+    nearestCompCompetition,
+    regCountdown,
+    compCountdown,
     startCountdown,
     bookmarkedCompetitions,
     toggleBookmark: compStore.toggleBookmark,
