@@ -5,6 +5,7 @@ import calculatorIcon from '@/assets/icons/calculator.svg?raw';
 import bookIcon from '@/assets/icons/book.svg?raw';
 import divingMaskIcon from '@/assets/icons/diving-mask.svg?raw';
 import hospitalIcon from '@/assets/icons/hospital.svg?raw';
+import calendarIcon from '@/assets/icons/calendar.svg?raw';
 
 export const MENU_ITEMS: MenuItem[] = [
     {
@@ -45,6 +46,14 @@ export const MENU_ITEMS: MenuItem[] = [
         desc: '다이빙 물리, 생리 및 특수기체 이론 퀴즈 도전하기',
         icon: bookIcon,
         route: RouterName.QuizDashboard,
+        active: true,
+    },
+    {
+        title: '프리다이빙 대회 일정',
+        label: 'Competition',
+        desc: '국내외 프리다이빙 대회 일정 및 공식 접수 정보 확인하기',
+        icon: calendarIcon,
+        route: RouterName.Competition,
         active: true,
     },
     {

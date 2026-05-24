@@ -64,6 +64,11 @@ const routes = [
         path: 'medical',
         name: RouterName.MedicalFinder,
         component: () => import('@/views/medical/MedicalFinder.vue')
+      },
+      {
+        path: 'competition',
+        name: RouterName.Competition,
+        component: () => import('@/views/competition/CompetitionMain.vue')
       }
     ]
   },
