@@ -4,30 +4,59 @@
     <Header title="프리다이빙 대회 일정" subtitle="Freediving Competition Arena 🏆" />
 
     <main class="main-content">
-      <!-- 실시간 카운트다운 위젯 대시보드 (가장 임박한 대회 정보 노출) -->
-      <section v-if="nearestCompetition && !countdown.isOver" class="countdown-dashboard">
-        <div class="dashboard-header">
-          <span class="label">가장 임박한 접수 일정</span>
-          <h2>🔥 {{ nearestCompetition.title }}</h2>
-          <span class="sub">접수 마감 시한까지 남은 시간</span>
+      <!-- 이중 실시간 카운트다운 위젯 대시보드 -->
+      <section class="countdown-dashboards-grid">
+        <!-- 1. 접수 마감 임박 타이머 -->
+        <div v-if="nearestRegCompetition && !regCountdown.isOver" class="countdown-dashboard reg-timer">
+          <div class="dashboard-header">
+            <span class="label">🔥 접수 마감 임박</span>
+            <h2>{{ nearestRegCompetition.title }}</h2>
+            <span class="sub">접수 마감 시한까지 남은 시간</span>
+          </div>
+          <div class="timer-grid">
+            <div class="time-unit">
+              <span class="value">{{ String(regCountdown.days).padStart(2, '0') }}</span>
+              <span class="label">Days</span>
+            </div>
+            <div class="time-unit">
+              <span class="value">{{ String(regCountdown.hours).padStart(2, '0') }}</span>
+              <span class="label">Hours</span>
+            </div>
+            <div class="time-unit">
+              <span class="value">{{ String(regCountdown.minutes).padStart(2, '0') }}</span>
+              <span class="label">Mins</span>
+            </div>
+            <div class="time-unit">
+              <span class="value">{{ String(regCountdown.seconds).padStart(2, '0') }}</span>
+              <span class="label">Secs</span>
+            </div>
+          </div>
         </div>
 
-        <div class="timer-grid">
-          <div class="time-unit">
-            <span class="value">{{ String(countdown.days).padStart(2, '0') }}</span>
-            <span class="label">Days</span>
+        <!-- 2. 대회 개막 임박 타이머 -->
+        <div v-if="nearestCompCompetition && !compCountdown.isOver" class="countdown-dashboard comp-timer">
+          <div class="dashboard-header">
+            <span class="label">📅 대회 개막 임박</span>
+            <h2>{{ nearestCompCompetition.title }}</h2>
+            <span class="sub">대회 시작까지 남은 시간</span>
           </div>
-          <div class="time-unit">
-            <span class="value">{{ String(countdown.hours).padStart(2, '0') }}</span>
-            <span class="label">Hours</span>
-          </div>
-          <div class="time-unit">
-            <span class="value">{{ String(countdown.minutes).padStart(2, '0') }}</span>
-            <span class="label">Mins</span>
-          </div>
-          <div class="time-unit">
-            <span class="value">{{ String(countdown.seconds).padStart(2, '0') }}</span>
-            <span class="label">Secs</span>
+          <div class="timer-grid">
+            <div class="time-unit">
+              <span class="value">{{ String(compCountdown.days).padStart(2, '0') }}</span>
+              <span class="label">Days</span>
+            </div>
+            <div class="time-unit">
+              <span class="value">{{ String(compCountdown.hours).padStart(2, '0') }}</span>
+              <span class="label">Hours</span>
+            </div>
+            <div class="time-unit">
+              <span class="value">{{ String(compCountdown.minutes).padStart(2, '0') }}</span>
+              <span class="label">Mins</span>
+            </div>
+            <div class="time-unit">
+              <span class="value">{{ String(compCountdown.seconds).padStart(2, '0') }}</span>
+              <span class="label">Secs</span>
+            </div>
           </div>
         </div>
       </section>
@@ -215,8 +244,10 @@ const {
   filters,
   getDDay,
   filteredCompetitions,
-  nearestCompetition,
-  countdown,
+  nearestRegCompetition,
+  nearestCompCompetition,
+  regCountdown,
+  compCountdown,
   startCountdown,
   bookmarkedCompetitions,
   toggleBookmark
