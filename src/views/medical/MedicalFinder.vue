@@ -179,12 +179,12 @@
         :id="'hospital-card-' + hospital.id"
         class="hospital-card fade-in-up"
         :style="{ animationDelay: `${index * 0.05}s` }"
+        @click="onCardClick(hospital)"
+        title="지도에서 이 병원 위치 보기"
       >
         <div class="card-top">
           <div 
-            class="title-area clickable-title" 
-            @click="onCardClick(hospital)"
-            title="지도에서 이 병원 위치 보기"
+            class="title-area" 
           >
             <h3>📍 {{ hospital.name }}</h3>
             <!-- 내 위치 활성화 시 실시간 거리 배지 노출 -->
@@ -215,7 +215,7 @@
             <span class="label">🏢 주소:</span>
             <span 
               class="value address-value" 
-              @click="copyAddress(hospital.address)"
+              @click.stop="copyAddress(hospital.address)"
               :title="`${hospital.address} (클릭 시 주소 복사)`"
             >
               {{ hospital.address }}
@@ -233,6 +233,7 @@
                   rel="noopener noreferrer"
                   class="map-icon-btn kakao"
                   :title="`카카오맵 ${hospital.kakaoPlaceId ? '상세 정보' : '길찾기'} 보기`"
+                  @click.stop
                 >
                   <svg viewBox="0 0 24 24">
                     <path d="M12 2C6.477 2 2 5.58 2 10c0 2.906 1.884 5.476 4.72 6.848-.112.42-.406 1.516-.465 1.748-.073.29-.29 1.157.126 1.157.34 0 1.954-1.328 2.73-1.856.346.066.702.103 1.066.103 5.523 0 10-3.58 10-8s-4.477-8-10-8z"/>
@@ -248,6 +249,7 @@
                   rel="noopener noreferrer"
                   class="map-icon-btn naver"
                   :title="`네이버 지도 ${hospital.naverPlaceId ? '상세 정보' : '검색'} 보기`"
+                  @click.stop
                 >
                   <svg viewBox="0 0 24 24">
                     <path d="M16.2 3H21v18h-4.8L9 9.9V21H4V3h4.8l7.2 11.1V3z"/>
@@ -258,7 +260,7 @@
           </div>
           <div class="detail-item">
             <span class="label">📞 전화:</span>
-            <a :href="`tel:${hospital.tel}`" class="value tel-link">{{ hospital.tel }}</a>
+            <a :href="`tel:${hospital.tel}`" class="value tel-link" @click.stop>{{ hospital.tel }}</a>
           </div>
           <div class="detail-item">
             <span class="label">💵 발급비:</span>
@@ -286,7 +288,7 @@
 
         <!-- 다이버 실시간 한 줄 후기 및 히스토리 아코디언 -->
         <div class="review-section">
-          <button class="review-toggle-btn" @click="toggleReviews(hospital.id)">
+          <button class="review-toggle-btn" @click.stop="toggleReviews(hospital.id)">
             💬 다이버 방문 후기 & 히스토리 ({{ hospital.reviews ? hospital.reviews.length : 0 }}개)
             <span class="toggle-arrow" :class="{ open: openedReviews[hospital.id] }">▼</span>
           </button>
@@ -294,6 +296,7 @@
           <div 
             class="review-list-wrapper"
             :style="{ maxHeight: openedReviews[hospital.id] ? '2000px' : '0px' }"
+            @click.stop
           >
             <div class="review-list" v-if="hospital.reviews && hospital.reviews.length > 0">
               <div 

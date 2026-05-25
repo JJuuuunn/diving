@@ -65,15 +65,16 @@ const routes = [
         name: RouterName.MedicalFinder,
         component: () => import('@/views/medical/MedicalFinder.vue')
       },
-      {
-        path: 'medical-test',
-        redirect: { name: RouterName.ComponentPlayground, hash: '#sec-map' },
-      },
-      {
-        path: 'playground',
-        name: RouterName.ComponentPlayground,
-        component: () => import('@/views/dev/ComponentPlayground.vue')
-      },
+      // 개발 모드(npm run dev)일 때만 Playground 등록
+      ...(import.meta.env.DEV
+        ? [
+            {
+              path: 'playground',
+              name: RouterName.ComponentPlayground,
+              component: () => import('@/views/dev/ComponentPlayground.vue'),
+            },
+          ]
+        : []),
       {
         path: 'competition',
         name: RouterName.Competition,
