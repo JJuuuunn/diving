@@ -24,6 +24,8 @@ export interface SidebarProps {
 }
 
 export interface DarkModeToggleProps {
-  modelValue: boolean;
+  modelValue?: boolean;
+  /** 사이드바 확장 상태와 동일한 와이드 UI를 강제 표시 (플레이그라운드 등) */
+  expanded?: boolean;
 }
 

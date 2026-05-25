@@ -1,5 +1,6 @@
 <template>
   <div class="medical-finder-container">
+
     <!-- 상단 헤더 및 소개 -->
     <header class="medical-header">
       <h1 class="fade-in-up">🏥 메디컬 스탬프 파인더</h1>
@@ -40,6 +41,27 @@
 
     </header>
 
+    <!-- 📄 공식 메디컬 서식 다운로드 센터 진입 배너 (2-Depth) -->
+    <div class="forms-download-banner fade-in-up delay">
+      <div class="banner-title">
+        <span class="banner-icon">📄</span>
+        <div>
+          <h3>대회 제출용 공식 메디컬 서식 다운로드 센터</h3>
+          <p>병원 방문 전에 해당하는 종목의 질문지를 미리 인쇄하여 수동 체크 후 지참해 주세요.</p>
+        </div>
+      </div>
+      <div class="banner-actions">
+        <button 
+          class="download-center-btn" 
+          @click="showFormsModal = true"
+          title="공식 스쿠버/프리다이빙 메디컬 질문지 다운로드 센터 열기"
+        >
+          <span>📄 서식 다운로드 센터 열기</span>
+          <span class="arrow-icon">➔</span>
+        </button>
+      </div>
+    </div>
+
     <!-- 검색 및 컨트롤 영역 -->
     <div class="control-box fade-in-up delay">
       <!-- 주소/병원명 텍스트 검색 -->
@@ -64,6 +86,19 @@
         >
           <span class="gps-icon">📍</span>
           {{ geoHelper.loading.value ? '위치 탐색 중...' : isGpsSorted ? '거리순 정렬 완료 (가까운 순)' : '내 주변 가까운 병원 찾기' }}
+        </button>
+      </div>
+
+      <!-- 데이터 내보내기 그룹 (CSV) -->
+      <div class="export-control-group">
+        <button 
+          class="export-btn csv" 
+          :disabled="isLoadingData || sortedHospitals.length === 0" 
+          @click="exportHospitalsToCSV"
+          title="현재 조건으로 검색된 병원 목록을 CSV 파일로 다운로드합니다."
+        >
+          <span class="btn-icon">📊</span>
+          <span>목록 CSV 다운로드</span>
         </button>
       </div>
     </div>
@@ -100,8 +135,34 @@
       ⚠️ {{ geoHelper.error.value }}
     </div>
 
-    <!-- 스켈레톤 로딩 상태 -->
-    <div class="hospital-list" v-if="isLoadingData">
+    <!-- 🗺️ 반응형 지도 및 리스트 스플릿 레이아웃 영역 -->
+    <div class="dashboard-wrapper">
+      
+      <!-- 📍 모바일 전용 뷰 탭 컨트롤러 (1024px 미만에서만 표시) -->
+      <div class="mobile-view-tabs">
+        <button 
+          class="tab-btn" 
+          :class="{ active: mobileActiveTab === 'list' }"
+          @click="mobileActiveTab = 'list'"
+        >
+          📋 리스트 보기
+        </button>
+        <button 
+          class="tab-btn" 
+          :class="{ active: mobileActiveTab === 'map' }"
+          @click="mobileActiveTab = 'map'"
+        >
+          🗺️ 지도 보기
+        </button>
+      </div>
+
+      <!-- 1) 리스트 영역 -->
+      <div 
+        class="list-panel" 
+        :class="{ 'mobile-hidden': mobileActiveTab === 'map' }"
+      >
+        <!-- 스켈레톤 로딩 상태 -->
+        <div class="hospital-list" v-if="isLoadingData">
       <CustomSkeleton 
         v-for="n in 3" 
         :key="n" 
@@ -115,39 +176,51 @@
       <div 
         v-for="(hospital, index) in sortedHospitals" 
         :key="hospital.id"
+        :id="'hospital-card-' + hospital.id"
         class="hospital-card fade-in-up"
         :style="{ animationDelay: `${index * 0.05}s` }"
       >
         <div class="card-top">
-          <div class="title-area">
-            <h3>{{ hospital.name }}</h3>
+          <div 
+            class="title-area clickable-title" 
+            @click="onCardClick(hospital)"
+            title="지도에서 이 병원 위치 보기"
+          >
+            <h3>📍 {{ hospital.name }}</h3>
             <!-- 내 위치 활성화 시 실시간 거리 배지 노출 -->
             <span v-if="isGpsSorted && hospital.distance !== undefined" class="distance-badge">
               🚗 내 위치에서 {{ hospital.distance }} km
             </span>
+          </div>
+          <div class="badge-row">
+            <span class="update-badge">최근 확인: {{ formatDate(hospital.lastUpdated) }}</span>
             <!-- 상태 배지 노출 -->
             <span v-if="hospital.status === 'active'" class="status-chip active">
-              <span class="dot"></span> 정상 발급 중
+              <span class="dot"></span> 발급중
             </span>
             <span v-else-if="hospital.status === 'paused'" class="status-chip paused">
-              <span class="dot"></span> 발급 임시 중단
+              <span class="dot"></span> 중단
             </span>
             <span v-else-if="hospital.status === 'pending'" class="status-chip pending">
-              <span class="dot"></span> 검수 대기 중
+              <span class="dot"></span> 검수중
             </span>
             <span v-else-if="hospital.status === 'inactive'" class="status-chip inactive">
-              <span class="dot"></span> 발급 불가
+              <span class="dot"></span> 불가
             </span>
           </div>
-          <span class="update-badge">최근 확인: {{ formatDate(hospital.lastUpdated) }}</span>
         </div>
 
         <div class="card-details">
           <div class="detail-item address-item">
             <span class="label">🏢 주소:</span>
-            <span class="value">{{ hospital.address }}</span>
+            <span 
+              class="value address-value" 
+              @click="copyAddress(hospital.address)"
+              :title="`${hospital.address} (클릭 시 주소 복사)`"
+            >
+              {{ hospital.address }}
+            </span>
             <div class="address-actions">
-              <button class="copy-btn" @click="copyAddress(hospital.address)">📋 복사</button>
 
               <!-- 원형 지도 바로가기 로고 버튼 세트 -->
               <div class="map-icons">
@@ -196,7 +269,7 @@
         <!-- 다이버 유용한 팁 -->
         <div class="card-tips">
           <strong>💡 다이버 팁 & 정보:</strong>
-          <p>{{ hospital.tips }}</p>
+          <p :title="hospital.tips">{{ hospital.tips }}</p>
         </div>
 
         <!-- 태그 리스트 -->
@@ -360,6 +433,31 @@
       <small>스프레드시트에 새로운 발급 성공 병원을 정비하거나, 검색어를 다르게 입력해 주세요.</small>
     </div>
 
+    </div> <!-- Closes list-panel -->
+
+    <!-- 2) 지도 영역 -->
+    <div 
+      class="map-panel" 
+      :class="{ 'mobile-hidden': mobileActiveTab === 'list' }"
+    >
+      <div class="map-container-wrapper">
+        <div id="kakao-map" class="map-canvas"></div>
+        
+        <!-- 지도 로딩 또는 에러 정보 상태 표시 -->
+        <div v-if="!isMapLoaded && mapError" class="map-status-overlay error">
+          <span class="warning-icon">⚠️</span>
+          <p>{{ mapError }}</p>
+          <small>지도가 연결되지 않아도 병원 리스트는 정상적으로 검색하고 조회하실 수 있습니다.</small>
+        </div>
+        <div v-else-if="!isMapLoaded" class="map-status-overlay loading">
+          <span class="spinner"></span>
+          <p>카카오 지도를 활성화하고 있습니다...</p>
+        </div>
+      </div>
+    </div>
+
+  </div> <!-- Closes dashboard-wrapper -->
+
     <!-- 의사 가이드라인 팝업 모달 -->
     <div v-if="showGuideModal" class="guide-modal-overlay" @click.self="showGuideModal = false">
       <div class="guide-modal-content">
@@ -400,7 +498,33 @@
           <section class="modal-section alert-box">
             <h4>💡 병원 가기 전 다이버 필수 준비물</h4>
             <ul>
-              <li>대회 혹은 협회 공식 메디컬 질문 서식 인쇄본 (스쿠버: WRSTC / 프리다이빙: AIDA 등 1부)</li>
+              <li>
+                대회 혹은 협회 공식 메디컬 질문 서식 인쇄본 (1부)
+                <div class="modal-download-links">
+                  <a 
+                    :href="`${baseUrl}forms/Diver-Medical-Participant-Questionnaire.pdf`" 
+                    download="Diver-Medical-Participant-Questionnaire.pdf"
+                    class="modal-dl-btn scuba"
+                    title="스쿠버 메디컬 서식 다운로드 (로컬 파일)"
+                  >
+                    🤿 스쿠버 (WRSTC 양식) 📥
+                  </a>
+                  <a 
+                    :href="`${baseUrl}forms/AIDA_Medical_Form.pdf`" 
+                    download="AIDA_Medical_Form.pdf"
+                    class="modal-dl-btn freediving"
+                    title="프리다이빙 메디컬 서식 다운로드 (로컬 파일)"
+                  >
+                    🐬 프리다이빙 (AIDA 양식) 📥
+                  </a>
+                </div>
+                <!-- 🌐 실시간 공식 홈페이지 백업 원본 보기 -->
+                <div class="modal-online-links" style="display: flex; gap: 0.75rem; justify-content: center; margin-top: 0.5rem; font-size: 0.75rem;">
+                  <a href="https://www.uhms.org/images/Diver-Medical-Participant-Questionnaire.pdf" target="_blank" rel="noopener noreferrer" style="color: #94a3b8; text-decoration: underline;">UHMS 공식 사이트 🌐</a>
+                  <span style="color: #4b5563;">|</span>
+                  <a href="https://drive.google.com/drive/folders/1DzpHdxEqGUHwxU7E7cHgVkfvKgRa1wQx" target="_blank" rel="noopener noreferrer" style="color: #94a3b8; text-decoration: underline;">AIDA 구글 드라이브 📂</a>
+                </div>
+              </li>
               <li>신분증</li>
               <li>최근 6개월 이내의 신체검사 결과표 (지참 시 시간/비용 절약 가능)</li>
             </ul>
@@ -522,18 +646,119 @@
         </div>
       </div>
     </div>
+
+    <!-- 📄 공식 메디컬 서식 다운로드 센터 팝업 모달 (2-Depth) -->
+    <div v-if="showFormsModal" class="forms-modal-overlay" @click.self="showFormsModal = false">
+      <div class="forms-modal-content scale-in">
+        <div class="modal-header">
+          <h2>📄 공식 메디컬 서식 다운로드</h2>
+          <button class="close-modal-btn" @click="showFormsModal = false">×</button>
+        </div>
+        <div class="modal-body">
+          <p class="modal-intro">
+            병원 방문 전에 해당하는 종목의 질문지를 미리 다운로드하여 인쇄한 뒤,<br/>
+            <strong>수동으로 자가 질문을 체크한 상태로</strong> 병원을 지참해 주셔야 원활한 소견서 발급이 가능합니다.
+          </p>
+
+          <div class="forms-download-list">
+            <!-- 스쿠버다이빙 카드 -->
+            <div class="form-download-card scuba">
+              <div class="card-left">
+                <span class="category-badge scuba">SCUBA</span>
+                <div class="form-info">
+                  <h4>🤿 스쿠버다이빙 (WRSTC 공식 양식)</h4>
+                  <p class="desc">전 세계 레저 스쿠버 단체(PADI, SSI, NAUI 등)의 표준 잠수적합성 자가 질의서 양식입니다.</p>
+                  <span class="file-meta">파일 형식: PDF (한글/영문 병행)</span>
+                </div>
+              </div>
+              <div class="card-right">
+                <a 
+                  :href="`${baseUrl}forms/Diver-Medical-Participant-Questionnaire.pdf`" 
+                  download="Diver-Medical-Participant-Questionnaire.pdf"
+                  class="download-btn-primary scuba"
+                  title="스쿠버 메디컬 서식 다운로드 (초고속 로컬)"
+                >
+                  <span>다운로드</span>
+                  <span class="dl-icon">📥</span>
+                </a>
+                <a 
+                  href="https://www.uhms.org/images/Diver-Medical-Participant-Questionnaire.pdf" 
+                  target="_blank" 
+                  rel="noopener noreferrer" 
+                  class="download-btn-secondary"
+                  title="UHMS 공식 사이트에서 원본 열기"
+                >
+                  <span>공식 원본 🌐</span>
+                </a>
+              </div>
+            </div>
+
+            <!-- 프리다이빙 카드 -->
+            <div class="form-download-card freediving">
+              <div class="card-left">
+                <span class="category-badge freediving">FREEDIVING</span>
+                <div class="form-info">
+                  <h4>🐬 프리다이빙 (AIDA 공식 양식)</h4>
+                  <p class="desc">AIDA 국제 프리다이빙 대회 및 교육 이수를 위해 필요한 표준 의사 소견서 질문지 양식입니다.</p>
+                  <span class="file-meta">파일 형식: PDF (영문 공식 양식)</span>
+                </div>
+              </div>
+              <div class="card-right">
+                <a 
+                  :href="`${baseUrl}forms/AIDA_Medical_Form.pdf`" 
+                  download="AIDA_Medical_Form.pdf"
+                  class="download-btn-primary freediving"
+                  title="프리다이빙 메디컬 서식 다운로드 (초고속 로컬)"
+                >
+                  <span>다운로드</span>
+                  <span class="dl-icon">📥</span>
+                </a>
+                <a 
+                  href="https://drive.google.com/drive/folders/1DzpHdxEqGUHwxU7E7cHgVkfvKgRa1wQx" 
+                  target="_blank" 
+                  rel="noopener noreferrer" 
+                  class="download-btn-secondary"
+                  title="AIDA 구글 드라이브(한글 서식 등) 열기"
+                >
+                  <span>구글 드라이브 📂</span>
+                </a>
+              </div>
+            </div>
+          </div>
+
+          <!-- 유용한 정보 박스 -->
+          <div class="forms-modal-tips">
+            <h5>💡 다이버를 위한 꿀팁!</h5>
+            <ul>
+              <li>일반 병원에서는 다이빙 전용 서식을 보유하고 있지 않으므로, <strong>반드시 인쇄하여 지참</strong>하셔야 합니다.</li>
+              <li>스쿠버/프리다이빙 서식 모두 의사 확인란(Physician Guidelines)이 포함되어 있습니다.</li>
+              <li>진료 시 의사 선생님께 "기본 신체 검사에 이비인후과 압력 평형 검진을 더하는 형태"라고 정중히 설명드리면 발급이 수월합니다.</li>
+            </ul>
+          </div>
+        </div>
+        <div class="modal-footer">
+          <button class="confirm-btn" @click="showFormsModal = false">확인했습니다</button>
+        </div>
+      </div>
+    </div>
+
+    <!-- 전역 푸터 -->
+    <Footer />
   </div>
 </template>
 
 <script setup lang="ts">
-import { ref, computed, onMounted } from 'vue';
+import { ref, computed, onMounted, watch, nextTick } from 'vue';
 import hospitalsData from '@/data/hospitals.json';
 import { useGeolocation } from '@/composables/useGeolocation';
+import { useToast } from '@/composables/useToast';
+import { useKakaoMap } from '@/composables/useKakaoMap';
 import type { Hospital, Review } from '@/types/medical';
 import { formatDate } from '@/utils/formatter';
 import dayjs from 'dayjs';
 import CustomSwitch from '@/components/CustomSwitch.vue';
 import CustomSkeleton from '@/components/CustomSkeleton.vue';
+import Footer from '@/components/Footer.vue';
 
 interface ExtendedHospital extends Hospital {
   distance?: number;
@@ -547,6 +772,8 @@ const GOOGLE_SHEET_API_URL = (import.meta.env.VITE_GOOGLE_SHEET_API_URL as strin
 const searchQuery = ref('');
 const selectedStatuses = ref<string[]>(['active', 'paused']);
 const showGuideModal = ref(false);
+const showFormsModal = ref(false);
+const baseUrl = import.meta.env.BASE_URL;
 
 // 병원 제보 모달 관련 상태 (방안 B)
 const showSuggestModal = ref(false);
@@ -588,6 +815,7 @@ const initSuggestForm = () => {
 const isGpsSorted = ref(false);
 
 const geoHelper = useGeolocation();
+const { triggerToast } = useToast();
 const rawHospitals = ref<Hospital[]>([]);
 const isLoadingData = ref(false);
 const isFallbackMode = ref(false);
@@ -599,6 +827,9 @@ const CACHE_TTL = 24 * 60 * 60 * 1000; // 24시간(1일) (ms 단위)
 const isCachedData = ref(false);
 const lastSyncTimeStr = ref('');
 
+// 모바일 전용 액티브 뷰 탭 상태 ('list' 또는 'map')
+const mobileActiveTab = ref<'list' | 'map'>('list');
+
 // 개별 병원 카드 아코디언 상태 관리 (key: hospitalId, value: isOpen)
 const openedReviews = ref<Record<string, boolean>>({});
 
@@ -606,16 +837,86 @@ const toggleReviews = (hospitalId: string) => {
   openedReviews.value[hospitalId] = !openedReviews.value[hospitalId];
 };
 
+// 🗺️ 카카오 지도 API 설정 및 훅 연동
+const KAKAO_MAP_API_KEY = (import.meta.env.VITE_KAKAO_MAP_API_KEY as string) || "";
+const {
+  isMapLoaded,
+  mapError,
+  initMapSdk,
+  createMapInstance,
+  updateMarkers,
+  focusOnHospital,
+  updateUserLocationMarker
+} = useKakaoMap();
+
+// 리스트에서 병원 클릭 시 지도 중심으로 패닝 및 마커 강조
+const onCardClick = (hospital: Hospital) => {
+  if (isMapLoaded.value && hospital.lat && hospital.lng) {
+    focusOnHospital(hospital.id, true);
+  }
+};
+
+// 마커 클릭 시 해당 병원 카드로 부드러운 스크롤 이동 및 플래시 하이라이트
+const scrollToHospitalCard = (hospitalId: string) => {
+  if (mobileActiveTab.value === 'map') {
+    mobileActiveTab.value = 'list';
+  }
+  setTimeout(() => {
+    const el = document.getElementById(`hospital-card-${hospitalId}`);
+    if (el) {
+      el.scrollIntoView({ behavior: 'smooth', block: 'center' });
+      el.classList.add('highlight-flash');
+      setTimeout(() => {
+        el.classList.remove('highlight-flash');
+      }, 1500);
+    }
+  }, 100);
+};
+
+
+
+// 🏢 구글 스프레드시트 혹은 로컬 스토리지 데이터의 lat/lng 좌표가 string인 경우 strict float(Number)로 확실하게 캐스팅 보정
+const sanitizeHospitalsCoordinates = (list: Hospital[]): Hospital[] => {
+  return list.map(h => ({
+    ...h,
+    lat: Number(h.lat),
+    lng: Number(h.lng)
+  }));
+};
 
 onMounted(async () => {
   await loadHospitalsData();
+
+  // 💡 Vue 렌더링 엔진이 스켈레톤 상태를 끄고 지도 컨테이너 DOM을 완벽히 구축할 때까지 대기
+  await nextTick();
+
+  // 지도 인스턴스 초기화 수행
+  if (KAKAO_MAP_API_KEY) {
+    const success = await initMapSdk(KAKAO_MAP_API_KEY);
+    if (success) {
+      // 최초 지도 타겟: 리스트 첫 병원 위치, 없을 시 서울 시청 부근
+      const firstComp = rawHospitals.value.find(h => h.lat && h.lng);
+      const initLat = firstComp ? firstComp.lat : 37.5665;
+      const initLng = firstComp ? firstComp.lng : 126.9780;
+
+      const created = createMapInstance('kakao-map', initLat, initLng);
+      if (created) {
+        updateMarkers(filteredHospitals.value, (hospital) => {
+          scrollToHospitalCard(hospital.id);
+        });
+      }
+    }
+  } else {
+    // API 키 누락 시 은은하고 명확한 예외 피드백 노출
+    mapError.value = 'VITE_KAKAO_MAP_API_KEY가 비어있어 지도가 비활성화되었습니다. (.env.local 파일을 구성하여 로드할 수 있습니다.)';
+  }
 });
 
 // 비동기 구글 시트 REST API 로드 및 예외 발생 시 로컬 캐시 폴백 처리
 const loadHospitalsData = async (force = false) => {
   if (!GOOGLE_SHEET_API_URL) {
     // API 주소가 제공되지 않았을 때는 은은하게 즉시 로컬 JSON 로드 (폴백 경고 배지는 미표시)
-    rawHospitals.value = hospitalsData as Hospital[];
+    rawHospitals.value = sanitizeHospitalsCoordinates(hospitalsData as Hospital[]);
     isFallbackMode.value = false;
     isCachedData.value = false;
     return;
@@ -634,7 +935,7 @@ const loadHospitalsData = async (force = false) => {
         try {
           const parsed = JSON.parse(cachedDataStr);
           if (Array.isArray(parsed)) {
-            rawHospitals.value = parsed as Hospital[];
+            rawHospitals.value = sanitizeHospitalsCoordinates(parsed as Hospital[]);
             isFallbackMode.value = false;
             isCachedData.value = true;
             updateLastSyncTimeText(cachedTime);
@@ -659,9 +960,9 @@ const loadHospitalsData = async (force = false) => {
     }
     const data = await response.json();
     if (Array.isArray(data)) {
-      rawHospitals.value = data as Hospital[];
+      rawHospitals.value = sanitizeHospitalsCoordinates(data as Hospital[]);
       // 2. 캐시 스토리지 갱신
-      localStorage.setItem(CACHE_KEY, JSON.stringify(data));
+      localStorage.setItem(CACHE_KEY, JSON.stringify(rawHospitals.value));
       const now = Date.now();
       localStorage.setItem(CACHE_TIME_KEY, String(now));
       updateLastSyncTimeText(now);
@@ -671,7 +972,7 @@ const loadHospitalsData = async (force = false) => {
   } catch (err) {
     console.warn('구글 스프레드시트 API 로드 실패. 기존 로컬 백업 파일로 복원(폴백)합니다.', err);
     // 통신 장애, CORS 차단 등의 경우 로컬 데이터로 안전 복구
-    rawHospitals.value = hospitalsData as Hospital[];
+    rawHospitals.value = sanitizeHospitalsCoordinates(hospitalsData as Hospital[]);
     isFallbackMode.value = true; 
   } finally {
     isLoadingData.value = false;
@@ -701,9 +1002,9 @@ const forceRefreshHospitals = async () => {
 // 클립보드 주소 복사
 const copyAddress = (address: string) => {
   navigator.clipboard.writeText(address).then(() => {
-    alert('주소가 클립보드에 복사되었습니다.');
+    triggerToast('주소가 클립보드에 복사되었습니다. 📋');
   }).catch(() => {
-    alert('주소를 복사하는 중 오류가 발생했습니다.');
+    triggerToast('주소를 복사하는 중 오류가 발생했습니다.', true);
   });
 };
 
@@ -736,6 +1037,26 @@ const filteredHospitals = computed<ExtendedHospital[]>(() => {
 
   return list;
 });
+
+// 리액티브 필터링/검색된 리스트 변화 감지 시 지도 마커 자동 리드로잉
+watch(filteredHospitals, (newList) => {
+  if (isMapLoaded.value) {
+    updateMarkers(newList, (hospital) => {
+      scrollToHospitalCard(hospital.id);
+    });
+  }
+}, { deep: true });
+
+// 내 현재 위치 마커 실시간 업데이트 동기화 (GPS 정렬 활성화 시 내 위치 블루핀 표시)
+watch([isGpsSorted, () => geoHelper.coords.value], ([sorted, coords]) => {
+  if (isMapLoaded.value) {
+    if (sorted && coords) {
+      updateUserLocationMarker(coords.latitude, coords.longitude);
+    } else {
+      updateUserLocationMarker(null, null);
+    }
+  }
+}, { immediate: true });
 
 // 거리순 혹은 기본 정렬된 병원 리스트
 const sortedHospitals = computed(() => {
@@ -1058,6 +1379,60 @@ const submitHospitalSuggestion = async () => {
     suggestForm.value.isSubmitting = false;
   }
 };
+
+// ==========================================
+// 📥 병원 목록 CSV 내보내기 구현
+// ==========================================
+
+const exportHospitalsToCSV = () => {
+  if (sortedHospitals.value.length === 0) {
+    triggerToast('내보낼 병원 데이터가 없습니다.', true);
+    return;
+  }
+
+  // 1. CSV 헤더 정의
+  const headers = ['병원명', '주소', '연락처', '발급 비용', '발급 상태', '추천 태그', '다이버 유용한 팁', '최근 확인일'];
+  
+  // 2. CSV 로우 생성
+  const rows = sortedHospitals.value.map(h => {
+    const statusMap: Record<string, string> = {
+      active: '정상 발급 중',
+      paused: '임시 중단',
+      pending: '검수 대기',
+      inactive: '발급 불가'
+    };
+    return [
+      h.name,
+      h.address,
+      h.tel,
+      h.fee,
+      statusMap[h.status] || h.status,
+      h.tags.join(', '),
+      h.tips.replace(/"/g, '""'), // 따옴표 이스케이프
+      formatDate(h.lastUpdated)
+    ];
+  });
+
+  // 3. UTF-8 BOM 주입하여 한글 깨짐 방지
+  const BOM = '\uFEFF';
+  const csvContent = BOM + [headers.join(','), ...rows.map(r => r.map(val => `"${val}"`).join(','))].join('\n');
+
+  // 4. Blob을 사용하여 즉각 다운로드 링크 생성
+  const blob = new Blob([csvContent], { type: 'text/csv;charset=utf-8;' });
+  const url = URL.createObjectURL(blob);
+  const link = document.createElement('a');
+  
+  const dateStr = dayjs().format('YYYYMMDD');
+  link.setAttribute('href', url);
+  link.setAttribute('download', `diving_medical_hospitals_${dateStr}.csv`);
+  link.style.visibility = 'hidden';
+  document.body.appendChild(link);
+  link.click();
+  document.body.removeChild(link);
+  
+  triggerToast('병원 목록 CSV 파일이 다운로드되었습니다! 📊');
+};
+
 
 </script>
 

@@ -1,7 +1,11 @@
 <template>
   <div
     class="hybrid-toggle"
-    :class="{ 'is-day': isDay, 'has-transition': isTransitionActive }"
+    :class="{
+      'is-day': isDay,
+      'has-transition': isTransitionActive,
+      'is-expanded': expanded,
+    }"
     @click="toggle"
     aria-label="Toggle Dive Computer Mode"
   >
@@ -45,18 +49,21 @@
 </template>
 
 <script setup lang="ts">
-import { ref, computed, watch, onUnmounted } from 'vue';
+import { ref, computed, watch, onUnmounted, withDefaults } from 'vue';
 import type { DarkModeToggleProps } from '@/types/components';
+import { MAX_DEPTH } from '@/constants/theme';
 import sunIcon from '@/assets/icons/sun.svg?raw';
 import moonStarsIcon from '@/assets/icons/moon-stars.svg?raw';
 
-const props = defineProps<DarkModeToggleProps>();
+const props = withDefaults(defineProps<DarkModeToggleProps>(), {
+  expanded: false,
+});
 const emit = defineEmits<{
   (e: 'update:modelValue', value: boolean): void;
 }>();
 
 const isDay = ref(props.modelValue);
-const currentDepth = ref(props.modelValue ? 0 : 30);
+const currentDepth = ref(props.modelValue ? 0 : MAX_DEPTH);
 const isTransitionActive = ref(false);
 
 // Universal theme icon based on current state
@@ -66,7 +73,7 @@ const currentIcon = computed(() => (isDay.value ? sunIcon : moonStarsIcon));
 // Radius is 15, so Circumference is 94.2
 const dashOffset = computed(() => {
   const baseOffset = 94.2;
-  const progress = currentDepth.value / 30;
+  const progress = currentDepth.value / MAX_DEPTH;
   return baseOffset - (progress * baseOffset);
 });
 
@@ -109,7 +116,7 @@ const toggle = () => {
   isTransitionActive.value = true;
   
   emit('update:modelValue', isDay.value);
-  animateDepth(isDay.value ? 0 : 30);
+  animateDepth(isDay.value ? 0 : MAX_DEPTH);
 
   // Clear previous transition reset timer and set a new one
   if (transitionTimeoutId) {
@@ -122,7 +129,7 @@ const toggle = () => {
 
 watch(() => props.modelValue, (newValue) => {
   isDay.value = newValue;
-  animateDepth(newValue ? 0 : 30);
+  animateDepth(newValue ? 0 : MAX_DEPTH);
 });
 
 onUnmounted(() => {

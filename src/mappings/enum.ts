@@ -11,6 +11,7 @@ export enum RouterName {
   QuizResult = '퀴즈 결과',
   MedicalFinder = '메디컬 스탬프 파인더',
   Competition = '프리다이빙 대회 일정',
+  ComponentPlayground = '컴포넌트 플레이그라운드',
   NotFound = 'NotFound'
 }
 

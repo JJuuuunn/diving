@@ -2,7 +2,7 @@
   position: fixed;
   top: 1.5rem;
   left: 1.5rem;
-  z-index: 999;
+  z-index: var(--z-menu-toggle);
   background-color: var(--menu-button-bg);
   border: 1px solid var(--menu-button-border);
   border-radius: 50%;

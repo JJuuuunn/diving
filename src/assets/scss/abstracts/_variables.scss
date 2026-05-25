@@ -6,6 +6,16 @@
   --sidebar-width: 280px;
   --sidebar-collapsed-width: 76px;
   --overlay-bg: rgba(0, 0, 0, 0.4);
+
+  // Z-index scale (low → high)
+  --z-sticky-nav: 100;
+  --z-menu-toggle: 1050;
+  --z-sidebar-overlay: 1100;
+  --z-sidebar: 1101;
+  --z-dropdown: 1200;
+  --z-scroll-top: 1400;
+  --z-modal: 9999;
+  --z-toast: 10000;
 }
 
 body.dark {

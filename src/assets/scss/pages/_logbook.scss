@@ -80,6 +80,12 @@
   padding: 28px;
   margin-bottom: 32px;
   box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.05);
+  position: relative;
+  z-index: 0;
+
+  &:has(.is-active) {
+    z-index: var(--z-dropdown);
+  }
 
   body.dark & {
     background: rgba(15, 23, 42, 0.65);

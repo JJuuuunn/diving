@@ -59,6 +59,10 @@
   }
 }
 
+.hybrid-toggle.is-expanded {
+  @include apply-expanded-styles;
+}
+
 .hybrid-toggle {
   // ==========================================
   // DEFAULT STATE: Collapsed (Circular 48px)

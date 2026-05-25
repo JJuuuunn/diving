@@ -10,7 +10,7 @@
   visibility: hidden;
   opacity: 0;
   transition: visibility 0.3s, opacity 0.3s;
-  z-index: 1000;
+  z-index: var(--z-sidebar-overlay);
   font-family: 'Pretendard', 'Poppins', sans-serif;
 
   &.is-open {
@@ -38,7 +38,7 @@
   transition: transform 0.4s cubic-bezier(0.19, 1, 0.22, 1), background-color 0.3s ease, border-color 0.3s ease, box-shadow 0.3s ease;
   display: flex;
   flex-direction: column; // 세로 배치 레이아웃 구성
-  z-index: 1001;
+  z-index: var(--z-sidebar);
   overflow: hidden; // 사이드바 바깥으로 내용이 나가는 것 차단
 
   // --- HEADER ---
@@ -192,7 +192,7 @@
     visibility: visible !important;
     opacity: 1 !important;
     pointer-events: none;
-    z-index: 1000;
+    z-index: var(--z-sidebar-overlay);
   }
 
   #left-sidebar {

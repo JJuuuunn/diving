@@ -65,6 +65,14 @@ export const MENU_ITEMS: MenuItem[] = [
         active: true,
     },
     {
+        title: '컴포넌트 플레이그라운드',
+        label: 'Playground',
+        desc: '커스텀 컴포넌트, 지도 SDK, UI 인터랙션 통합 테스트 공간',
+        icon: divingMaskIcon,
+        route: RouterName.ComponentPlayground,
+        active: true,
+    },
+    {
         title: '아이디어 로그',
         label: 'Ideas',
         desc: '새로운 기능 구상 중...',

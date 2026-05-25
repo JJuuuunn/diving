@@ -126,6 +126,18 @@ input[type=number] {
 // ==========================================
 // 3. 프리미엄 셀렉트박스 (Custom Select) 스타일
 // ==========================================
+// 드롭다운 열림 시: 부모 쌓임 맥락 상승 (DOM 순서·backdrop-filter 형제 섹션 대응)
+.custom-select:has(.is-active) {
+  position: relative;
+  z-index: var(--z-dropdown);
+}
+
+.form-group:has(.is-active),
+.form-row:has(.is-active) {
+  position: relative;
+  z-index: var(--z-dropdown);
+}
+
 .custom-select {
   position: relative;
   width: 100%;
@@ -207,7 +219,7 @@ input[type=number] {
     position: absolute;
     top: calc(100% + 8px);
     left: 0;
-    z-index: 1100;
+    z-index: var(--z-dropdown);
     width: 100%;
     max-height: 240px;
     overflow-y: auto;

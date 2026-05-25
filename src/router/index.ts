@@ -66,6 +66,15 @@ const routes = [
         component: () => import('@/views/medical/MedicalFinder.vue')
       },
       {
+        path: 'medical-test',
+        redirect: { name: RouterName.ComponentPlayground, hash: '#sec-map' },
+      },
+      {
+        path: 'playground',
+        name: RouterName.ComponentPlayground,
+        component: () => import('@/views/dev/ComponentPlayground.vue')
+      },
+      {
         path: 'competition',
         name: RouterName.Competition,
         component: () => import('@/views/competition/CompetitionMain.vue')
@@ -83,12 +92,14 @@ const routes = [
 const router = createRouter({
   history: createWebHistory('/diving/'), 
   routes,
-  scrollBehavior(to, from, savedPosition) {
+  scrollBehavior(to, _from, savedPosition) {
     if (savedPosition) {
       return savedPosition;
-    } else {
-      return { top: 0, behavior: 'smooth' };
     }
+    if (to.hash) {
+      return { el: to.hash, behavior: 'smooth', top: 140 };
+    }
+    return { top: 0, behavior: 'smooth' };
   }
 })
 
