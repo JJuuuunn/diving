@@ -7,7 +7,8 @@ import divingMaskIcon from '@/assets/icons/diving-mask.svg?raw';
 import hospitalIcon from '@/assets/icons/hospital.svg?raw';
 import calendarIcon from '@/assets/icons/calendar.svg?raw';
 
-export const MENU_ITEMS: MenuItem[] = [
+// 1. 기본 메뉴 아이템 정의 (Playground 포함)
+const ALL_MENU_ITEMS: MenuItem[] = [
     {
         title: '홈',
         label: 'Home',
@@ -70,7 +71,7 @@ export const MENU_ITEMS: MenuItem[] = [
         desc: '커스텀 컴포넌트, 지도 SDK, UI 인터랙션 통합 테스트 공간',
         icon: divingMaskIcon,
         route: RouterName.ComponentPlayground,
-        active: true,
+        active: true, // 하단 filter에서 개발모드가 아니면 걸러집니다.
     },
     {
         title: '아이디어 로그',
@@ -81,3 +82,15 @@ export const MENU_ITEMS: MenuItem[] = [
         active: false,
     }
 ];
+
+// 2. 개발 모드(npm run dev)인지 확인
+// Vite 프로젝트 기준: import.meta.env.DEV는 개발 모드일 때 true, 배포 빌드 시 false가 됩니다.
+const isDev = import.meta.env.DEV;
+
+// 3. 배포 환경일 경우 Playground 메뉴를 제외하고 export
+export const MENU_ITEMS: MenuItem[] = ALL_MENU_ITEMS.filter((item) => {
+    if (item.route === RouterName.ComponentPlayground) {
+        return isDev; // 개발 모드일 때만 포함
+    }
+    return true; // 다른 메뉴는 항상 포함
+});
