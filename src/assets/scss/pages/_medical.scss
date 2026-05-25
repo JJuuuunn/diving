@@ -1,5 +1,5 @@
 .medical-finder-container {
-  max-width: 900px;
+  max-width: 1200px;
   margin: 0 auto;
   padding: 6rem 1.5rem 4rem;
   font-family: 'Pretendard', sans-serif;
@@ -358,9 +358,17 @@
 }
 
 .hospital-list {
-  display: flex;
-  flex-direction: column;
+  display: grid;
+  grid-template-columns: 1fr;
   gap: 1.5rem;
+
+  @media (min-width: 840px) and (max-width: 1023px) {
+    grid-template-columns: repeat(2, 1fr); // 태블릿 가로폭에서 지도 미노출 시 2열 배치
+  }
+
+  @media (min-width: 1400px) {
+    grid-template-columns: repeat(2, 1fr); // 1400px 초광폭 데스크톱 스플릿 상태에서 2열 배치
+  }
 }
 
 .hospital-card {
@@ -369,7 +377,7 @@
   backdrop-filter: blur(12px);
   border-radius: 1.5rem;
   padding: 1.5rem;
-  box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.02);
+  box-shadow: 0 6px 20px -4px rgba(15, 23, 42, 0.06), 0 2px 8px -1px rgba(15, 23, 42, 0.02);
   transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
 
   body.dark & {
@@ -460,16 +468,48 @@
       gap: 0.5rem;
       font-size: 0.95rem;
 
+      &.address-item {
+        align-items: flex-start; // 주소 라벨이 2줄 영역의 맨 위에 정렬되도록 보정
+      }
+
       .label {
         font-weight: 600;
         color: var(--page-text-secondary);
         width: 70px;
         flex-shrink: 0;
+        margin-top: 2px; // 라벨과 첫째 줄 주소 텍스트의 수평 정렬 매칭
       }
 
       .value {
         color: var(--page-text-primary);
         line-height: 1.4;
+
+        &.address-value {
+          display: -webkit-box;
+          -webkit-line-clamp: 2; // 최대 2줄 제한
+          -webkit-box-orient: vertical;
+          overflow: hidden;
+          text-overflow: ellipsis;
+          line-height: 1.4;
+          height: 2.8em; // 딱 2줄 높이로 고정
+          min-height: 2.8em; // 1줄 주소도 2줄 높이를 확보하여 카드 높이를 완전 통일!
+          flex: 1; // 남은 공간 전체 채우기
+          cursor: pointer;
+          transition: all 0.2s ease;
+          border-bottom: 1px dashed transparent;
+
+          &:hover {
+            color: #0ea5e9;
+            border-bottom-color: #0ea5e9;
+          }
+
+          body.dark & {
+            &:hover {
+              color: #38bdf8;
+              border-bottom-color: #38bdf8;
+            }
+          }
+        }
 
         &.tel-link {
           color: #0ea5e9;
@@ -541,13 +581,15 @@
   }
 
   .card-tips {
-    background: rgba(14, 165, 233, 0.04);
+    background: rgba(14, 165, 233, 0.065);
     border-left: 4px solid #0ea5e9;
     padding: 0.85rem 1rem;
     border-radius: 0 0.75rem 0.75rem 0;
     margin-bottom: 1.25rem;
     font-size: 0.9rem;
     line-height: 1.5;
+    height: 4.85em; // 팁 전체 고정 높이 락 (헤더 + 팁 2줄 본문)
+    min-height: 4.85em;
 
     strong {
       display: block;
@@ -562,6 +604,14 @@
     p {
       margin: 0;
       color: var(--page-text-primary);
+      display: -webkit-box;
+      -webkit-line-clamp: 2; // 최대 2줄 제한
+      -webkit-box-orient: vertical;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      line-height: 1.5;
+      height: 3em; // 2줄 고정 높이
+      min-height: 3em;
     }
 
     body.dark & {
@@ -574,6 +624,9 @@
     display: flex;
     flex-wrap: wrap;
     gap: 0.5rem;
+    height: 1.7rem; // 1열 높이 고정 락
+    min-height: 1.7rem;
+    overflow: hidden; // 2열로 넘어가는 태그는 레이아웃 보호를 위해 숨김
 
     .tag-chip {
       background: rgba(0, 0, 0, 0.03);
@@ -1944,4 +1997,1365 @@
   from { transform: scale(0.95); opacity: 0; }
   to { transform: scale(1); opacity: 1; }
 }
+
+// ==========================================================================
+// 🗺️ Kakao Map Split-Screen Dashboard & Interactive Layout Styles
+// ==========================================================================
+
+.dashboard-wrapper {
+  display: flex;
+  flex-direction: column;
+  gap: 2rem;
+  margin-top: 1rem;
+  width: 100%;
+
+  @media (min-width: 1024px) {
+    display: grid;
+    grid-template-columns: 1fr 440px; // 데스크톱 기준 좌측 리스트(유동), 우측 지도(440px)
+    align-items: start;
+    gap: 2rem;
+  }
+
+  @media (min-width: 1200px) {
+    grid-template-columns: 1fr 520px; // 더 넓은 화면에서 지도의 비율 확장
+  }
+}
+
+.list-panel {
+  width: 100%;
+  min-width: 0; // 플렉스/그리드 내에서 말줄임 및 카드 축소 오동작 방지
+}
+
+.map-panel {
+  width: 100%;
+  position: relative;
+
+  @media (min-width: 1024px) {
+    position: sticky;
+    top: 6.5rem; // 사이드바 및 네비게이션 헤더에 완벽히 피팅되도록 스티키 탑 고정
+    height: calc(100vh - 12rem); // 화면 뷰포트에 맞춘 스티키 높이 설정
+    min-height: 500px;
+    z-index: 10;
+  }
+}
+
+.map-container-wrapper {
+  position: relative;
+  width: 100%;
+  height: 380px; // 모바일/태블릿 기본 고정 높이
+  border-radius: 1.5rem;
+  overflow: hidden;
+  box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.05), 0 8px 10px -6px rgba(0, 0, 0, 0.05);
+  border: 1px solid rgba(255, 255, 255, 0.4);
+  background: rgba(255, 255, 255, 0.1);
+  backdrop-filter: blur(8px);
+  transition: all 0.3s ease;
+
+  @media (min-width: 1024px) {
+    height: 100%; // 데스크톱 스티키 고정 높이 상속
+  }
+
+  body.dark & {
+    border-color: rgba(255, 255, 255, 0.05);
+    background: rgba(15, 23, 42, 0.2);
+    box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.25);
+  }
+}
+
+.map-canvas {
+  width: 100%;
+  height: 100%;
+  z-index: 1;
+}
+
+// ⏳ 지도 로딩 & 키 누락 에러 오버레이
+.map-status-overlay {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: rgba(255, 255, 255, 0.9);
+  backdrop-filter: blur(10px);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 2.5rem;
+  text-align: center;
+  z-index: 20;
+
+  body.dark & {
+    background: rgba(15, 23, 42, 0.9);
+  }
+
+  p {
+    font-size: 0.95rem;
+    font-weight: 700;
+    margin: 0.75rem 0 0.25rem;
+    color: var(--page-text-primary);
+    line-height: 1.5;
+  }
+
+  small {
+    font-size: 0.8rem;
+    color: var(--page-text-secondary);
+    opacity: 0.75;
+    line-height: 1.4;
+  }
+
+  &.error {
+    .warning-icon {
+      font-size: 2.5rem;
+      color: #f59e0b;
+      animation: pulse 2s infinite;
+    }
+  }
+
+  .spinner {
+    width: 32px;
+    height: 32px;
+    border: 3px solid rgba(14, 165, 233, 0.1);
+    border-top-color: #0ea5e9;
+    border-radius: 50%;
+    animation: spin 1s infinite linear;
+
+    body.dark & {
+      border-color: rgba(56, 189, 248, 0.1);
+      border-top-color: #38bdf8;
+    }
+  }
+}
+
+// 📍 모바일 보기 탭 스위치
+.mobile-view-tabs {
+  display: flex;
+  background: rgba(0, 0, 0, 0.04);
+  padding: 0.3rem;
+  border-radius: 50px;
+  margin-bottom: 1.5rem;
+  width: 100%;
+
+  @media (min-width: 1024px) {
+    display: none; // 데스크톱에서는 숨김
+  }
+
+  body.dark & {
+    background: rgba(255, 255, 255, 0.04);
+  }
+
+  .tab-btn {
+    flex: 1;
+    background: transparent;
+    border: none;
+    padding: 0.65rem 1rem;
+    font-size: 0.9rem;
+    font-weight: 700;
+    color: var(--page-text-secondary);
+    border-radius: 50px;
+    cursor: pointer;
+    transition: all 0.25s cubic-bezier(0.4, 0, 0.2, 1);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0.35rem;
+
+    &:hover {
+      color: var(--page-text-primary);
+    }
+
+    &.active {
+      background: #ffffff;
+      color: #0ea5e9;
+      box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.08);
+
+      body.dark & {
+        background: #334155;
+        color: #38bdf8;
+        box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.3);
+      }
+    }
+  }
+}
+
+// 📱 모바일 탭 기반 가시성 제어 유틸리티
+@media (max-width: 1023px) {
+  .mobile-hidden {
+    display: none !important;
+  }
+}
+
+// 🖱️ 리스트 카드 마커 연동 인터랙션
+.clickable-title {
+  cursor: pointer;
+  
+  h3 {
+    display: inline-flex;
+    align-items: center;
+    transition: all 0.25s ease;
+  }
+
+  &:hover {
+    h3 {
+      color: #0ea5e9;
+      transform: translateX(4px);
+
+      body.dark & {
+        color: #38bdf8;
+      }
+    }
+  }
+}
+
+// ✨ 마커 클릭 시 해당 카드 플래시 강제 하이라이트 애니메이션
+@keyframes flash-highlight-light {
+  0%, 100% {
+    background: rgba(255, 255, 255, 0.5);
+    border-color: rgba(255, 255, 255, 0.4);
+  }
+  25%, 75% {
+    background: rgba(14, 165, 233, 0.12);
+    border-color: #0ea5e9;
+    box-shadow: 0 0 20px rgba(14, 165, 233, 0.25);
+    transform: translateY(-6px);
+  }
+  50% {
+    background: rgba(14, 165, 233, 0.18);
+    border-color: #0ea5e9;
+    box-shadow: 0 0 25px rgba(14, 165, 233, 0.35);
+    transform: translateY(-8px);
+  }
+}
+
+@keyframes flash-highlight-dark {
+  0%, 100% {
+    background: rgba(30, 41, 59, 0.4);
+    border-color: rgba(255, 255, 255, 0.05);
+  }
+  25%, 75% {
+    background: rgba(56, 189, 248, 0.08);
+    border-color: #38bdf8;
+    box-shadow: 0 0 20px rgba(56, 189, 248, 0.2);
+    transform: translateY(-6px);
+  }
+  50% {
+    background: rgba(56, 189, 248, 0.12);
+    border-color: #38bdf8;
+    box-shadow: 0 0 25px rgba(56, 189, 248, 0.3);
+    transform: translateY(-8px);
+  }
+}
+
+.hospital-card.highlight-flash {
+  animation: flash-highlight-light 1.6s cubic-bezier(0.25, 1, 0.5, 1) forwards;
+
+  body.dark & {
+    animation: flash-highlight-dark 1.6s cubic-bezier(0.25, 1, 0.5, 1) forwards;
+  }
+}
+
+// 🏢 카카오맵 프리미엄 커스텀 오버레이 글래스모피즘 스타일링
+.kakao-custom-overlay {
+  position: relative;
+  background: rgba(255, 255, 255, 0.82);
+  backdrop-filter: blur(14px) saturate(190%);
+  -webkit-backdrop-filter: blur(14px) saturate(190%);
+  border: 1px solid rgba(255, 255, 255, 0.45);
+  border-radius: 1.25rem;
+  box-shadow: 0 12px 30px rgba(15, 23, 42, 0.12), 
+              0 4px 8px rgba(15, 23, 42, 0.04);
+  padding: 1.25rem;
+  width: 280px;
+  max-width: 90vw;
+  font-family: 'Pretendard', sans-serif;
+  color: #1e293b;
+  text-align: left;
+  z-index: 1000;
+  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+
+  body.dark & {
+    background: rgba(15, 23, 42, 0.82);
+    border-color: rgba(255, 255, 255, 0.08);
+    box-shadow: 0 12px 30px rgba(0, 0, 0, 0.35),
+                0 4px 8px rgba(0, 0, 0, 0.15);
+    color: #f1f5f9;
+  }
+
+  &.scale-in {
+    animation: scale-in-bounce 0.35s cubic-bezier(0.34, 1.56, 0.64, 1) forwards;
+  }
+
+  .overlay-header {
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+    position: relative;
+    padding-bottom: 0.75rem;
+    margin-bottom: 0.75rem;
+    border-bottom: 1px solid rgba(0, 0, 0, 0.06);
+
+    body.dark & {
+      border-bottom-color: rgba(255, 255, 255, 0.06);
+    }
+
+    .overlay-title {
+      font-weight: 800;
+      font-size: 1.05rem;
+      color: #0f172a;
+      line-height: 1.4;
+      padding-right: 1.5rem; // 닫기 버튼 충범 방지
+      word-break: keep-all;
+
+      body.dark & {
+        color: #ffffff;
+      }
+    }
+
+    .overlay-badge {
+      align-self: flex-start;
+      font-size: 0.72rem;
+      font-weight: 700;
+      padding: 0.2rem 0.5rem;
+      border-radius: 6px;
+      line-height: 1;
+      white-space: nowrap;
+      
+      &.success {
+        background: rgba(16, 185, 129, 0.1);
+        color: #10b981;
+        border: 1px solid rgba(16, 185, 129, 0.2);
+        body.dark & {
+          background: rgba(52, 211, 153, 0.1);
+          color: #34d399;
+          border-color: rgba(52, 211, 153, 0.15);
+        }
+      }
+
+      &.paused {
+        background: rgba(245, 158, 11, 0.1);
+        color: #f59e0b;
+        border: 1px solid rgba(245, 158, 11, 0.2);
+        body.dark & {
+          background: rgba(251, 191, 36, 0.1);
+          color: #fbbf24;
+          border-color: rgba(251, 191, 36, 0.15);
+        }
+      }
+
+      &.pending {
+        background: rgba(139, 92, 246, 0.1);
+        color: #8b5cf6;
+        border: 1px solid rgba(139, 92, 246, 0.2);
+        body.dark & {
+          background: rgba(167, 139, 250, 0.1);
+          color: #a78bfa;
+          border-color: rgba(167, 139, 250, 0.15);
+        }
+      }
+
+      &.inactive {
+        background: rgba(100, 116, 139, 0.1);
+        color: #64748b;
+        border: 1px solid rgba(100, 116, 139, 0.2);
+        body.dark & {
+          background: rgba(148, 163, 184, 0.1);
+          color: #94a3b8;
+          border-color: rgba(148, 163, 184, 0.15);
+        }
+      }
+    }
+
+    .overlay-close-btn {
+      position: absolute;
+      top: -0.25rem;
+      right: -0.25rem;
+      background: transparent;
+      border: none;
+      font-size: 1.5rem;
+      font-weight: 300;
+      cursor: pointer;
+      color: #94a3b8;
+      width: 28px;
+      height: 28px;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      line-height: 1;
+      transition: all 0.2s ease;
+
+      &:hover {
+        background: rgba(0, 0, 0, 0.05);
+        color: #475569;
+      }
+
+      body.dark & {
+        color: #64748b;
+        &:hover {
+          background: rgba(255, 255, 255, 0.06);
+          color: #e2e8f0;
+        }
+      }
+    }
+  }
+
+  .overlay-body {
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+    font-size: 0.85rem;
+    color: #475569;
+
+    body.dark & {
+      color: #94a3b8;
+    }
+
+    .overlay-row {
+      line-height: 1.5;
+      display: flex;
+      flex-direction: column;
+      gap: 0.2rem;
+
+      strong {
+        color: #10b981;
+        font-weight: 800;
+        font-size: 0.9rem;
+        body.dark & {
+          color: #34d399;
+        }
+      }
+
+      .overlay-address {
+        color: #475569;
+        font-size: 0.8rem;
+        font-weight: 500;
+        word-break: keep-all;
+        background: rgba(15, 23, 42, 0.04);
+        padding: 0.45rem 0.65rem;
+        border-radius: 8px;
+        border: 1px solid rgba(15, 23, 42, 0.06);
+
+        body.dark & {
+          color: #cbd5e1;
+          background: rgba(255, 255, 255, 0.03);
+          border-color: rgba(255, 255, 255, 0.04);
+        }
+      }
+    }
+  }
+
+  // 삼각형 화살표 가이드
+  .overlay-arrow {
+    position: absolute;
+    bottom: -10px;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 0;
+    height: 0;
+    border-left: 10px solid transparent;
+    border-right: 10px solid transparent;
+    border-top: 10px solid rgba(255, 255, 255, 0.82);
+    filter: drop-shadow(0 4px 3px rgba(0, 0, 0, 0.05));
+    z-index: -1;
+
+    body.dark & {
+      border-top-color: rgba(15, 23, 42, 0.82);
+    }
+  }
+}
+
+@keyframes scale-in-bounce {
+  from {
+    opacity: 0;
+    transform: translateY(10px) scale(0.92);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+  }
+}
+
+// 🔄 스피너 및 펄스 키프레임 정의
+@keyframes spin {
+  to { transform: rotate(360deg); }
+}
+@keyframes pulse {
+  0%, 100% { transform: scale(1); opacity: 1; }
+  50% { transform: scale(1.1); opacity: 0.8; }
+}
+
+// 📄 공식 메디컬 서식 다운로드 센터 및 모달 링크 스타일
+.forms-download-banner {
+  background: linear-gradient(135deg, rgba(14, 165, 233, 0.08) 0%, rgba(16, 185, 129, 0.08) 100%);
+  border: 1px solid rgba(14, 165, 233, 0.2);
+  backdrop-filter: blur(12px);
+  border-radius: 1.5rem;
+  padding: 1.25rem 1.5rem;
+  margin-bottom: 1.5rem;
+  display: flex;
+  flex-direction: column;
+  gap: 1.25rem;
+  box-shadow: 0 8px 24px -6px rgba(14, 165, 233, 0.08);
+
+  body.dark & {
+    background: linear-gradient(135deg, rgba(56, 189, 248, 0.05) 0%, rgba(52, 211, 153, 0.05) 100%);
+    border-color: rgba(56, 189, 248, 0.15);
+    box-shadow: 0 8px 24px -6px rgba(0, 0, 0, 0.25);
+  }
+
+  @media (min-width: 768px) {
+    flex-direction: row;
+    align-items: center;
+    justify-content: space-between;
+    gap: 2rem;
+  }
+
+  .banner-title {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+
+    .banner-icon {
+      font-size: 2rem;
+      background: rgba(14, 165, 233, 0.1);
+      width: 48px;
+      height: 48px;
+      border-radius: 12px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+
+      body.dark & {
+        background: rgba(56, 189, 248, 0.1);
+      }
+    }
+
+    h3 {
+      font-size: 1.05rem;
+      font-weight: 800;
+      margin: 0 0 0.25rem 0;
+      color: var(--page-text-primary);
+    }
+
+    p {
+      font-size: 0.82rem;
+      color: var(--page-text-secondary);
+      margin: 0;
+      line-height: 1.4;
+    }
+  }
+
+  .banner-actions {
+    display: flex;
+    width: 100%;
+
+    @media (min-width: 768px) {
+      width: auto;
+      justify-content: flex-end;
+      flex-shrink: 0;
+    }
+
+    .download-center-btn {
+      width: 100%;
+      min-width: 240px;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 0.75rem;
+      padding: 0.85rem 1.75rem;
+      border-radius: 50px;
+      font-size: 0.95rem;
+      font-weight: 800;
+      color: #ffffff;
+      background: linear-gradient(135deg, #0ea5e9 0%, #10b981 100%);
+      border: 1px solid rgba(255, 255, 255, 0.1);
+      box-shadow: 0 4px 15px rgba(14, 165, 233, 0.25);
+      cursor: pointer;
+      transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+
+      body.dark & {
+        border-color: rgba(255, 255, 255, 0.05);
+        box-shadow: 0 4px 15px rgba(0, 0, 0, 0.3);
+      }
+
+      .arrow-icon {
+        font-size: 1rem;
+        transition: transform 0.2s ease;
+      }
+
+      &:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 8px 24px rgba(14, 165, 233, 0.35);
+        background: linear-gradient(135deg, #0284c7 0%, #059669 100%);
+
+        .arrow-icon {
+          transform: translateX(4px);
+        }
+
+        body.dark & {
+          box-shadow: 0 8px 24px rgba(0, 0, 0, 0.45);
+        }
+      }
+    }
+  }
+}
+
+.modal-download-links {
+  display: flex;
+  gap: 0.5rem;
+  margin-top: 0.5rem;
+  flex-wrap: wrap;
+}
+
+.modal-dl-btn {
+  font-size: 0.78rem;
+  text-decoration: none;
+  padding: 0.35rem 0.75rem;
+  border-radius: 50px;
+  font-weight: 700;
+  display: inline-flex;
+  align-items: center;
+  gap: 0.25rem;
+  transition: all 0.2s ease;
+
+  &:hover {
+    transform: translateY(-1px);
+  }
+
+  &.scuba {
+    background: rgba(14, 165, 233, 0.1);
+    border: 1px solid rgba(14, 165, 233, 0.25);
+    color: #0ea5e9;
+
+    &:hover {
+      background: #0ea5e9;
+      color: #ffffff;
+    }
+
+    body.dark & {
+      color: #38bdf8;
+      background: rgba(56, 189, 248, 0.08);
+      border-color: rgba(56, 189, 248, 0.2);
+
+      &:hover {
+        background: #38bdf8;
+        color: #0f172a;
+      }
+    }
+  }
+
+  &.freediving {
+    background: rgba(16, 185, 129, 0.1);
+    border: 1px solid rgba(16, 185, 129, 0.25);
+    color: #10b981;
+
+    &:hover {
+      background: #10b981;
+      color: #ffffff;
+    }
+
+    body.dark & {
+      color: #34d399;
+      background: rgba(52, 211, 153, 0.08);
+      border-color: rgba(52, 211, 153, 0.2);
+
+      &:hover {
+        background: #34d399;
+        color: #0f172a;
+      }
+    }
+  }
+}
+
+// 📄 배너 내 개별 다운로드 버튼 + 백업 링크 래퍼
+.action-btn-wrapper {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.35rem;
+  flex: 1;
+  min-width: 200px;
+
+  .download-btn {
+    width: 100%;
+  }
+
+  .backup-link {
+    font-size: 0.75rem;
+    color: var(--page-text-secondary);
+    text-decoration: underline;
+    transition: color 0.2s ease;
+
+    &:hover {
+      color: var(--page-text-primary);
+    }
+  }
+}
+
+// 📊 데이터 내보내기 버튼 그룹 (CSV / PDF)
+.export-control-group {
+  display: flex;
+  gap: 0.5rem;
+  width: 100%;
+
+  @media (min-width: 1024px) {
+    width: auto;
+    flex-shrink: 0;
+  }
+
+  .export-btn {
+    flex: 1;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0.4rem;
+    padding: 0.75rem 1rem;
+    border-radius: 0.75rem;
+    font-size: 0.9rem;
+    font-weight: 700;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    white-space: nowrap;
+
+    @media (min-width: 640px) {
+      padding: 0.75rem 1.25rem;
+    }
+
+    &:hover:not(:disabled) {
+      transform: translateY(-1px);
+    }
+
+    &:disabled {
+      opacity: 0.5;
+      cursor: not-allowed;
+    }
+
+    &.csv {
+      background: rgba(16, 185, 129, 0.08);
+      border: 1px solid rgba(16, 185, 129, 0.25);
+      color: #10b981;
+
+      &:hover:not(:disabled) {
+        background: #10b981;
+        color: #ffffff;
+        box-shadow: 0 4px 12px rgba(16, 185, 129, 0.2);
+      }
+
+      body.dark & {
+        color: #34d399;
+        background: rgba(52, 211, 153, 0.06);
+        border-color: rgba(52, 211, 153, 0.15);
+
+        &:hover:not(:disabled) {
+          background: #34d399;
+          color: #0f172a;
+          box-shadow: 0 4px 12px rgba(52, 211, 153, 0.2);
+        }
+      }
+    }
+
+    &.print {
+      background: rgba(79, 70, 229, 0.08);
+      border: 1px solid rgba(79, 70, 229, 0.25);
+      color: #6366f1;
+
+      &:hover:not(:disabled) {
+        background: #6366f1;
+        color: #ffffff;
+        box-shadow: 0 4px 12px rgba(79, 70, 229, 0.2);
+      }
+
+      body.dark & {
+        color: #818cf8;
+        background: rgba(129, 140, 248, 0.06);
+        border-color: rgba(129, 140, 248, 0.15);
+
+        &:hover:not(:disabled) {
+          background: #818cf8;
+          color: #0f172a;
+          box-shadow: 0 4px 12px rgba(129, 140, 248, 0.2);
+        }
+      }
+    }
+  }
+}
+
+// 🖨️ 인쇄 전용 화면 숨김 (기본)
+.print-only-header {
+  display: none;
+}
+
+// 🖨️ 인쇄 레이아웃 스타일 (@media print)
+@media print {
+  body {
+    background: #ffffff !important;
+    color: #000000 !important;
+    font-family: 'Segoe UI', Arial, sans-serif !important;
+    font-size: 11pt !important;
+  }
+
+  // 1. 화면 전용 대화형 컴포넌트 모두 은닉
+  .medical-header,
+  .forms-download-banner,
+  .control-box,
+  .status-filter-bar,
+  .mobile-view-tabs,
+  .map-panel,
+  .review-section,
+  .review-toggle-btn,
+  .update-badge,
+  .map-icons,
+  .sync-btn,
+  .diver-depth-gauge, // 우측 하단 수심 게이지
+  footer,
+  .suggest-modal-overlay,
+  .guide-modal-overlay,
+  .forms-modal-overlay {
+    display: none !important;
+  }
+
+  // 2. 메인 페이지 인쇄 전용 헤더 노출
+  .print-only-header {
+    display: block !important;
+    margin-bottom: 2rem;
+    padding-bottom: 1rem;
+    border-bottom: 2px solid #333333;
+    text-align: center;
+
+    h2 {
+      font-size: 18pt !important;
+      font-weight: 700;
+      color: #000000 !important;
+      margin: 0 0 0.5rem 0;
+    }
+
+    .print-meta {
+      font-size: 9pt !important;
+      color: #555555 !important;
+      margin: 0;
+    }
+  }
+
+  // 3. 레이아웃 전면 재구성 (스플릿/반응형 끄고 전체 너비 로드)
+  .medical-finder-container {
+    padding: 0 !important;
+    margin: 0 !important;
+    background: transparent !important;
+  }
+
+  .dashboard-wrapper {
+    display: block !important;
+  }
+
+  .list-panel {
+    width: 100% !important;
+    max-width: 100% !important;
+    height: auto !important;
+    overflow: visible !important;
+    padding: 0 !important;
+  }
+
+  .hospital-list {
+    display: flex !important;
+    flex-direction: column !important;
+    gap: 1.5rem !important;
+  }
+
+  // 4. 인쇄 전용 초고대비 병원 정보 카드 스타일
+  .hospital-card {
+    background: #ffffff !important;
+    border: 1px solid #cccccc !important;
+    border-radius: 0.5rem !important;
+    padding: 1.25rem !important;
+    margin: 0 !important;
+    box-shadow: none !important;
+    page-break-inside: avoid; // 카드 중간에서 페이지가 끊기는 것 방지
+    color: #000000 !important;
+
+    .card-top {
+      border-bottom: 1px dashed #cccccc !important;
+      padding-bottom: 0.5rem !important;
+      margin-bottom: 0.75rem !important;
+
+      h3 {
+        color: #000000 !important;
+        font-size: 14pt !important;
+        font-weight: 700;
+        margin: 0 !important;
+      }
+    }
+
+    .card-details {
+      display: grid !important;
+      grid-template-columns: 1fr 1fr !important;
+      gap: 0.5rem !important;
+      margin-bottom: 0.75rem !important;
+    }
+
+    .detail-item {
+      font-size: 10pt !important;
+      color: #000000 !important;
+      margin: 0 !important;
+      
+      .label {
+        font-weight: 700 !important;
+        color: #333333 !important;
+      }
+
+      .value {
+        color: #000000 !important;
+        text-decoration: none !important;
+      }
+    }
+
+    .card-tips {
+      margin-top: 0.75rem !important;
+      background: #f9f9f9 !important;
+      border: 1px solid #eeeeee !important;
+      border-radius: 0.25rem !important;
+      padding: 0.5rem 0.75rem !important;
+      font-size: 9.5pt !important;
+
+      strong {
+        color: #333333 !important;
+      }
+
+      p {
+        color: #444444 !important;
+        margin: 0.25rem 0 0 0 !important;
+        height: auto !important; // 라인 클램프 해제
+        display: block !important;
+        overflow: visible !important;
+      }
+    }
+
+    .card-tags {
+      margin-top: 0.5rem !important;
+      height: auto !important; // 라인 클램프 해제
+      overflow: visible !important;
+      display: flex !important;
+      flex-wrap: wrap !important;
+      gap: 0.25rem !important;
+
+      .tag-chip {
+        background: #f0f0f0 !important;
+        color: #333333 !important;
+        border: 1px solid #dddddd !important;
+        font-size: 8pt !important;
+        padding: 0.15rem 0.4rem !important;
+        border-radius: 0.25rem !important;
+      }
+    }
+
+    // 인쇄 시 거추장스러운 거리순 배지 및 상태 점 제거
+    .distance-badge,
+    .status-chip {
+      border: 1px solid #000000 !important;
+      color: #000000 !important;
+      background: transparent !important;
+      font-size: 8pt !important;
+      padding: 0.1rem 0.4rem !important;
+      border-radius: 4px !important;
+      display: inline-block !important;
+      margin-left: 0.5rem !important;
+      font-weight: normal !important;
+
+      .dot {
+        display: none !important;
+      }
+    }
+  }
+}
+
+// ==========================================
+// 📄 메디컬 서식 다운로드 모달 팝업 스타일 (2-Depth)
+// ==========================================
+.forms-modal-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: rgba(15, 23, 42, 0.4);
+  backdrop-filter: blur(8px);
+  z-index: 1100;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 1rem;
+
+  body.dark & {
+    background: rgba(15, 23, 42, 0.7);
+  }
+}
+
+.forms-modal-content {
+  background: rgba(255, 255, 255, 0.85);
+  border: 1px solid rgba(255, 255, 255, 0.4);
+  backdrop-filter: blur(20px);
+  border-radius: 1.5rem;
+  width: 100%;
+  max-width: 780px;
+  max-height: 90vh;
+  display: flex;
+  flex-direction: column;
+  box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.15);
+  overflow: hidden;
+  animation: scale-in-bounce 0.4s cubic-bezier(0.34, 1.56, 0.64, 1);
+
+  body.dark & {
+    background: rgba(30, 41, 59, 0.85);
+    border-color: rgba(255, 255, 255, 0.08);
+    box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.4);
+  }
+
+  .modal-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 1.25rem 1.5rem;
+    border-bottom: 1px solid rgba(0, 0, 0, 0.05);
+
+    body.dark & {
+      border-bottom-color: rgba(255, 255, 255, 0.05);
+    }
+
+    h2 {
+      font-size: 1.2rem;
+      font-weight: 800;
+      color: var(--page-text-primary);
+      margin: 0;
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+    }
+
+    .close-modal-btn {
+      background: transparent;
+      border: none;
+      font-size: 1.75rem;
+      font-weight: 300;
+      color: var(--page-text-secondary);
+      cursor: pointer;
+      line-height: 1;
+      width: 32px;
+      height: 32px;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      transition: all 0.2s ease;
+
+      &:hover {
+        background: rgba(0, 0, 0, 0.05);
+        color: var(--page-text-primary);
+      }
+
+      body.dark & {
+        &:hover {
+          background: rgba(255, 255, 255, 0.05);
+        }
+      }
+    }
+  }
+
+  .modal-body {
+    padding: 1.5rem;
+    overflow-y: auto;
+    display: flex;
+    flex-direction: column;
+    gap: 1.25rem;
+
+    .modal-intro {
+      font-size: 0.9rem;
+      line-height: 1.6;
+      color: var(--page-text-secondary);
+      margin: 0;
+      text-align: center;
+      background: rgba(14, 165, 233, 0.04);
+      border: 1px dashed rgba(14, 165, 233, 0.2);
+      padding: 0.75rem 1rem;
+      border-radius: 0.75rem;
+
+      body.dark & {
+        background: rgba(56, 189, 248, 0.02);
+        border-color: rgba(56, 189, 248, 0.1);
+      }
+
+      strong {
+        color: #0ea5e9;
+        body.dark & {
+          color: #38bdf8;
+        }
+      }
+    }
+  }
+
+  .forms-download-list {
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+  }
+
+  .form-download-card {
+    display: flex;
+    flex-direction: column;
+    gap: 1.25rem;
+    padding: 1.25rem;
+    border-radius: 1rem;
+    border: 1px solid rgba(0, 0, 0, 0.05);
+    transition: all 0.25s ease;
+
+    @media (min-width: 640px) {
+      flex-direction: row;
+      align-items: center;
+      justify-content: space-between;
+    }
+
+    body.dark & {
+      border-color: rgba(255, 255, 255, 0.05);
+    }
+
+    &.scuba {
+      background: linear-gradient(135deg, rgba(14, 165, 233, 0.04) 0%, rgba(14, 165, 233, 0.01) 100%);
+      border-left: 4px solid #0ea5e9;
+
+      &:hover {
+        background: linear-gradient(135deg, rgba(14, 165, 233, 0.06) 0%, rgba(14, 165, 233, 0.02) 100%);
+        border-color: rgba(14, 165, 233, 0.25);
+        box-shadow: 0 4px 15px rgba(14, 165, 233, 0.05);
+      }
+    }
+
+    &.freediving {
+      background: linear-gradient(135deg, rgba(16, 185, 129, 0.04) 0%, rgba(16, 185, 129, 0.01) 100%);
+      border-left: 4px solid #10b981;
+
+      &:hover {
+        background: linear-gradient(135deg, rgba(16, 185, 129, 0.06) 0%, rgba(16, 185, 129, 0.02) 100%);
+        border-color: rgba(16, 185, 129, 0.25);
+        box-shadow: 0 4px 15px rgba(16, 185, 129, 0.05);
+      }
+    }
+
+    .card-left {
+      display: flex;
+      flex-direction: column;
+      gap: 0.75rem;
+      min-width: 0;
+
+      @media (min-width: 640px) {
+        flex-direction: row;
+        align-items: flex-start;
+        gap: 1rem;
+        width: calc(100% - 140px - 1.25rem);
+        flex-shrink: 0;
+      }
+    }
+
+    .category-badge {
+      align-self: flex-start;
+      font-size: 0.7rem;
+      font-weight: 900;
+      padding: 0.2rem 0;
+      border-radius: 4px;
+      letter-spacing: 0.5px;
+      color: #ffffff;
+      width: 80px;
+      min-width: 80px;
+      text-align: center;
+      flex-shrink: 0;
+
+      &.scuba {
+        background: #0ea5e9;
+      }
+      &.freediving {
+        background: #10b981;
+      }
+    }
+
+    .form-info {
+      flex: 1;
+      min-width: 0;
+
+      h4 {
+        font-size: 0.95rem;
+        font-weight: 800;
+        color: var(--page-text-primary);
+        margin: 0 0 0.35rem 0;
+      }
+
+      .desc {
+        font-size: 0.8rem;
+        color: var(--page-text-secondary);
+        line-height: 1.4;
+        margin: 0 0 0.5rem 0;
+      }
+
+      .file-meta {
+        font-size: 0.7rem;
+        color: var(--page-text-secondary);
+        opacity: 0.6;
+        display: block;
+      }
+    }
+
+    .card-right {
+      display: flex;
+      flex-direction: row;
+      gap: 0.5rem;
+      width: 100%;
+
+      @media (min-width: 640px) {
+        flex-direction: column;
+        width: 140px;
+        min-width: 140px;
+        flex-shrink: 0;
+        align-items: stretch;
+      }
+
+      a {
+        flex: 1;
+        text-align: center;
+        text-decoration: none;
+        white-space: nowrap;
+      }
+
+      .download-btn-primary {
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        gap: 0.35rem;
+        padding: 0.6rem 1.2rem;
+        border-radius: 8px;
+        font-size: 0.8rem;
+        font-weight: 700;
+        color: #ffffff;
+        cursor: pointer;
+        transition: all 0.2s ease;
+
+        &.scuba {
+          background: linear-gradient(135deg, #0ea5e9 0%, #0284c7 100%);
+          box-shadow: 0 4px 10px rgba(14, 165, 233, 0.2);
+
+          &:hover {
+            box-shadow: 0 6px 14px rgba(14, 165, 233, 0.3);
+            transform: translateY(-1px);
+          }
+        }
+
+        &.freediving {
+          background: linear-gradient(135deg, #10b981 0%, #059669 100%);
+          box-shadow: 0 4px 10px rgba(16, 185, 129, 0.2);
+
+          &:hover {
+            box-shadow: 0 6px 14px rgba(16, 185, 129, 0.3);
+            transform: translateY(-1px);
+          }
+        }
+      }
+
+      .download-btn-secondary {
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        padding: 0.6rem 1.2rem;
+        border-radius: 8px;
+        font-size: 0.8rem;
+        font-weight: 700;
+        background: rgba(0, 0, 0, 0.03);
+        border: 1px solid rgba(0, 0, 0, 0.08);
+        color: var(--page-text-secondary);
+        transition: all 0.2s ease;
+
+        &:hover {
+          background: rgba(0, 0, 0, 0.07);
+          color: var(--page-text-primary);
+        }
+
+        body.dark & {
+          background: rgba(255, 255, 255, 0.03);
+          border-color: rgba(255, 255, 255, 0.08);
+
+          &:hover {
+            background: rgba(255, 255, 255, 0.07);
+          }
+        }
+      }
+    }
+  }
+
+  .forms-modal-tips {
+    background: rgba(251, 191, 36, 0.04);
+    border: 1px solid rgba(251, 191, 36, 0.2);
+    border-radius: 0.75rem;
+    padding: 1rem;
+
+    h5 {
+      font-size: 0.85rem;
+      font-weight: 800;
+      color: #d97706;
+      margin: 0 0 0.5rem 0;
+    }
+
+    ul {
+      margin: 0;
+      padding-left: 1.1rem;
+      display: flex;
+      flex-direction: column;
+      gap: 0.35rem;
+
+      li {
+        font-size: 0.78rem;
+        color: var(--page-text-secondary);
+        line-height: 1.4;
+
+        strong {
+          color: #d97706;
+        }
+      }
+    }
+  }
+
+  .modal-footer {
+    display: flex;
+    justify-content: flex-end;
+    padding: 1rem 1.5rem;
+    border-top: 1px solid rgba(0, 0, 0, 0.05);
+
+    body.dark & {
+      border-top-color: rgba(255, 255, 255, 0.05);
+    }
+
+    .confirm-btn {
+      padding: 0.6rem 1.5rem;
+      border-radius: 8px;
+      font-size: 0.85rem;
+      font-weight: 700;
+      color: #ffffff;
+      background: #0ea5e9;
+      border: none;
+      cursor: pointer;
+      transition: all 0.2s ease;
+      box-shadow: 0 4px 10px rgba(14, 165, 233, 0.2);
+
+      &:hover {
+        background: #0284c7;
+        box-shadow: 0 6px 14px rgba(14, 165, 233, 0.3);
+      }
+
+      body.dark & {
+        background: #38bdf8;
+        color: #0f172a;
+        box-shadow: 0 4px 10px rgba(56, 189, 248, 0.2);
+
+        &:hover {
+          background: #0ea5e9;
+        }
+      }
+    }
+  }
+}
+
+
 
