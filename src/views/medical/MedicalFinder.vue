@@ -1406,7 +1406,7 @@ const exportHospitalsToCSV = () => {
       h.address,
       h.tel,
       h.fee,
-      statusMap[h.status] || h.status,
+      h.status ? (statusMap[h.status] ?? h.status) : '미지정',
       h.tags.join(', '),
       h.tips.replace(/"/g, '""'), // 따옴표 이스케이프
       formatDate(h.lastUpdated)

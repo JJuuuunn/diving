@@ -49,7 +49,7 @@
 </template>
 
 <script setup lang="ts">
-import { ref, computed, watch, onUnmounted, withDefaults } from 'vue';
+import { ref, computed, watch, onUnmounted } from 'vue';
 import type { DarkModeToggleProps } from '@/types/components';
 import { MAX_DEPTH } from '@/constants/theme';
 import sunIcon from '@/assets/icons/sun.svg?raw';
