@@ -1,0 +1,30 @@
+{
+  "schemaVersion": 1,
+  "generatedAt": "2026-07-26T11:43:10.320Z",
+  "sources": [
+    {
+      "federation": "AIDA",
+      "url": "https://www.aidainternational.org/Events/",
+      "fetchedAt": "2026-07-26T11:43:10.320Z"
+    },
+    {
+      "federation": "CMAS",
+      "url": "https://www.cmas.org/freediving/calendar.html",
+      "fetchedAt": "2026-07-26T11:43:10.320Z"
+    }
+  ],
+  "events": [
+    {
+      "id": "aida-0304f493bed1a3c1",
+      "sourceEventId": "/Events/EventDetails-5166",
+      "title": "24th FREEDIVINGFRIENDS CUP AIDA INDOOR FESTIVAL",
+      "federation": "AIDA",
+      "type": "pool",
+      "startDate": "2026-07-26",
+      "countryCode": "KR",
+      "registrationStatus": "closed",
+      "officialUrl": "https://www.aidainternational.org/Events/EventDetails-5166",
+      "sourceUrl": "https://www.aidainternational.org/Events/"
+    }
+  ]
+}

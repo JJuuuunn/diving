@@ -1,30 +1,29 @@
 import { defineStore } from 'pinia';
 import { useStorage } from '@vueuse/core';
-import type { Competition } from '@/types/competition';
-import rawCompetitions from '@/data/competitions.json';
+import type { CompetitionFeed } from '@/types/competition';
+import rawFeed from '@/data/competition-feed.json';
+
+const LEGACY_IDS: Record<string, string> = {};
 
 export const useCompetitionStore = defineStore('competition', () => {
-  const competitions = rawCompetitions as Competition[];
-  
-  // VueUse useStorage를 이용해 관심 등록된 대회 ID 리스트를 로컬스토리지에 완벽 동기화
+  const feed = rawFeed as CompetitionFeed;
+  const competitions = feed.events;
   const bookmarkedIds = useStorage<string[]>('bookmarked-competitions-ids', []);
 
+  // One-time compatibility pass. Unknown legacy IDs are intentionally retained:
+  // a future official event may provide a migration mapping.
+  if (typeof window !== 'undefined' && !localStorage.getItem('competition-bookmarks-v2')) {
+    bookmarkedIds.value = [...new Set(bookmarkedIds.value.map((id) => LEGACY_IDS[id] ?? id))];
+    localStorage.setItem('competition-bookmarks-v2', 'done');
+  }
+
   const toggleBookmark = (id: string): void => {
-    if (bookmarkedIds.value.includes(id)) {
-      bookmarkedIds.value = bookmarkedIds.value.filter((bId) => bId !== id);
-    } else {
-      bookmarkedIds.value.push(id);
-    }
+    bookmarkedIds.value = bookmarkedIds.value.includes(id)
+      ? bookmarkedIds.value.filter((bookmarkedId) => bookmarkedId !== id)
+      : [...bookmarkedIds.value, id];
   };
 
-  const isBookmarked = (id: string): boolean => {
-    return bookmarkedIds.value.includes(id);
-  };
+  const isBookmarked = (id: string): boolean => bookmarkedIds.value.includes(id);
 
-  return {
-    competitions,
-    bookmarkedIds,
-    toggleBookmark,
-    isBookmarked
-  };
+  return { feed, competitions, bookmarkedIds, toggleBookmark, isBookmarked };
 });

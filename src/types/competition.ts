@@ -1,32 +1,39 @@
+export type Federation = 'AIDA' | 'CMAS';
+export type CompetitionType = 'pool' | 'depth' | 'mixed' | 'unknown';
+export type RegistrationStatus = 'open' | 'closed' | 'unknown';
+export type EventStatus = 'upcoming' | 'ongoing' | 'ended';
+
 export interface Competition {
   id: string;
+  sourceEventId: string;
   title: string;
-  federation: 'AIDA' | 'CMAS' | 'Independent';
-  type: 'pool' | 'depth';
-  startDate: string; // YYYY-MM-DD
-  endDate: string; // YYYY-MM-DD
-  regStartDate: string; // YYYY-MM-DD
-  regEndDate: string; // YYYY-MM-DD
-  location: string;
-  locationType: 'domestic' | 'international';
-  disciplines: string[];
+  federation: Federation;
+  type: CompetitionType;
+  startDate: string;
+  endDate?: string;
+  venue?: string;
+  city?: string;
+  countryCode: 'KR';
+  registrationStatus: RegistrationStatus;
   officialUrl: string;
-  hasMedicalStampRequired: boolean;
+  sourceUrl: string;
+}
+
+export interface CompetitionFeed {
+  schemaVersion: 1;
+  generatedAt: string;
+  sources: Array<{
+    federation: Federation;
+    url: string;
+    fetchedAt: string;
+  }>;
+  events: Competition[];
 }
 
 export interface CompetitionFilters {
   searchQuery: string;
-  federation: 'all' | 'AIDA' | 'CMAS' | 'Independent';
-  type: 'all' | 'pool' | 'depth';
-  locationType: 'all' | 'domestic' | 'international';
-  status: 'all' | 'registering' | 'upcoming' | 'ongoing' | 'closed';
-}
-
-export interface CompetitionCountdown {
-  title: string;
-  days: number;
-  hours: number;
-  minutes: number;
-  seconds: number;
-  isOver: boolean;
+  federation: 'all' | Federation;
+  type: 'all' | CompetitionType;
+  status: 'all' | EventStatus;
+  bookmarkedOnly: boolean;
 }

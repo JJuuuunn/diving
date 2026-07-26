@@ -1,275 +1,105 @@
 <template>
   <div class="competition-container">
-    <!-- 메인 네비게이션 헤더 -->
-    <Header title="프리다이빙 대회 일정" subtitle="Freediving Competition Arena 🏆" />
-
+    <Header title="국내 프리다이빙 공식 대회" subtitle="AIDA · CMAS 대한민국 공식 일정" />
     <main class="main-content">
-      <!-- 이중 실시간 카운트다운 위젯 대시보드 -->
-      <section class="countdown-dashboards-grid">
-        <!-- 1. 접수 마감 임박 타이머 -->
-        <div v-if="nearestRegCompetition && !regCountdown.isOver" class="countdown-dashboard reg-timer">
-          <div class="dashboard-header">
-            <span class="label">🔥 접수 마감 임박</span>
-            <h2>{{ nearestRegCompetition.title }}</h2>
-            <span class="sub">접수 마감 시한까지 남은 시간</span>
-          </div>
-          <div class="timer-grid">
-            <div class="time-unit">
-              <span class="value">{{ String(regCountdown.days).padStart(2, '0') }}</span>
-              <span class="label">Days</span>
-            </div>
-            <div class="time-unit">
-              <span class="value">{{ String(regCountdown.hours).padStart(2, '0') }}</span>
-              <span class="label">Hours</span>
-            </div>
-            <div class="time-unit">
-              <span class="value">{{ String(regCountdown.minutes).padStart(2, '0') }}</span>
-              <span class="label">Mins</span>
-            </div>
-            <div class="time-unit">
-              <span class="value">{{ String(regCountdown.seconds).padStart(2, '0') }}</span>
-              <span class="label">Secs</span>
-            </div>
-          </div>
-        </div>
-
-        <!-- 2. 대회 개막 임박 타이머 -->
-        <div v-if="nearestCompCompetition && !compCountdown.isOver" class="countdown-dashboard comp-timer">
-          <div class="dashboard-header">
-            <span class="label">📅 대회 개막 임박</span>
-            <h2>{{ nearestCompCompetition.title }}</h2>
-            <span class="sub">대회 시작까지 남은 시간</span>
-          </div>
-          <div class="timer-grid">
-            <div class="time-unit">
-              <span class="value">{{ String(compCountdown.days).padStart(2, '0') }}</span>
-              <span class="label">Days</span>
-            </div>
-            <div class="time-unit">
-              <span class="value">{{ String(compCountdown.hours).padStart(2, '0') }}</span>
-              <span class="label">Hours</span>
-            </div>
-            <div class="time-unit">
-              <span class="value">{{ String(compCountdown.minutes).padStart(2, '0') }}</span>
-              <span class="label">Mins</span>
-            </div>
-            <div class="time-unit">
-              <span class="value">{{ String(compCountdown.seconds).padStart(2, '0') }}</span>
-              <span class="label">Secs</span>
-            </div>
-          </div>
+      <section class="summary-grid" aria-label="일정 요약">
+        <div><span>다가오는 대회</span><strong>{{ upcomingCompetitions.length }}개</strong></div>
+        <div><span>가장 가까운 대회</span><strong>{{ upcomingCompetitions[0]?.title ?? '예정 없음' }}</strong></div>
+        <div><span>마지막 갱신</span><strong>{{ generatedAt }}</strong></div>
+        <div>
+          <span>공식 출처</span>
+          <strong>
+            <a v-for="source in feed.sources" :key="source.federation" :href="source.url" target="_blank" rel="noopener noreferrer">
+              {{ source.federation }} ↗
+            </a>
+          </strong>
         </div>
       </section>
 
-      <!-- 다차원 지능형 필터 영역 -->
-      <section class="filter-panel">
-        <!-- 텍스트 검색창 -->
-        <div class="search-group">
-          <i class="fa-solid fa-magnifying-glass"></i>
-          <input 
-            v-model="filters.searchQuery" 
-            type="text" 
-            placeholder="대회명 또는 장소를 입력하세요..."
-          />
-        </div>
-
-        <!-- 3열 셀렉트 필터 그리드 -->
+      <section class="filter-panel" aria-label="대회 필터">
+        <label class="search-group">
+          <span class="sr-only">대회 검색</span>
+          <input v-model="filters.searchQuery" type="search" placeholder="대회명, 장소 또는 도시 검색" />
+        </label>
         <div class="filter-row">
-          <!-- 주관 협회 필터 -->
-          <div class="filter-item">
-            <label for="federation">주관 협회</label>
-            <CustomSelect 
-              id="federation" 
-              v-model="filters.federation" 
-              :options="federationOptions" 
-            />
-          </div>
-
-          <!-- 대회 형태 필터 -->
-          <div class="filter-item">
-            <label for="type">대회 분류</label>
-            <CustomSelect 
-              id="type" 
-              v-model="filters.type" 
-              :options="typeOptions" 
-            />
-          </div>
-
-          <!-- 접수 상태 필터 -->
-          <div class="filter-item">
-            <label for="status">접수 상태</label>
-            <CustomSelect 
-              id="status" 
-              v-model="filters.status" 
-              :options="statusOptions" 
-            />
-          </div>
+          <label>협회
+            <select v-model="filters.federation">
+              <option value="all">전체</option><option value="AIDA">AIDA</option><option value="CMAS">CMAS</option>
+            </select>
+          </label>
+          <label>경기 유형
+            <select v-model="filters.type">
+              <option value="all">전체</option><option value="pool">풀</option><option value="depth">수심</option>
+              <option value="mixed">혼합</option><option value="unknown">미확인</option>
+            </select>
+          </label>
+          <label>진행 상태
+            <select v-model="filters.status">
+              <option value="all">전체</option><option value="upcoming">예정</option>
+              <option value="ongoing">진행</option><option value="ended">종료</option>
+            </select>
+          </label>
+        </div>
+        <div class="filter-actions">
+          <label class="bookmark-filter">
+            <input v-model="filters.bookmarkedOnly" type="checkbox" /> 관심 대회만 보기
+          </label>
+          <button type="button" class="reset-button" @click="resetFilters">필터 초기화</button>
         </div>
       </section>
 
-      <!-- 본문 분할 컨텐츠 레이아웃 (메인 대회 리스트 + 우측 마이 아레나 체크리스트) -->
-      <div class="competition-content-grid">
-        <!-- 좌측: 실시간 대회 일정 목록 -->
-        <section class="competitions-main-list">
-          <h3 class="list-title">
-            📅 검색된 대회 일정 
-            <span>총 {{ filteredCompetitions.length }}개</span>
-          </h3>
-
-          <!-- 대회 리스트가 비어있을 때 빈 화면 노출 -->
-          <div v-if="filteredCompetitions.length === 0" class="empty-state">
-            <i class="fa-solid fa-calendar-xmark"></i>
-            <p>검색 조건에 맞는 프리다이빙 대회 일정이 없습니다.</p>
-          </div>
-
-          <!-- 대회 정보 리스트 렌더링 -->
-          <CompetitionCard 
-            v-for="comp in filteredCompetitions" 
-            :key="comp.id" 
-            :competition="comp"
-          />
-        </section>
-
-        <!-- 우측 사이드바: 마이 아레나 (관심 대회 & 유기적 연동 체크리스트) -->
-        <aside class="my-arena-widget">
-          <!-- 관심 대회 카드 목록 -->
-          <div class="widget-card">
-            <h3><i class="fa-solid fa-heart"></i> 마이 아레나</h3>
-            <div class="my-comp-list">
-              <div v-if="bookmarkedCompetitions.length === 0" class="empty-bookmark">
-                <i class="fa-regular fa-bookmark"></i>
-                <p>관심 있는 대회 카드의 하트 버튼을 누르면 일정이 여기에 기록됩니다.</p>
-              </div>
-
-              <!-- 등록된 북마크 아이템 리스트 -->
-              <div 
-                v-for="comp in bookmarkedCompetitions" 
-                :key="comp.id" 
-                class="my-comp-item"
-              >
-                <div class="info">
-                  <span class="title">{{ comp.title }}</span>
-                  <span class="dday">{{ getDDay(comp.startDate) }} 개최</span>
-                </div>
-                <button 
-                  class="remove-btn" 
-                  @click="toggleBookmark(comp.id)"
-                  title="일정 삭제"
-                >
-                  <i class="fa-solid fa-xmark"></i>
-                </button>
-              </div>
-            </div>
-
-            <!-- 스마트 3대 모달 유기적 크로스 연동 체크리스트 -->
-            <div class="arena-checklist">
-              <span class="checklist-title">대회 참가 완벽 대비책</span>
-
-              <!-- 1. 메디컬 파인더 연동 -->
-              <div class="checklist-item">
-                <i class="fa-solid" :class="hasMedicalStampInFav ? 'fa-circle-check' : 'fa-circle'"></i>
-                <div class="link-wrapper">
-                  <span>메디컬 스탬프 인증서</span>
-                  <RouterLink :to="{ name: '메디컬 스탬프 파인더' }">
-                    🏥 내 주변 발급 병원 조회 <i class="fa-solid fa-chevron-right"></i>
-                  </RouterLink>
-                </div>
-              </div>
-
-              <!-- 2. 로그북 트레이닝 연습 연동 -->
-              <div class="checklist-item">
-                <i class="fa-solid" :class="hasLogRecords ? 'fa-circle-check' : 'fa-circle'"></i>
-                <div class="link-wrapper">
-                  <span>훈련 대비 공식 PB 연습</span>
-                  <RouterLink :to="{ name: '다이빙 로그북' }">
-                    🌊 트레이닝 일지 쓰러가기 <i class="fa-solid fa-chevron-right"></i>
-                  </RouterLink>
-                </div>
-              </div>
-
-              <!-- 3. DPTI 멘탈 유형 연동 -->
-              <div class="checklist-item">
-                <i class="fa-solid fa-circle-check"></i>
-                <div class="link-wrapper">
-                  <span>다이버 멘탈/성향 점검</span>
-                  <RouterLink :to="{ name: '다이버 성향 테스트' }">
-                    🧠 나의 다이빙 성향 점검 <i class="fa-solid fa-chevron-right"></i>
-                  </RouterLink>
-                </div>
-              </div>
-            </div>
-          </div>
-        </aside>
+      <div class="view-toolbar">
+        <p>검색 결과 <strong>{{ filteredCompetitions.length }}개</strong></p>
+        <div role="group" aria-label="보기 방식">
+          <button type="button" :aria-pressed="view === 'list'" @click="view = 'list'">목록</button>
+          <button type="button" :aria-pressed="view === 'calendar'" @click="view = 'calendar'">월간</button>
+        </div>
       </div>
 
-      <!-- 전역 푸터 -->
+      <section v-if="view === 'list'" class="competition-content-grid">
+        <div class="competitions-main-list">
+          <div v-if="filteredCompetitions.length === 0" class="empty-state">
+            <strong>조건에 맞는 공식 대회가 없습니다.</strong>
+            <span>필터를 초기화하거나 공식 출처의 다음 갱신을 기다려 주세요.</span>
+          </div>
+          <CompetitionCard v-for="competition in filteredCompetitions" :key="competition.id" :competition="competition" />
+        </div>
+        <aside class="my-arena-widget">
+          <h2>★ 마이 아레나</h2>
+          <p v-if="bookmarkedCompetitions.length === 0">관심 대회를 등록하면 이 브라우저에 저장됩니다.</p>
+          <a
+            v-for="competition in bookmarkedCompetitions"
+            :key="competition.id"
+            :href="competition.officialUrl"
+            target="_blank"
+            rel="noopener noreferrer"
+          >{{ competition.title }} ↗</a>
+        </aside>
+      </section>
+      <CompetitionCalendar v-else :events="filteredCompetitions" />
       <Footer />
     </main>
   </div>
 </template>
 
 <script setup lang="ts">
-import { onMounted, computed } from 'vue';
-import { useCompetition } from '@/composables/useCompetition';
-import { useLogbookStore } from '@/stores/logbook';
+import { computed, ref } from 'vue';
 import Header from '@/components/Header.vue';
 import Footer from '@/components/Footer.vue';
-import CustomSelect from '@/components/CustomSelect.vue';
 import CompetitionCard from './CompetitionCard.vue';
+import CompetitionCalendar from './CompetitionCalendar.vue';
+import { useCompetition } from '@/composables/useCompetition';
 
-// 필터링 셀렉트 옵션 정의
-const federationOptions = [
-  { value: 'all', label: '모든 협회' },
-  { value: 'AIDA', label: 'AIDA 주관' },
-  { value: 'CMAS', label: 'CMAS 주관' },
-  { value: 'Independent', label: '독립/사설 대회' }
-];
-
-const typeOptions = [
-  { value: 'all', label: '모든 장소' },
-  { value: 'pool', label: '실내 풀장 대회' },
-  { value: 'depth', label: '해양 수심 대회' }
-];
-
-const statusOptions = [
-  { value: 'all', label: '모든 상태' },
-  { value: 'registering', label: '접수 진행 중' },
-  { value: 'upcoming', label: '접수 시작 예정' },
-  { value: 'ongoing', label: '대회 진행 중' },
-  { value: 'closed', label: '기간 마감' }
-];
-
-// 비즈니스 로직 및 컴포저블 데이터 취득
+const view = ref<'list' | 'calendar'>('list');
 const {
-  filters,
-  getDDay,
-  filteredCompetitions,
-  nearestRegCompetition,
-  nearestCompCompetition,
-  regCountdown,
-  compCountdown,
-  startCountdown,
-  bookmarkedCompetitions,
-  toggleBookmark
+  feed, filters, resetFilters, filteredCompetitions,
+  bookmarkedCompetitions, upcomingCompetitions
 } = useCompetition();
-
-const logbookStore = useLogbookStore();
-
-// 컴포넌트 마운트 시 실시간 타이머 가동
-onMounted((): void => {
-  startCountdown();
-});
-
-// 크로스 모듈 연동 체크리스트 상태 계산
-const hasMedicalStampInFav = computed((): boolean => {
-  // 북마크한 대회들 중 메디컬 스탬프 진단서 제출이 필요한 대회가 존재할 경우 체크
-  return bookmarkedCompetitions.value.some((comp) => comp.hasMedicalStampRequired);
-});
-
-const hasLogRecords = computed((): boolean => {
-  // 사용자의 로그북 기록이 최소 1개 이상 존재할 경우 훈련 진행으로 인정
-  return logbookStore.logs.length > 0;
-});
+const generatedAt = computed(() =>
+  new Intl.DateTimeFormat('ko-KR', {
+    timeZone: 'Asia/Seoul', dateStyle: 'medium', timeStyle: 'short'
+  }).format(new Date(feed.generatedAt))
+);
 </script>
 
 <style lang="scss">

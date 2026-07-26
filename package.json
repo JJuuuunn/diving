@@ -6,7 +6,10 @@
   "scripts": {
     "dev": "vite",
     "build": "vite build && cp dist/index.html dist/404.html",
-    "preview": "vite preview"
+    "preview": "vite preview",
+    "collect:competitions": "node scripts/collect-competitions.mjs",
+    "test": "node --test",
+    "typecheck": "vue-tsc --noEmit"
   },
   "dependencies": {
     "@vueuse/core": "^14.2.1",

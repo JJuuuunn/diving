@@ -1,8 +1,11 @@
-name: Deploy to GitHub Pages
+name: Collect official competitions and deploy
 
 on:
   push:
-    branches: [ main ]
+    branches: [main]
+  schedule:
+    # 06:00 KST (GitHub cron uses UTC)
+    - cron: '0 21 * * *'
   workflow_dispatch:
 
 permissions:
@@ -10,26 +13,36 @@ permissions:
   pages: write
   id-token: write
 
+concurrency:
+  group: pages
+  cancel-in-progress: false
+
 jobs:
   build:
     runs-on: ubuntu-latest
-    outputs:
-      bundle_size: ${{ steps.size.outputs.bundle_size }}
     steps:
       - name: Checkout
         uses: actions/checkout@v4
-      
+
       - name: Set up Node
         uses: actions/setup-node@v4
         with:
           node-version: 24
-          cache: 'npm'
+          cache: npm
 
       - name: Install dependencies
         run: npm ci
 
-      - name: TypeScript Compile Check
-        run: npx vue-tsc --noEmit
+      - name: Test stored fixtures
+        run: npm test
+
+      # The collector writes through a validated temporary file. If either
+      # official source fails, this step exits before the existing feed changes.
+      - name: Collect AIDA and CMAS official calendars
+        run: npm run collect:competitions
+
+      - name: Type check
+        run: npm run typecheck
 
       - name: Build
         env:
@@ -37,50 +50,33 @@ jobs:
           VITE_KAKAO_MAP_API_KEY: ${{ secrets.VITE_KAKAO_MAP_API_KEY }}
         run: npm run build
 
-      - name: Calculate Bundle Size
-        id: size
-        run: |
-          size=$(du -sh dist | cut -f1)
-          echo "bundle_size=$size" >> $GITHUB_OUTPUT
-
-      - name: Upload artifact
+      - name: Upload Pages artifact
         uses: actions/upload-pages-artifact@v3
         with:
-          path: './dist'
+          path: ./dist
 
   deploy:
+    needs: build
+    runs-on: ubuntu-latest
     environment:
       name: github-pages
       url: ${{ steps.deployment.outputs.page_url }}
-    needs: build
-    runs-on: ubuntu-latest
     steps:
       - name: Deploy to GitHub Pages
         id: deployment
         uses: actions/deploy-pages@v4
 
-      - name: Telegram Notification on Success
+  notify-failure:
+    if: ${{ always() && (needs.build.result == 'failure' || needs.deploy.result == 'failure') }}
+    needs: [build, deploy]
+    runs-on: ubuntu-latest
+    steps:
+      - name: Telegram notification on failure
         uses: appleboy/telegram-action@master
         with:
           to: ${{ secrets.TELEGRAM_TO }}
           token: ${{ secrets.TELEGRAM_TOKEN }}
           message: |
-            🐬 프리다이빙 다이어리 배포 성공! 🎉
-            
-            - 실행 결과: SUCCESS
-            - 최종 빌드 크기: ${{ needs.build.outputs.bundle_size }} 📦
-            - 배포 주소: ${{ steps.deployment.outputs.page_url }}
-            - 커밋 내용: ${{ github.event.head_commit.message }}
-
-      - name: Telegram Notification on Failure
-        if: failure()
-        uses: appleboy/telegram-action@master
-        with:
-          to: ${{ secrets.TELEGRAM_TO }}
-          token: ${{ secrets.TELEGRAM_TOKEN }}
-          message: |
-            🚨 프리다이빙 다이어리 배포 실패! ❌
-            
-            - 실행 결과: FAILED
-            - 발생 위치: ${{ github.workflow }}
-            - 오류 로그 확인: https://github.com/${{ github.repository }}/actions/runs/${{ github.run_id }}
+            🚨 프리다이빙 공식 일정 수집 또는 배포 실패
+            - 실행: ${{ github.event_name }}
+            - 로그: https://github.com/${{ github.repository }}/actions/runs/${{ github.run_id }}

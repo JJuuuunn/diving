@@ -1,910 +1,166 @@
 .competition-container {
   min-height: 100vh;
-  display: flex;
-  flex-direction: column;
-  background: linear-gradient(135deg, #f8fafc 0%, #f1f5f9 50%, #e2e8f0 100%);
+  background: linear-gradient(145deg, #f8fbfd, #e9f5fa);
   color: var(--page-text-primary);
-  padding: 0 0 60px 0;
-  overflow-x: hidden;
-  transition: background 0.3s ease, color 0.3s ease;
-
-  body.dark & {
-    background: linear-gradient(135deg, #0a0f1d 0%, #07162c 50%, #020a15 100%);
-    color: #f8fafc;
-  }
+  body.dark & { background: linear-gradient(145deg, #071421, #0b2233); }
 
   .main-content {
-    flex: 1;
-    max-width: 900px;
-    width: 100%;
+    width: min(1120px, calc(100% - 32px));
     margin: 0 auto;
-    padding: 24px 20px;
-    box-sizing: border-box;
+    padding: 28px 0 56px;
     display: flex;
     flex-direction: column;
-    gap: 32px;
+    gap: 24px;
   }
 }
 
-// 이중 카운트다운 위젯 그리드 컨테이너
-.countdown-dashboards-grid {
+.sr-only {
+  position: absolute; width: 1px; height: 1px; padding: 0; margin: -1px;
+  overflow: hidden; clip: rect(0, 0, 0, 0); white-space: nowrap; border: 0;
+}
+
+.summary-grid {
   display: grid;
-  grid-template-columns: repeat(2, 1fr);
-  gap: 20px;
-
-  @media (max-width: 768px) {
-    grid-template-columns: 1fr;
-    gap: 16px;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 12px;
+  > div {
+    min-height: 104px; padding: 20px; border-radius: 18px;
+    background: rgba(255,255,255,.8); border: 1px solid rgba(14,116,144,.12);
+    display: flex; flex-direction: column; gap: 10px;
+    body.dark & { background: rgba(15,35,50,.85); border-color: rgba(125,211,252,.14); }
   }
+  span { color: var(--page-text-secondary); font-size: .78rem; font-weight: 700; }
+  strong { font-size: 1rem; line-height: 1.35; }
+  a { color: #0284c7; margin-right: 10px; }
 }
 
-// 카운트다운 프리미엄 대시보드 (공통)
-.countdown-dashboard {
-  background: rgba(255, 255, 255, 0.7);
-  backdrop-filter: blur(20px);
-  border: 1px solid rgba(0, 0, 0, 0.05);
-  border-radius: 24px;
-  padding: 28px;
-  box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.05);
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-  gap: 20px;
-  text-align: center;
-  position: relative;
-  overflow: hidden;
-  transition: background 0.3s ease, border-color 0.3s ease, box-shadow 0.3s ease;
-
-  body.dark & {
-    background: rgba(15, 23, 42, 0.6);
-    border-color: rgba(255, 255, 255, 0.05);
-    box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.35);
-  }
-
-  &::before {
-    content: '';
-    position: absolute;
-    top: -50%;
-    left: -50%;
-    width: 200%;
-    height: 200%;
-    pointer-events: none;
-    z-index: 0;
-    // 기본값 — 서브클래스에서 오버라이드
-    background: radial-gradient(circle, rgba(14, 165, 233, 0.04) 0%, transparent 70%);
-  }
-
-  // 🔥 접수 마감 임박 — 로즈/앰버 테마
-  &.reg-timer {
-    border-color: rgba(244, 63, 94, 0.12);
-    box-shadow: 0 8px 32px 0 rgba(244, 63, 94, 0.06);
-
-    body.dark & {
-      border-color: rgba(244, 63, 94, 0.18);
-      box-shadow: 0 8px 32px 0 rgba(244, 63, 94, 0.12);
-    }
-
-    &::before {
-      background: radial-gradient(circle, rgba(244, 63, 94, 0.06) 0%, transparent 70%);
-
-      body.dark & {
-        background: radial-gradient(circle, rgba(244, 63, 94, 0.1) 0%, transparent 60%);
-      }
-    }
-
-    .dashboard-header .label {
-      color: #e11d48;
-      background: rgba(244, 63, 94, 0.08);
-
-      body.dark & {
-        color: #fb7185;
-        background: rgba(244, 63, 94, 0.12);
-      }
-    }
-
-    .timer-grid .time-unit .value {
-      color: #e11d48;
-
-      body.dark & {
-        color: #fb7185;
-        text-shadow: 0 0 12px rgba(251, 113, 133, 0.35);
-      }
-    }
-  }
-
-  // 📅 대회 개막 임박 — 스카이블루/아쿠아마린 테마
-  &.comp-timer {
-    border-color: rgba(14, 165, 233, 0.12);
-    box-shadow: 0 8px 32px 0 rgba(14, 165, 233, 0.06);
-
-    body.dark & {
-      border-color: rgba(56, 189, 248, 0.18);
-      box-shadow: 0 8px 32px 0 rgba(56, 189, 248, 0.1);
-    }
-
-    &::before {
-      background: radial-gradient(circle, rgba(14, 165, 233, 0.05) 0%, transparent 70%);
-
-      body.dark & {
-        background: radial-gradient(circle, rgba(56, 189, 248, 0.09) 0%, transparent 60%);
-      }
-    }
-
-    .dashboard-header .label {
-      color: #0284c7;
-      background: rgba(14, 165, 233, 0.08);
-
-      body.dark & {
-        color: #38bdf8;
-        background: rgba(56, 189, 248, 0.1);
-      }
-    }
-
-    .timer-grid .time-unit .value {
-      color: #0ea5e9;
-
-      body.dark & {
-        color: #38bdf8;
-        text-shadow: 0 0 10px rgba(56, 189, 248, 0.3);
-      }
-    }
-  }
-
-  .dashboard-header {
-    z-index: 1;
-
-    .label {
-      font-size: 0.75rem;
-      font-weight: 700;
-      text-transform: uppercase;
-      letter-spacing: 0.15em;
-      padding: 4px 12px;
-      border-radius: 20px;
-      margin-bottom: 8px;
-      display: inline-block;
-      // 기본 컬러는 서브클래스에서 재정의됨
-      color: #0284c7;
-      background: rgba(14, 165, 233, 0.08);
-    }
-
-    h2 {
-      font-size: 1.1rem;
-      font-weight: 800;
-      color: var(--page-text-primary);
-      margin: 8px 0 4px;
-      letter-spacing: -0.02em;
-      line-height: 1.3;
-    }
-
-    .sub {
-      font-size: 0.8rem;
-      color: var(--page-text-secondary);
-    }
-  }
-
-  .timer-grid {
-    display: flex;
-    justify-content: center;
-    gap: 10px;
-    z-index: 1;
-
-    @media (max-width: 480px) {
-      gap: 8px;
-    }
-
-    .time-unit {
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      background: rgba(255, 255, 255, 0.9);
-      border: 1px solid rgba(0, 0, 0, 0.04);
-      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.02);
-      border-radius: 16px;
-      padding: 10px 8px;
-      min-width: 60px;
-
-      body.dark & {
-        background: rgba(15, 23, 42, 0.85);
-        border-color: rgba(255, 255, 255, 0.04);
-        box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
-      }
-
-      @media (max-width: 480px) {
-        min-width: 52px;
-        padding: 7px 6px;
-      }
-
-      .value {
-        font-size: 1.65rem;
-        font-weight: 900;
-        font-family: 'Poppins', monospace;
-        line-height: 1;
-        letter-spacing: -0.05em;
-        // 기본 컬러는 서브클래스에서 재정의됨
-        color: #0ea5e9;
-
-        @media (max-width: 480px) {
-          font-size: 1.3rem;
-        }
-      }
-
-      .label {
-        font-size: 0.6rem;
-        font-weight: 700;
-        color: var(--page-text-secondary);
-        text-transform: uppercase;
-        margin-top: 4px;
-        letter-spacing: 0.05em;
-      }
-    }
-  }
-}
-
-
-// 다차원 필터링 패널
 .filter-panel {
-  background: rgba(255, 255, 255, 0.5);
-  backdrop-filter: blur(16px);
-  border: 1px solid rgba(0, 0, 0, 0.05);
-  border-radius: 20px;
-  padding: 24px;
-  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.03);
-  display: flex;
-  flex-direction: column;
-  gap: 20px;
-
-  body.dark & {
-    background: rgba(15, 23, 42, 0.4);
-    border-color: rgba(255, 255, 255, 0.05);
-  }
-
-  .search-group {
-    position: relative;
-    display: flex;
-    align-items: center;
-    background: rgba(255, 255, 255, 0.85);
-    border: 1px solid rgba(0, 0, 0, 0.08);
-    border-radius: 12px;
-    padding: 0 16px;
-    transition: all 0.25s ease;
+  padding: 20px; border-radius: 18px; background: rgba(255,255,255,.72);
+  border: 1px solid rgba(14,116,144,.12); display: grid; gap: 16px;
+  body.dark & { background: rgba(15,35,50,.82); }
+  input[type="search"], select {
+    width: 100%; min-height: 46px; padding: 0 13px; margin-top: 7px;
+    border: 1px solid rgba(100,116,139,.3); border-radius: 10px;
+    background: #fff; color: var(--page-text-primary);
 
     body.dark & {
-      background: rgba(15, 23, 42, 0.6);
-      border-color: rgba(255, 255, 255, 0.08);
-    }
-
-    &:focus-within {
-      border-color: #0ea5e9;
-      box-shadow: 0 0 0 3px rgba(14, 165, 233, 0.15);
-    }
-
-    i {
-      color: var(--page-text-secondary);
-      margin-right: 12px;
-      font-size: 1rem;
-    }
-
-    input {
-      width: 100%;
-      border: none;
-      background: transparent;
-      padding: 14px 0;
-      color: var(--page-text-primary);
-      font-size: 0.95rem;
-      outline: none;
-
-      &::placeholder {
-        color: var(--page-text-secondary);
-        opacity: 0.7;
-      }
+      background: #0f2332;
+      border-color: rgba(125,211,252,.22);
+      color: #f1f5f9;
+      color-scheme: dark;
     }
   }
+  select option {
+    background: #fff;
+    color: #1e293b;
 
-  .filter-row {
-    display: grid;
-    grid-template-columns: repeat(3, 1fr);
-    gap: 16px;
-
-    @media (max-width: 768px) {
-      grid-template-columns: 1fr;
-      gap: 12px;
+    body.dark & {
+      background: #0f2332;
+      color: #f1f5f9;
     }
   }
-
-  .filter-item {
-    display: flex;
-    flex-direction: column;
-    gap: 8px;
-
-    label {
-      font-size: 0.8rem;
-      font-weight: 700;
-      color: var(--page-text-secondary);
-      text-transform: uppercase;
-      letter-spacing: 0.05em;
-    }
-  }
+  .filter-row { display: grid; grid-template-columns: repeat(3, 1fr); gap: 12px; }
+  label { font-size: .8rem; font-weight: 700; color: var(--page-text-secondary); }
+  .filter-actions { display: flex; align-items: center; justify-content: space-between; gap: 12px; }
+  .bookmark-filter { display: flex; align-items: center; gap: 8px; min-height: 44px; }
 }
 
-// 대회 일정 컨텐츠 분할 그리드
-.competition-content-grid {
-  display: grid;
-  grid-template-columns: 1fr 280px;
-  gap: 32px;
-
-  @media (max-width: 991px) {
-    grid-template-columns: 1fr;
-    gap: 32px;
-  }
+button, a {
+  &:focus-visible { outline: 3px solid #38bdf8; outline-offset: 3px; }
+}
+.reset-button, .view-toolbar button, .calendar-toolbar button {
+  min-height: 44px; padding: 0 16px; border-radius: 10px; border: 1px solid rgba(14,116,144,.24);
+  background: transparent; color: var(--page-text-primary); cursor: pointer;
+}
+.view-toolbar {
+  display: flex; align-items: center; justify-content: space-between;
+  p { margin: 0; }
+  div { display: flex; gap: 6px; }
+  button[aria-pressed="true"] { color: white; background: #0284c7; }
 }
 
-// 메인 대회 일정 섹션
-.competitions-main-list {
-  display: flex;
-  flex-direction: column;
-  gap: 20px;
-
-  .list-title {
-    font-size: 1.2rem;
-    font-weight: 700;
-    color: var(--page-text-primary);
-    display: flex;
-    align-items: center;
-    gap: 10px;
-
-    span {
-      font-size: 0.8rem;
-      color: #0ea5e9;
-      background: rgba(14, 165, 233, 0.08);
-      padding: 2px 10px;
-      border-radius: 20px;
-      font-weight: 600;
-
-      body.dark & {
-        color: #38bdf8;
-        background: rgba(56, 189, 248, 0.1);
-      }
-    }
-  }
-
-  .empty-state {
-    text-align: center;
-    padding: 60px 20px;
-    background: rgba(255, 255, 255, 0.3);
-    border: 1px dashed rgba(0, 0, 0, 0.08);
-    border-radius: 20px;
-    color: var(--page-text-secondary);
-
-    body.dark & {
-      background: rgba(30, 41, 59, 0.2);
-      border-color: rgba(255, 255, 255, 0.08);
-    }
-
-    i {
-      font-size: 3rem;
-      margin-bottom: 12px;
-      display: block;
-      color: #cbd5e1;
-      body.dark & { color: #334155; }
-    }
-  }
-}
-
-// 마이 아레나 사이드 위젯
-.my-arena-widget {
-  display: flex;
-  flex-direction: column;
-  gap: 20px;
-  align-self: flex-start;
-
-  .widget-card {
-    background: rgba(255, 255, 255, 0.5);
-    border: 1px solid rgba(0, 0, 0, 0.06);
-    border-radius: 20px;
-    padding: 20px;
-    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.03);
-
-    body.dark & {
-      background: rgba(15, 23, 42, 0.4);
-      border-color: rgba(255, 255, 255, 0.05);
-    }
-
-    h3 {
-      font-size: 1rem;
-      font-weight: 700;
-      margin: 0 0 16px 0;
-      color: var(--page-text-primary);
-      display: flex;
-      align-items: center;
-      gap: 8px;
-
-      i { color: #ef4444; }
-    }
-  }
-
-  .my-comp-list {
-    display: flex;
-    flex-direction: column;
-    gap: 12px;
-
-    .empty-bookmark {
-      text-align: center;
-      padding: 30px 10px;
-      font-size: 0.85rem;
-      color: var(--page-text-secondary);
-      line-height: 1.5;
-
-      i {
-        font-size: 1.5rem;
-        display: block;
-        margin-bottom: 8px;
-        color: #cbd5e1;
-        body.dark & { color: #334155; }
-      }
-    }
-  }
-
-  .my-comp-item {
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    background: rgba(255, 255, 255, 0.7);
-    border: 1px solid rgba(0, 0, 0, 0.04);
-    padding: 10px 14px;
-    border-radius: 12px;
-    box-shadow: 0 2px 6px rgba(0,0,0,0.02);
-
-    body.dark & {
-      background: rgba(15, 23, 42, 0.6);
-      border-color: rgba(255, 255, 255, 0.04);
-    }
-
-    .info {
-      display: flex;
-      flex-direction: column;
-      gap: 2px;
-      max-width: 170px;
-
-      .title {
-        font-size: 0.85rem;
-        font-weight: 700;
-        color: var(--page-text-primary);
-        white-space: nowrap;
-        overflow: hidden;
-        text-overflow: ellipsis;
-      }
-
-      .dday {
-        font-size: 0.75rem;
-        color: #e11d48;
-        font-weight: 700;
-        font-family: monospace;
-      }
-    }
-
-    .remove-btn {
-      background: transparent;
-      border: none;
-      color: #94a3b8;
-      cursor: pointer;
-      padding: 4px;
-      border-radius: 50%;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      transition: all 0.2s ease;
-
-      &:hover {
-        background: rgba(239, 68, 68, 0.1);
-        color: #ef4444;
-      }
-    }
-  }
-
-  // 스마트 연동 체크리스트
-  .arena-checklist {
-    display: flex;
-    flex-direction: column;
-    gap: 12px;
-    border-top: 1px solid rgba(0, 0, 0, 0.06);
-    margin-top: 16px;
-    padding-top: 16px;
-
-    body.dark & {
-      border-color: rgba(255, 255, 255, 0.06);
-    }
-
-    .checklist-title {
-      font-size: 0.75rem;
-      font-weight: 700;
-      color: var(--page-text-secondary);
-      text-transform: uppercase;
-      letter-spacing: 0.08em;
-    }
-
-    .checklist-item {
-      display: flex;
-      align-items: flex-start;
-      gap: 10px;
-      font-size: 0.85rem;
-
-      i {
-        font-size: 0.95rem;
-        margin-top: 2px;
-        
-        &.fa-circle-check { color: #10b981; }
-        &.fa-circle { color: #94a3b8; }
-      }
-
-      .link-wrapper {
-        display: flex;
-        flex-direction: column;
-        gap: 2px;
-
-        span {
-          color: var(--page-text-primary);
-          font-weight: 600;
-        }
-
-        a {
-          color: #0ea5e9;
-          font-size: 0.75rem;
-          text-decoration: none;
-          font-weight: 700;
-          display: inline-flex;
-          align-items: center;
-          gap: 2px;
-
-          &:hover {
-            text-decoration: underline;
-          }
-
-          body.dark & {
-            color: #38bdf8;
-          }
-        }
-      }
-    }
-  }
-}
-
-// 개별 대회 카드
+.competition-content-grid { display: grid; grid-template-columns: minmax(0, 1fr) 260px; gap: 24px; }
+.competitions-main-list { display: flex; flex-direction: column; gap: 14px; }
 .competition-card {
-  background: rgba(255, 255, 255, 0.65);
-  backdrop-filter: blur(16px);
-  border: 1px solid rgba(0, 0, 0, 0.06);
-  border-radius: 24px;
-  overflow: hidden;
-  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.03);
-  transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-  padding: 24px;
-  display: flex;
-  flex-direction: column;
-  gap: 16px;
-
-  body.dark & {
-    background: rgba(15, 23, 42, 0.5);
-    border-color: rgba(255, 255, 255, 0.06);
-    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.15);
+  display: grid; grid-template-columns: 76px 1fr; gap: 18px; padding: 20px;
+  border-radius: 18px; background: rgba(255,255,255,.86); border: 1px solid rgba(14,116,144,.12);
+  body.dark & { background: rgba(15,35,50,.9); border-color: rgba(125,211,252,.14); }
+  &__date {
+    height: 76px; border-radius: 16px; color: #0369a1; background: #e0f2fe;
+    display: flex; flex-direction: column; align-items: center; justify-content: center;
+    strong { font-size: 1.55rem; }
   }
-
-  &:hover {
-    border-color: rgba(14, 165, 233, 0.3);
-    box-shadow: 0 8px 30px rgba(14, 165, 233, 0.08);
-    transform: translateY(-2px);
-
-    body.dark & {
-      border-color: rgba(56, 189, 248, 0.25);
-      box-shadow: 0 8px 30px rgba(56, 189, 248, 0.08);
-    }
-  }
-
-  .card-top-row {
-    display: flex;
-    justify-content: space-between;
-    align-items: flex-start;
-    gap: 12px;
-
-    .comp-title-area {
-      display: flex;
-      flex-direction: column;
-      gap: 6px;
-
-      h4 {
-        font-size: 1.15rem;
-        font-weight: 800;
-        color: var(--page-text-primary);
-        margin: 0;
-        line-height: 1.3;
-      }
-
-      .fed-badges {
-        display: flex;
-        align-items: center;
-        gap: 6px;
-
-        .fed-badge {
-          font-size: 0.65rem;
-          font-weight: 800;
-          padding: 2px 8px;
-          border-radius: 6px;
-          text-transform: uppercase;
-
-          &.aida {
-            background: rgba(2, 132, 199, 0.1);
-            color: #0284c7;
-            body.dark & {
-              background: rgba(56, 189, 248, 0.15);
-              color: #38bdf8;
-            }
-          }
-
-          &.cmas {
-            background: rgba(16, 185, 129, 0.1);
-            color: #10b981;
-            body.dark & {
-              background: rgba(52, 211, 153, 0.15);
-              color: #34d399;
-            }
-          }
-
-          &.independent {
-            background: rgba(100, 116, 139, 0.1);
-            color: #64748b;
-            body.dark & {
-              background: rgba(148, 163, 184, 0.15);
-              color: #94a3b8;
-            }
-          }
-        }
-
-        .type-badge {
-          font-size: 0.65rem;
-          font-weight: 700;
-          color: var(--page-text-secondary);
-          background: rgba(0, 0, 0, 0.03);
-          padding: 2px 6px;
-          border-radius: 6px;
-
-          body.dark & {
-            background: rgba(255, 255, 255, 0.05);
-          }
-        }
-      }
-    }
-
-    .status-area {
-      display: flex;
-      flex-direction: column;
-      align-items: flex-end;
-      gap: 6px;
-
-      .status-badge {
-        font-size: 0.75rem;
-        font-weight: 800;
-        padding: 4px 10px;
-        border-radius: 20px;
-        text-transform: uppercase;
-
-        &.status-registering {
-          background: rgba(16, 185, 129, 0.1);
-          color: #10b981;
-          box-shadow: 0 2px 8px rgba(16, 185, 129, 0.15);
-
-          body.dark & {
-            background: rgba(52, 211, 153, 0.15);
-            color: #34d399;
-          }
-        }
-
-        &.status-upcoming {
-          background: rgba(245, 158, 11, 0.1);
-          color: #d97706;
-
-          body.dark & {
-            background: rgba(251, 191, 36, 0.15);
-            color: #fbbf24;
-          }
-        }
-
-        &.status-ongoing {
-          background: rgba(14, 165, 233, 0.1);
-          color: #0ea5e9;
-
-          body.dark & {
-            background: rgba(56, 189, 248, 0.15);
-            color: #38bdf8;
-          }
-        }
-
-        &.status-closed {
-          background: rgba(0, 0, 0, 0.03);
-          color: #94a3b8;
-
-          body.dark & {
-            background: rgba(255, 255, 255, 0.05);
-          }
-        }
-      }
-
-      .dday-label {
-        font-size: 0.8rem;
-        font-weight: 800;
-        color: #e11d48;
-        font-family: monospace;
-      }
-    }
-  }
-
-  .card-details-grid {
-    display: grid;
-    grid-template-columns: 1fr 1fr;
-    gap: 12px;
-    border-top: 1px solid rgba(0, 0, 0, 0.05);
-    border-bottom: 1px solid rgba(0, 0, 0, 0.05);
-    padding: 14px 0;
-
-    body.dark & {
-      border-color: rgba(255, 255, 255, 0.05);
-    }
-
-    @media (max-width: 480px) {
-      grid-template-columns: 1fr;
-      gap: 10px;
-    }
-
-    .detail-item {
-      display: flex;
-      align-items: flex-start;
-      gap: 10px;
-      font-size: 0.85rem;
-
-      i {
-        font-size: 0.95rem;
-        color: #0ea5e9;
-        width: 16px;
-        text-align: center;
-        margin-top: 3px;
-        body.dark & { color: #38bdf8; }
-      }
-
-      .detail-content {
-        display: flex;
-        flex-direction: column;
-        gap: 3px;
-
-        .detail-label {
-          font-size: 0.75rem;
-          color: var(--page-text-secondary);
-          font-weight: 500;
-        }
-
-        .detail-value {
-          color: var(--page-text-primary);
-          font-weight: 700;
-          font-size: 0.85rem;
-        }
-      }
-    }
-  }
-
-  .disciplines-row {
-    display: flex;
-    flex-wrap: wrap;
-    align-items: center;
-    gap: 6px;
-
-    .label {
-      font-size: 0.7rem;
-      font-weight: 700;
-      color: var(--page-text-secondary);
-      text-transform: uppercase;
-      letter-spacing: 0.05em;
-      margin-right: 4px;
-    }
-
-    .tag {
-      font-size: 0.75rem;
-      font-weight: 700;
-      background: rgba(0, 0, 0, 0.02);
-      border: 1px solid rgba(0, 0, 0, 0.06);
-      color: var(--page-text-secondary);
-      padding: 2px 8px;
-      border-radius: 6px;
-      font-family: 'Poppins', sans-serif;
-
-      body.dark & {
-        background: rgba(255, 255, 255, 0.03);
-        border-color: rgba(255, 255, 255, 0.06);
-      }
-    }
-  }
-
-  .card-actions-row {
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    gap: 16px;
-    margin-top: 4px;
-
-    .bookmark-toggle-btn {
-      background: rgba(0, 0, 0, 0.02);
-      border: 1px solid rgba(0, 0, 0, 0.06);
-      color: #94a3b8;
-      width: 44px;
-      height: 44px;
-      border-radius: 12px;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      cursor: pointer;
-      transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
-
-      body.dark & {
-        background: rgba(255, 255, 255, 0.03);
-        border-color: rgba(255, 255, 255, 0.06);
-      }
-
-      &:hover {
-        background: rgba(244, 63, 94, 0.08);
-        border-color: rgba(244, 63, 94, 0.2);
-        color: #f43f5e;
-        transform: scale(1.05);
-      }
-
-      &.is-bookmarked {
-        background: rgba(244, 63, 94, 0.1);
-        border-color: rgba(244, 63, 94, 0.3);
-        color: #f43f5e;
-        box-shadow: 0 2px 8px rgba(244, 63, 94, 0.15);
-
-        i {
-          animation: heartBeat 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
-        }
-      }
-    }
-
-    .apply-action-btn {
-      flex-grow: 1;
-      display: inline-flex;
-      align-items: center;
-      justify-content: center;
-      gap: 8px;
-      background: linear-gradient(135deg, #0284c7 0%, #0369a1 100%);
-      color: white;
-      padding: 12px 24px;
-      border: none;
-      border-radius: 12px;
-      font-size: 0.9rem;
-      font-weight: 700;
-      cursor: pointer;
-      text-decoration: none;
-      transition: all 0.3s ease;
-      box-shadow: 0 4px 12px rgba(2, 132, 199, 0.2);
-
-      &:hover {
-        transform: translateY(-1px);
-        box-shadow: 0 6px 16px rgba(2, 132, 199, 0.35);
-        background: linear-gradient(135deg, #0ea5e9 0%, #0284c7 100%);
-      }
-
-      &.disabled {
-        background: rgba(0, 0, 0, 0.05);
-        color: #94a3b8;
-        box-shadow: none;
-        cursor: not-allowed;
-        pointer-events: none;
-
-        body.dark & {
-          background: rgba(255, 255, 255, 0.05);
-        }
-      }
-    }
-  }
+  &__badges { display: flex; flex-wrap: wrap; gap: 6px; }
+  h3 { margin: 10px 0 8px; font-size: 1.1rem; }
+  &__meta { display: flex; flex-wrap: wrap; gap: 12px; color: var(--page-text-secondary); font-size: .85rem; }
+  &__actions { display: flex; gap: 10px; margin-top: 16px; }
+}
+.fed-badge, .type-badge, .registration-badge {
+  padding: 4px 8px; border-radius: 99px; font-size: .7rem; font-weight: 800; background: #e2e8f0;
+}
+.fed-badge.aida { background: #dbeafe; color: #1d4ed8; }
+.fed-badge.cmas { background: #ccfbf1; color: #0f766e; }
+.registration-open { background: #dcfce7; color: #15803d; }
+.registration-closed { background: #fee2e2; color: #b91c1c; }
+.registration-unknown { background: #f1f5f9; color: #475569; }
+.bookmark-toggle-btn, .official-action-btn {
+  min-height: 44px; padding: 0 14px; border-radius: 10px; cursor: pointer; font-weight: 700;
+  display: inline-flex; align-items: center; justify-content: center; text-decoration: none;
+}
+.bookmark-toggle-btn { border: 1px solid #bae6fd; background: transparent; color: #0369a1; }
+.bookmark-toggle-btn.is-bookmarked { background: #fef3c7; color: #a16207; border-color: #fde68a; }
+.official-action-btn { margin-left: auto; border: 0; background: #0284c7; color: white; }
+.my-arena-widget {
+  align-self: start; position: sticky; top: 20px; padding: 20px; border-radius: 18px;
+  background: rgba(255,255,255,.78); border: 1px solid rgba(14,116,144,.12);
+  display: flex; flex-direction: column; gap: 12px;
+  body.dark & { background: rgba(15,35,50,.9); }
+  h2 { margin: 0; font-size: 1rem; }
+  p, a { font-size: .82rem; line-height: 1.5; }
+  a { color: #0284c7; }
+}
+.empty-state {
+  min-height: 180px; padding: 24px; border: 1px dashed #94a3b8; border-radius: 18px;
+  display: flex; flex-direction: column; justify-content: center; align-items: center; gap: 8px;
+  text-align: center; color: var(--page-text-secondary);
+  &.compact { min-height: 80px; }
 }
 
-@keyframes heartBeat {
-  0% { transform: scale(1); }
-  50% { transform: scale(1.3); }
-  100% { transform: scale(1); }
+.calendar-panel {
+  padding: 20px; border-radius: 18px; background: rgba(255,255,255,.78);
+  body.dark & { background: rgba(15,35,50,.9); }
+}
+.calendar-toolbar { display: flex; align-items: center; justify-content: space-between; h2 { font-size: 1.1rem; } }
+.calendar-weekdays, .calendar-grid { display: grid; grid-template-columns: repeat(7, 1fr); }
+.calendar-weekdays span { padding: 10px; text-align: center; font-size: .75rem; color: var(--page-text-secondary); }
+.calendar-day {
+  min-width: 0; min-height: 112px; padding: 8px; border: 1px solid rgba(148,163,184,.22);
+  background: transparent; color: var(--page-text-primary); text-align: left; cursor: pointer;
+  &.muted { opacity: .35; }
+  &.selected { box-shadow: inset 0 0 0 2px #0ea5e9; }
+  &__number { display: block; margin-bottom: 6px; font-size: .75rem; }
+}
+.calendar-event, .calendar-more {
+  display: block; overflow: hidden; white-space: nowrap; text-overflow: ellipsis;
+  margin: 3px 0; padding: 4px; border-radius: 4px; background: #dbeafe; font-size: .65rem;
+}
+.calendar-event.cmas { background: #ccfbf1; }
+.calendar-selection { display: flex; flex-direction: column; gap: 12px; margin-top: 24px; h3 { font-size: 1rem; } }
+
+@media (max-width: 800px) {
+  .summary-grid { grid-template-columns: repeat(2, 1fr); }
+  .competition-content-grid { grid-template-columns: 1fr; }
+  .my-arena-widget { position: static; order: -1; }
+  .filter-panel .filter-row { grid-template-columns: 1fr; }
+}
+@media (max-width: 520px) {
+  .competition-container .main-content { width: min(100% - 20px, 1120px); padding-top: 16px; }
+  .summary-grid { grid-template-columns: 1fr 1fr; > div { min-height: 88px; padding: 14px; } }
+  .competition-card { grid-template-columns: 54px 1fr; padding: 14px; gap: 12px; &__date { height: 58px; } }
+  .competition-card__actions { flex-direction: column; }
+  .official-action-btn { margin-left: 0; }
+  .calendar-panel { padding: 8px; }
+  .calendar-day { min-height: 76px; padding: 4px; }
+  .calendar-event { font-size: 0; height: 7px; padding: 0; }
+  .calendar-more { font-size: .58rem; padding: 2px; }
 }
