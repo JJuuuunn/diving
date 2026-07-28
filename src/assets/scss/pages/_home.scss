@@ -66,8 +66,8 @@
 
 .dashboard-card {
   // Glassmorphism Base
-  background: rgba(255, 255, 255, 0.6); // 반투명
-  border: 1px solid rgba(255, 255, 255, 0.4);
+  background: var(--page-card-bg);
+  border: 1px solid var(--page-card-border);
   backdrop-filter: blur(12px);
   -webkit-backdrop-filter: blur(12px);
 
@@ -78,15 +78,8 @@
   text-decoration: none;
   position: relative;
   overflow: hidden;
-  box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.05);
+  box-shadow: var(--page-card-shadow);
   transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-
-  // 다크모드 카드 배경
-  body.dark & {
-    background: rgba(30, 41, 59, 0.6); // 어두운 반투명
-    border-color: rgba(255, 255, 255, 0.1);
-    box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.3);
-  }
 
   // Hover Effect: 둥둥 뜨는 느낌 + 보더 강조
   &:hover:not(.disabled) {

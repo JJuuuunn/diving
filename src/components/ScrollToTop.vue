@@ -1,8 +1,8 @@
 <template>
   <transition name="pop-in">
-    <div 
-      v-if="isVisible" 
-      class="scroll-to-top-gauge" 
+    <div
+      v-if="isVisible"
+      class="scroll-to-top-gauge"
       @click="scrollToTop"
       title="수면으로 급상승하기 (맨 위로)"
     >
@@ -63,7 +63,7 @@ const strokeCircumference = 131.95;
 const gaugeCircleStyle = computed(() => {
   const percentage = Math.min(Math.max(scrollPercentage.value, 0), 100);
   const offset = strokeCircumference - (percentage / 100) * strokeCircumference;
-  
+
   return {
     strokeDasharray: `${strokeCircumference}`,
     strokeDashoffset: `${offset}`

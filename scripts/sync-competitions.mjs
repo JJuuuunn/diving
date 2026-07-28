@@ -10,7 +10,7 @@ const FEDERATIONS = new Set(['AIDA', 'CMAS']);
 const TYPES = new Set(['pool', 'depth', 'mixed', 'unknown']);
 const REGISTRATION_STATUSES = new Set(['open', 'closed', 'unknown']);
 const ROW_STATUSES = new Set(['draft', 'published', 'cancelled']);
-const ID_PATTERN = /^AIDA-[A-Za-z0-9-]+$/;
+const ID_PATTERN = /^[A-Z][A-Z0-9]*-[A-Za-z0-9][A-Za-z0-9-]*$/;
 
 const asText = (value) => String(value ?? '').trim();
 
@@ -71,7 +71,7 @@ export const normalizeSheetPayload = (payload, now = new Date()) => {
     if (status !== 'published') continue;
 
     const title = asText(raw.title);
-    const sourceEventId = asText(raw.sourceEventId) || id.slice('AIDA-'.length);
+    const sourceEventId = asText(raw.sourceEventId) || id.slice(id.indexOf('-') + 1);
     const federation = asText(raw.federation).toUpperCase();
     const type = asText(raw.type).toLowerCase();
     const startDate = asKstDate(raw.startDate);
@@ -83,8 +83,8 @@ export const normalizeSheetPayload = (payload, now = new Date()) => {
     const verifiedAt = asKstDate(raw.verifiedAt);
 
     if (!title) throw new Error(`Row ${index + 2}: title is required`);
-    if (!sourceEventId || id !== `AIDA-${sourceEventId}`) {
-      throw new Error(`Row ${index + 2}: id must match AIDA-{sourceEventId}`);
+    if (!sourceEventId || id.slice(id.indexOf('-') + 1) !== sourceEventId) {
+      throw new Error(`Row ${index + 2}: id suffix must match sourceEventId`);
     }
     if (!FEDERATIONS.has(federation)) throw new Error(`Row ${index + 2}: invalid federation`);
     if (!TYPES.has(type)) throw new Error(`Row ${index + 2}: invalid type`);

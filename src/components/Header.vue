@@ -1,10 +1,7 @@
 <script setup lang="ts">
-interface Props {
-  title?: string;
-  subtitle?: string;
-}
+import type { HeaderProps } from '@/types/components';
 
-withDefaults(defineProps<Props>(), {
+withDefaults(defineProps<HeaderProps>(), {
   title: '다이빙 정산요정',
   subtitle: 'Diving Pool Cost Calculation 🧜‍♂️',
 });

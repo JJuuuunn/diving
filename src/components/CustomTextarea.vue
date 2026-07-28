@@ -15,19 +15,19 @@
     <div v-if="maxLength > 0" class="textarea-limit-panel">
       <svg class="limit-donut-svg" viewBox="0 0 20 20">
         <!-- 배경 트랙 -->
-        <circle 
-          class="donut-track" 
-          cx="10" 
-          cy="10" 
-          r="8" 
+        <circle
+          class="donut-track"
+          cx="10"
+          cy="10"
+          r="8"
         />
         <!-- 전면 프로그레스 -->
-        <circle 
-          class="donut-fill" 
-          :class="donutColorClass" 
-          cx="10" 
-          cy="10" 
-          r="8" 
+        <circle
+          class="donut-fill"
+          :class="donutColorClass"
+          cx="10"
+          cy="10"
+          r="8"
           :style="donutCircleStyle"
         />
       </svg>
@@ -42,17 +42,9 @@
 <script setup lang="ts">
 import { computed, onMounted, watch } from 'vue';
 import { useAutoGrow } from '@/composables/useAutoGrow';
+import type { TextareaProps } from '@/types/components';
 
-// Props 정의 (Strict TypeScript 구조 활용)
-interface Props {
-  modelValue: string;
-  placeholder?: string;
-  maxLength?: number;
-  disabled?: boolean;
-  rows?: number;
-}
-
-const props = withDefaults(defineProps<Props>(), {
+const props = withDefaults(defineProps<TextareaProps>(), {
   placeholder: '메모를 입력해주세요...',
   maxLength: 0,
   disabled: false,
@@ -87,7 +79,7 @@ const strokeCircumference = 50.27;
 const donutCircleStyle = computed(() => {
   const percentage = Math.min(Math.max(characterPercentage.value, 0), 100);
   const offset = strokeCircumference - (percentage / 100) * strokeCircumference;
-  
+
   return {
     strokeDasharray: `${strokeCircumference}`,
     strokeDashoffset: `${offset}`

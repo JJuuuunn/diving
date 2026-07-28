@@ -1,23 +1,23 @@
 // 1. Abstracts (Variables, mixins, etc.)
-@import 'abstracts/colors';
-@import 'abstracts/variables';
+@use 'abstracts/colors';
+@use 'abstracts/variables';
 
 // 2. Base (Reset, base styles, typography)
-@import 'base/reset';
-@import 'base/base';
-@import 'base/typography';
+@use 'base/reset';
+@use 'base/base';
+@use 'base/typography';
 
 // 3. Components (Reusable small elements)
-@import 'components/menu-toggle';
-@import 'components/dark-mode-toggle';
-@import 'components/datepicker';
-@import 'components/inputs';
-@import 'components/custom-components';
+@use 'components/menu-toggle';
+@use 'components/dark-mode-toggle';
+@use 'components/datepicker';
+@use 'components/inputs';
+@use 'components/calendar-panel';
+@use 'components/custom-components';
 
 // 4. Layout (Sidebar, header, etc.)
-@import 'layout/sidebar';
-@import 'layout/header-footer';
+@use 'layout/sidebar';
+@use 'layout/header-footer';
 
 // 5. Pages (Specific page styles)
 // Page-level styles are now loaded lazily inside their respective view components.
-

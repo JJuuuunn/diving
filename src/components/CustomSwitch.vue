@@ -1,11 +1,11 @@
 <template>
-  <div 
-    class="custom-switch-container" 
+  <div
+    class="custom-switch-container"
     :class="{ 'is-disabled': disabled }"
   >
     <!-- 활성 슬라이딩 배경 필 -->
-    <div 
-      class="switch-sliding-pill" 
+    <div
+      class="switch-sliding-pill"
       :class="{ 'is-active': value }"
     ></div>
 
@@ -38,18 +38,9 @@
 <script setup lang="ts">
 import { computed } from 'vue';
 import { useElasticToggle } from '@/composables/useElasticToggle';
+import type { SwitchProps } from '@/types/components';
 
-// Props 정의 (Strict TypeScript 선언)
-interface Props {
-  modelValue: boolean;
-  activeText: string;
-  inactiveText: string;
-  activeIcon?: string;
-  inactiveIcon?: string;
-  disabled?: boolean;
-}
-
-const props = withDefaults(defineProps<Props>(), {
+const props = withDefaults(defineProps<SwitchProps>(), {
   disabled: false
 });
 

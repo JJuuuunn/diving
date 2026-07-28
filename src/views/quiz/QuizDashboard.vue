@@ -6,9 +6,9 @@
     </header>
 
     <main class="quiz-sets-grid">
-      <div 
-        v-for="set in quizSets" 
-        :key="set.id" 
+      <div
+        v-for="set in quizSets"
+        :key="set.id"
         class="quiz-card set-card fade-in-up"
         @click="selectSet(set.id)"
       >
@@ -25,7 +25,7 @@
               최고 점수: {{ quizStore.getHighScore(set.id) }}점
             </span>
           </div>
-          <button class="start-btn">도전하기</button>
+          <CustomButton class="start-btn">도전하기</CustomButton>
         </div>
       </div>
     </main>
@@ -55,5 +55,5 @@ const selectSet = (setId: string) => {
 </script>
 
 <style lang="scss" scoped>
-@import '@/assets/scss/pages/_quiz.scss';
+@use '@/assets/scss/pages/_quiz.scss';
 </style>

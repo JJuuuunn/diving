@@ -1,6 +1,6 @@
 <template>
-  <div 
-    class="custom-skeleton" 
+  <div
+    class="custom-skeleton"
     :class="['type-' + type]"
   >
     <!-- 카드 타입 스켈레톤 디자인 -->
@@ -31,12 +31,9 @@
 </template>
 
 <script setup lang="ts">
-// Props 정의 (Strict TypeScript 선언)
-interface Props {
-  type?: 'card' | 'list' | 'text';
-}
+import type { SkeletonProps } from '@/types/components';
 
-withDefaults(defineProps<Props>(), {
+withDefaults(defineProps<SkeletonProps>(), {
   type: 'card'
 });
 </script>

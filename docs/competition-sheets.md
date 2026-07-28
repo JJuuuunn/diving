@@ -61,7 +61,7 @@ verifiedAt        YYYY-MM-DD
 isActive          TRUE
 ```
 
-`contentHash`, `firstSeenAt`, `lastSeenAt`, `updatedAt`은 직접 입력 방식에서는 비워도 됩니다. 이후 로컬 수집에서 같은 `AIDA-{eventId}`가 발견되면 자동으로 채워집니다.
+`contentHash`, `firstSeenAt`, `lastSeenAt`, `updatedAt`은 직접 입력 방식에서는 비워도 됩니다. 이후 동일한 소스 접두사와 이벤트 ID가 수집되면 자동으로 채워집니다.
 
 시트에 직접 입력한 작업은 크롤링 실행이 아니므로 `CrawlLogs`와 `CrawlState`에는 기록되지 않습니다.
 
@@ -71,7 +71,10 @@ isActive          TRUE
 - `CrawlLogs`: 로컬 수집 명령의 실행 이력
 - `CrawlState`: 마지막 로컬 수집 상태
 
-대회 기본 키는 `AIDA-{eventId}`입니다. 예를 들어 AIDA 이벤트 ID가 `5166`이면 `AIDA-5166`으로 저장합니다.
+대회 기본 키는 `{SOURCE}-{sourceEventId}`입니다. 접두사는 대문자로 관리하며 현재는
+`AIDA-*`, 향후에는 `CMAS-*`를 사용합니다. 자체 등록 출처가 추가되면 `CUSTOM-*` 같은
+별도 접두사를 사용할 수 있습니다. 예를 들어 AIDA 이벤트 ID가 `5166`이면
+`AIDA-5166`으로 저장합니다.
 
 ## API
 

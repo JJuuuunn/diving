@@ -11,21 +11,16 @@
 
 // 공통 카드 레이아웃 (Glassmorphism)
 .quiz-card {
-  background: rgba(255, 255, 255, 0.7);
-  border: 1px solid rgba(255, 255, 255, 0.5);
+  background: var(--page-card-bg);
+  border: 1px solid var(--page-card-border);
   backdrop-filter: blur(16px);
   -webkit-backdrop-filter: blur(16px);
   border-radius: 1.5rem;
   padding: 2rem;
-  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.05);
+  box-shadow: var(--page-card-shadow);
   margin-bottom: 2rem;
   transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
 
-  body.dark & {
-    background: rgba(30, 41, 59, 0.6);
-    border-color: rgba(255, 255, 255, 0.08);
-    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
-  }
 }
 
 // 1. 대시보드 스타일
@@ -571,3 +566,8 @@
   from { opacity: 1; transform: scale(1); }
   to { opacity: 0.7; transform: scale(0.95); }
 }
+.quiz-result-correct { color: #10b981; }
+.quiz-result-rate { color: #0ea5e9; }
+.quiz-result-summary { margin-bottom: 1.5rem; color: var(--page-text-secondary); font-size: .85rem; }
+.quiz-answer-hint { margin-bottom: .5rem; color: var(--page-text-secondary); font-size: .85rem; }
+.quiz-answer-label { margin-right: .5rem; }

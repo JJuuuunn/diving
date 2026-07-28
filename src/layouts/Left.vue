@@ -6,16 +6,16 @@
           <span class="logo-icon" v-html="divingMaskIcon"></span>
           <span class="logo-text">JJuuuunn Diving</span>
         </RouterLink>
-        <button class="close-btn" @click="$emit('close')">&times;</button>
+        <CustomButton class="close-btn" @click="$emit('close')">&times;</CustomButton>
       </header>
 
       <nav class="sidebar-nav">
         <ul>
           <li v-for="item in activeMenuItems" :key="item.label">
             <RouterLink :to="{ name: item.route }" custom v-slot="{ href, navigate, isActive, isExactActive }">
-              <a 
-                :href="href" 
-                @click="navigate(); $emit('close')" 
+              <a
+                :href="href"
+                @click="navigate(); $emit('close')"
                 :class="{ 'router-link-active': item.route === RouterName.Main ? isExactActive : isActive }"
               >
                 <span class="icon" v-html="item.icon"></span>
@@ -30,7 +30,7 @@
         <DarkModeToggle v-model="isDay" />
         <p>Designed for Divers 🤿</p>
         <div class="links">
-          <a href="https://github.com/JJuuuunn" target="_blank" rel="noopener noreferrer">GitHub</a> | 
+          <a href="https://github.com/JJuuuunn" target="_blank" rel="noopener noreferrer">GitHub</a> |
           <a href="https://www.instagram.com/jjuuuunn.hob" target="_blank" rel="noopener noreferrer">Instagram</a>
         </div>
       </footer>
@@ -66,5 +66,5 @@ const isDay = computed({
 </script>
 
 <style lang="scss" scoped>
-@import '@/assets/scss/layout/_sidebar.scss';
+@use '@/assets/scss/layout/_sidebar.scss';
 </style>

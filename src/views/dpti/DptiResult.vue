@@ -2,7 +2,7 @@
     <div class="dpti-container">
         <main class="dpti-main-content">
             <div v-if="result" class="result-container animate-fade-in">
-                
+
                 <div v-show="!capturedImageUrl" class="result-card" ref="captureArea">
                     <div class="user-capture-badge">
                         Diver. {{ displayUserName }}
@@ -47,28 +47,28 @@
                     </h3>
                     <p class="match-subtitle">버디를 클릭해서 매칭 성향 결과도 확인해보세요!</p>
                     <div class="match-boxes">
-                        <button class="match-box-btn best" @click="goToBuddyResult(result.best_match)">
+                        <CustomButton class="match-box-btn best" @click="goToBuddyResult(result.best_match)">
                             <span class="badge">최고의 버디</span>
                             <span class="animal-name">{{ getAnimalName(result.best_match) }}</span>
-                        </button>
-                        <button class="match-box-btn worst" @click="goToBuddyResult(result.worst_match)">
+                        </CustomButton>
+                        <CustomButton class="match-box-btn worst" @click="goToBuddyResult(result.worst_match)">
                             <span class="badge">주의할 버디</span>
                             <span class="animal-name">{{ getAnimalName(result.worst_match) }}</span>
-                        </button>
+                        </CustomButton>
                     </div>
                 </div>
-                
+
                 <div class="action-buttons">
                     <a v-if="capturedImageUrl" :href="capturedImageUrl" :download="`DPTI_${displayUserName}.png`" class="download-btn">
                         <i class="fas fa-download"></i> 기기에 파일로 저장
                     </a>
-                    <button v-else class="download-btn" disabled>
+                    <CustomButton v-else class="download-btn" disabled>
                         <i class="fas fa-spinner fa-spin"></i> 이미지 생성 중...
-                    </button>
+                    </CustomButton>
 
                     <div class="sub-buttons">
-                        <button class="retry-btn" @click="goToTest">다시 테스트하기</button>
-                        <button class="all-types-btn" @click="goToAllTypes">전체 유형 보기</button>
+                        <CustomButton class="retry-btn" @click="goToTest">다시 테스트하기</CustomButton>
+                        <CustomButton class="all-types-btn" @click="goToAllTypes">전체 유형 보기</CustomButton>
                     </div>
                 </div>
 
@@ -77,7 +77,7 @@
             <div v-else class="error-container">
                 <i class="fas fa-exclamation-circle"></i>
                 <p>잘못된 접근이거나 데이터가 없습니다.</p>
-                <button class="retry-btn" @click="goToTest">테스트 시작하기</button>
+                <CustomButton class="retry-btn" @click="goToTest">테스트 시작하기</CustomButton>
             </div>
         </main>
 
@@ -86,16 +86,16 @@
                 <div class="save-modal">
                     <h3>기록 저장하기</h3>
                     <p>이미지에 표시될 다이버 이름을 입력해주세요.</p>
-                    <input 
-                        v-model="userNameInput" 
-                        placeholder="이름을 입력하세요 (최대 10자)" 
+                    <CustomInput
+                        v-model="userNameInput"
+                        placeholder="이름을 입력하세요 (최대 10자)"
                         maxlength="10"
                         @keyup.enter="confirmSave"
                         ref="nameInput"
                     />
                     <div class="modal-btns">
-                        <button class="cancel-btn" @click="closeModal">취소</button>
-                        <button class="confirm-btn" @click="confirmSave">확인</button>
+                        <CustomButton class="cancel-btn" @click="closeModal">취소</CustomButton>
+                        <CustomButton class="confirm-btn" @click="confirmSave">확인</CustomButton>
                     </div>
                 </div>
             </div>
@@ -125,8 +125,8 @@ const { capturedImageUrl, captureElement } = useCapture();
 const captureArea = ref<HTMLElement | null>(null);
 const nameInput = ref<HTMLInputElement | null>(null);
 const isModalOpen = ref(false);
-const userNameInput = ref(""); 
-const savedUserName = ref(""); 
+const userNameInput = ref("");
+const savedUserName = ref("");
 
 const displayUserName = computed(() => {
     const queryName = route.query.name as string;
@@ -154,19 +154,19 @@ const animalImageUrl = computed(() => {
 // --- 이미지 자동 캡처 로직 ---
 const generateAndSetImage = async () => {
     await nextTick();
-    
+
     setTimeout(async () => {
         if (captureArea.value) {
             // 캡처 컴포저블이 이제 글로벌 Pinia 스토어를 직접 구독하므로, 컴포넌트는 오직 캡처 영역 레퍼런스만 넘겨주면 됩니다.
             await captureElement(captureArea.value, 480, 3);
         }
-    }, 400); 
+    }, 400);
 };
 
 // --- LifeCycle ---
 onMounted(async () => {
     const fromTest = window.history.state?.fromTest;
-    
+
     if (fromTest && result.value && hasScores.value) {
         isModalOpen.value = true;
         await nextTick();
@@ -184,13 +184,13 @@ watch(
     () => route.params.code,
     async (newCode) => {
         if (!newCode) return;
-        
+
         // 1. 화면을 최상단으로 스크롤
         window.scrollTo({ top: 0, behavior: 'smooth' });
-        
+
         // 2. 기존 이미지 초기화 (DOM에 result-card가 다시 떠서 새로 캡처할 수 있도록 함)
         capturedImageUrl.value = null;
-        
+
         // 3. 새 결과 기준 이미지 캡처 실행
         await generateAndSetImage();
     }
@@ -198,20 +198,20 @@ watch(
 
 
 // --- Methods ---
-const closeModal = () => { 
-    isModalOpen.value = false; 
+const closeModal = () => {
+    isModalOpen.value = false;
     generateAndSetImage(); // 취소해도 익명으로 이미지 생성
 };
 
 const confirmSave = () => {
     const finalName = userNameInput.value.trim() || "익명의 다이버";
-    savedUserName.value = finalName; 
-    
+    savedUserName.value = finalName;
+
     if (result.value) {
         dptiStore.saveToHistory(finalName, result.value, scores.value);
         triggerToast("성공적으로 저장되었습니다.");
     }
-    
+
     isModalOpen.value = false;
     generateAndSetImage(); // 이름 세팅 완료 후 이미지 생성
 };
@@ -223,10 +223,10 @@ const getAnimalName = (code: string): string => {
 
 const goToBuddyResult = (code: string) => {
     if (!code) return;
-    router.push({ 
-        name: RouterName.DptiResult, 
+    router.push({
+        name: RouterName.DptiResult,
         params: { code: code },
-        query: {} 
+        query: {}
     });
 };
 
@@ -235,5 +235,5 @@ const goToAllTypes = () => router.push({ name: RouterName.DptiAllTypes });
 </script>
 
 <style lang="scss" scoped>
-@import '@/assets/scss/pages/_dpti-result.scss';
+@use '@/assets/scss/pages/_dpti-result.scss';
 </style>

@@ -5,9 +5,9 @@
         <i class="fa-solid fa-users"></i> 참여 인원
         <span class="people-count">{{ people.length }}명</span>
       </h2>
-      <button @click="emit('addPerson')" class="add-person-btn">
+      <CustomButton @click="emit('addPerson')" class="add-person-btn">
         <i class="fa-solid fa-plus"></i> 추가
-      </button>
+      </CustomButton>
     </div>
     <div class="people-list">
       <PersonCard

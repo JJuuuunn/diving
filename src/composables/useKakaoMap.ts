@@ -4,21 +4,24 @@ import type {
   KakaoMap, 
   KakaoMarker, 
   KakaoCustomOverlay,
-  KakaoLatLng
+  KakaoLatLng,
+  ActiveMarkerInfo
 } from '@/types/map';
 
-interface ActiveMarkerInfo {
-  marker: KakaoMarker;
-  overlay: KakaoCustomOverlay | null;
-}
-
-declare global {
-  interface Window {
-    closeKakaoMapOverlay?: (hospitalId: string) => void;
-  }
-}
-
 let scriptLoadingPromise: Promise<void> | null = null;
+
+const appendTextElement = (
+  parent: HTMLElement,
+  tag: keyof HTMLElementTagNameMap,
+  className: string,
+  text: string
+): HTMLElement => {
+  const element = document.createElement(tag);
+  element.className = className;
+  element.textContent = text;
+  parent.appendChild(element);
+  return element;
+};
 
 const loadKakaoMapScript = (appKey: string): Promise<void> => {
   if (scriptLoadingPromise) return scriptLoadingPromise;
@@ -94,20 +97,12 @@ export function useKakaoMap() {
   const activeMarkers = ref<Record<string, ActiveMarkerInfo>>({});
   const userLocationMarker = ref<KakaoMarker | null>(null);
 
-  // 개별 오버레이 닫기 핸들러 (인라인 온클릭 바인딩 지원용)
   const closeActiveOverlay = (hospitalId: string): void => {
     const item = activeMarkers.value[hospitalId];
     if (item && item.overlay) {
       item.overlay.setMap(null);
     }
   };
-
-  // 글로벌 윈도우 인터페이스 노출 (커스텀 오버레이 닫기 버튼 연동)
-  if (typeof window !== 'undefined') {
-    window.closeKakaoMapOverlay = (hospitalId: string) => {
-      closeActiveOverlay(hospitalId);
-    };
-  }
 
   // 1. 지도 스크립트 비동기 로딩 초기화
   const initMapSdk = async (appKey: string): Promise<boolean> => {
@@ -217,20 +212,28 @@ export function useKakaoMap() {
           : h.status === 'inactive' 
             ? '발급 불가' 
             : '검수 대기';
-      const content = `
-        <div class="kakao-custom-overlay scale-in">
-          <div class="overlay-header">
-            <span class="overlay-badge ${isSuccessClass}">${statusText}</span>
-            <span class="overlay-title">${h.name}</span>
-            <button class="overlay-close-btn" onclick="window.closeKakaoMapOverlay('${h.id}')" title="닫기">×</button>
-          </div>
-          <div class="overlay-body">
-            <div class="overlay-row">💵 발급비: <strong>${h.fee}</strong></div>
-            <div class="overlay-row">🏢 주소: <span class="overlay-address">${h.address}</span></div>
-          </div>
-          <div class="overlay-arrow"></div>
-        </div>
-      `;
+      const content = document.createElement('div');
+      content.className = 'kakao-custom-overlay scale-in';
+
+      const header = document.createElement('div');
+      header.className = 'overlay-header';
+      appendTextElement(header, 'span', `overlay-badge ${isSuccessClass}`, statusText);
+      appendTextElement(header, 'span', 'overlay-title', h.name);
+      const closeButton = appendTextElement(header, 'button', 'overlay-close-btn', '×');
+      closeButton.setAttribute('type', 'button');
+      closeButton.setAttribute('title', '닫기');
+      closeButton.setAttribute('aria-label', `${h.name} 지도 정보 닫기`);
+      closeButton.addEventListener('click', () => closeActiveOverlay(h.id));
+      content.appendChild(header);
+
+      const body = document.createElement('div');
+      body.className = 'overlay-body';
+      const feeRow = appendTextElement(body, 'div', 'overlay-row', '💵 발급비: ');
+      appendTextElement(feeRow, 'strong', '', h.fee);
+      const addressRow = appendTextElement(body, 'div', 'overlay-row', '🏢 주소: ');
+      appendTextElement(addressRow, 'span', 'overlay-address', h.address);
+      content.appendChild(body);
+      appendTextElement(content, 'div', 'overlay-arrow', '');
 
       // 커스텀 오버레이 인스턴스 생성
       const overlay = new window.kakao.maps.CustomOverlay({

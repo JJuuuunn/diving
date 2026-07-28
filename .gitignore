@@ -257,3 +257,10 @@ $RECYCLE.BIN/
 !.agents/rules/
 .agents/rules/*
 !.agents/rules/frontend.md
+!.agents/rules/architecture.md
+!.agents/rules/data-persistence.md
+!.agents/rules/ui-components.md
+!.agents/rules/api-and-validation.md
+!.agents/rules/security.md
+!.agents/rules/testing.md
+!.agents/rules/routing-and-deployment.md

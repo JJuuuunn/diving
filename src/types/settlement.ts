@@ -33,3 +33,18 @@ export interface SettlementSettings {
     selectedPool: string;
     basePrice: string;
 }
+
+export interface StructuredSettlementData {
+  v: number;
+  pool: string;
+  price: number;
+  dayType: 'weekday' | 'weekend';
+  people: {
+    n: string;
+    b: boolean;
+    m: boolean;
+    p: number;
+    bk: string;
+    ac: string;
+  }[];
+}

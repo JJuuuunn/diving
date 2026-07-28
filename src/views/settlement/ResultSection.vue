@@ -1,7 +1,7 @@
 <template>
   <section id="resultSection" v-if="showResultSection" class="animate-fade-in">
     <div @click="emit('copyResultText')" class="copy-result-card">
-      <div style="display: flex; align-items: center;">
+      <div class="result-heading-row">
         <div class="copy-result-icon-wrapper">
           <i class="fa-regular fa-clipboard"></i>
         </div>
@@ -46,7 +46,7 @@
             <span class="settlement-account-text">
               <i class="fa-solid fa-piggy-bank"></i>{{ t.bank }} {{ t.account }}
             </span>
-            <button @click.stop="copyAccountText(t)" class="copy-account-btn">복사</button>
+            <CustomButton @click.stop="copyAccountText(t)" class="copy-account-btn">복사</CustomButton>
           </div>
         </li>
       </ul>
@@ -90,26 +90,7 @@
 </template>
 
 <script setup lang="ts">
-// 타입 정의
-interface Settlement {
-  from: string;
-  to: string;
-  amount: number;
-  bank: string;
-  account: string;
-}
-
-interface Person {
-  id: number;
-  name: string;
-  isBooker: boolean;
-  isMember: boolean;
-  prepaid: number;
-  bank: string;
-  account: string;
-  myCost?: number;
-  balance?: number;
-}
+import type { Person, Settlement } from '@/types/settlement';
 
 const props = defineProps<{
   showResultSection: boolean;

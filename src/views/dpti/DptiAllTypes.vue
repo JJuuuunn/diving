@@ -3,9 +3,9 @@
         <main class="dpti-main-content">
             <div class="all-types-container animate-fade-in">
                 <div class="header-row">
-                    <button class="back-btn" @click="goBack">
+                    <CustomButton class="back-btn" @click="goBack">
                         <i class="fas fa-arrow-left"></i> 뒤로
-                    </button>
+                    </CustomButton>
                     <h2>다이버 유형 도감</h2>
                 </div>
 
@@ -62,5 +62,5 @@ const goToResult = (code: string) => {
 </script>
 
 <style lang="scss" scoped>
-@import '@/assets/scss/pages/_dpti-all-type.scss';
+@use '@/assets/scss/pages/_dpti-all-type.scss';
 </style>

@@ -9,11 +9,11 @@
 
   // Z-index scale (low → high)
   --z-sticky-nav: 100;
-  --z-menu-toggle: 1050;
-  --z-sidebar-overlay: 1100;
-  --z-sidebar: 1101;
   --z-dropdown: 1200;
-  --z-scroll-top: 1400;
+  --z-menu-toggle: 1300;
+  --z-sidebar-overlay: 1400;
+  --z-sidebar: 1401;
+  --z-scroll-top: 1600;
   --z-modal: 9999;
   --z-toast: 10000;
 }
@@ -48,6 +48,22 @@ body.dark {
   --page-card-border: var(--slate-800);
   --page-card-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.37);
   --page-bg-image: linear-gradient(var(--slate-800) 1px, transparent 1px), linear-gradient(to right, var(--slate-800) 1px, var(--bg-color) 1px);
+
+  // Semantic colors
+  --color-action: var(--ocean-400);
+  --color-action-strong: var(--ocean-300);
+  --color-info-text: var(--ocean-300);
+  --color-info-bg: rgba(2, 132, 199, 0.25);
+  --color-success-text: var(--green-300);
+  --color-success-bg: rgba(22, 163, 74, 0.24);
+  --color-warning-text: var(--amber-300);
+  --color-warning-bg: rgba(245, 158, 11, 0.22);
+  --color-danger-text: #fca5a5;
+  --color-danger-bg: rgba(220, 38, 38, 0.24);
+  --color-neutral-text: var(--slate-300);
+  --color-neutral-bg: var(--slate-700);
+  --color-disabled-text: var(--slate-500);
+  --color-disabled-bg: rgba(100, 116, 139, 0.14);
 }
 
 body:not(.dark) {
@@ -80,4 +96,20 @@ body:not(.dark) {
   --page-card-border: var(--slate-200);
   --page-card-shadow: 0 4px 6px -1px rgba(0,0,0,0.1), 0 2px 4px -1px rgba(0,0,0,0.06);
   --page-bg-image: none;
+
+  // Semantic colors
+  --color-action: var(--ocean-600);
+  --color-action-strong: var(--ocean-700);
+  --color-info-text: var(--ocean-700);
+  --color-info-bg: var(--ocean-100);
+  --color-success-text: var(--green-700);
+  --color-success-bg: var(--green-100);
+  --color-warning-text: var(--amber-700);
+  --color-warning-bg: var(--amber-100);
+  --color-danger-text: #b91c1c;
+  --color-danger-bg: #fee2e2;
+  --color-neutral-text: var(--slate-600);
+  --color-neutral-bg: var(--slate-200);
+  --color-disabled-text: var(--slate-400);
+  --color-disabled-bg: var(--slate-100);
 }

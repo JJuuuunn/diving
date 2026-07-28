@@ -16,7 +16,7 @@
         :to="item.active ? { name: item.route } : undefined"
         class="dashboard-card"
         :class="{ disabled: !item.active }"
-        :style="{ animationDelay: `${index * 0.1}s` }" 
+        :style="{ animationDelay: `${index * 0.1}s` }"
       >
         <div class="card-icon">
           <span v-html="item.icon"></span>
@@ -38,11 +38,11 @@ import { RouterName } from '@/mappings/enum';
 import { MENU_ITEMS } from '@/mappings/menu';
 
 // 계산된 속성을 사용하여 Home 항목을 필터링
-const dashboardItems = computed(() => 
+const dashboardItems = computed(() =>
   MENU_ITEMS.filter(item => item.route !== RouterName.Main)
 );
 </script>
 
 <style lang="scss" scoped>
-@import '@/assets/scss/pages/_home.scss';
+@use '@/assets/scss/pages/_home.scss';
 </style>

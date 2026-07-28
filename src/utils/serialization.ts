@@ -1,20 +1,4 @@
-import type { Person } from '@/types/settlement';
-
-// 구조화된 최신 스키마 타입
-interface StructuredSettlementData {
-  v: number;       // 스키마 버전 (예: 2)
-  pool: string;    // 풀장 식별자
-  price: number;   // 입장료
-  dayType: 'weekday' | 'weekend';
-  people: {
-    n: string;     // name
-    b: boolean;    // isBooker
-    m: boolean;    // isMember
-    p: number;     // prepaid
-    bk: string;    // bank
-    ac: string;    // account
-  }[];
-}
+import type { Person, StructuredSettlementData } from '@/types/settlement';
 
 /**
  * 정산 데이터를 압축된 Base64 객체 문자열로 내보냅니다. (버전 2 객체형)

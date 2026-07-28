@@ -29,3 +29,21 @@ export interface DarkModeToggleProps {
   expanded?: boolean;
 }
 
+export interface ConfirmModalProps {
+  show: boolean;
+  title: string;
+  message: string;
+  confirmText?: string;
+  cancelText?: string;
+}
+
+export interface HeaderProps {
+  title?: string;
+  subtitle?: string;
+}
+
+export interface PlaygroundNavSection {
+  id: string;
+  icon: string;
+  label: string;
+}

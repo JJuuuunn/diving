@@ -16,11 +16,11 @@
         </div>
         <div class="stat-item">
           맞춘 문제
-          <span style="color: #10b981;">{{ history.correctCount }}문제</span>
+          <span class="quiz-result-correct">{{ history.correctCount }}문제</span>
         </div>
         <div class="stat-item">
           정답률
-          <span style="color: #0ea5e9;">{{ Math.round((history.correctCount / history.totalQuestions) * 100) }}%</span>
+          <span class="quiz-result-rate">{{ Math.round((history.correctCount / history.totalQuestions) * 100) }}%</span>
         </div>
       </div>
     </div>
@@ -28,14 +28,14 @@
     <!-- 오답 노트 및 해설 복습 -->
     <div class="quiz-card fade-in-up delay">
       <h3 class="review-header">📝 오답 노트 & 상세 해설</h3>
-      <p style="font-size: 0.85rem; color: var(--page-text-secondary); margin-bottom: 1.5rem;">
+      <p class="quiz-result-summary">
         ※ 각 문항을 클릭하면 상세한 해설과 내가 입력한 답안을 다시 볼 수 있습니다.
       </p>
 
       <div class="review-list">
-        <div 
-          v-for="(ans, idx) in history.answers" 
-          :key="ans.questionId" 
+        <div
+          v-for="(ans, idx) in history.answers"
+          :key="ans.questionId"
           class="review-item"
         >
           <div class="review-title-row" @click="toggleReview(idx)">
@@ -49,13 +49,13 @@
           <div v-if="openReviews[idx]" class="review-content">
             <div class="ans-match">
               <span>
-                제출한 답안: 
+                제출한 답안:
                 <strong :class="ans.isCorrect ? 'correct-val' : 'user-val'">
                   {{ getAnswerText(getQuestion(ans.questionId)!, ans.answer) }}
                 </strong>
               </span>
               <span>
-                실제 정답: 
+                실제 정답:
                 <strong class="correct-val">
                   {{ getCorrectAnswerText(getQuestion(ans.questionId)!) }}
                 </strong>
@@ -73,8 +73,8 @@
 
     <!-- 하단 액션 버튼 -->
     <div class="action-row fade-in-up">
-      <button class="action-btn secondary" @click="handleGoDashboard">문제 은행 홈</button>
-      <button class="action-btn primary" @click="handleRetry">다시 풀기</button>
+      <CustomButton class="action-btn secondary" @click="handleGoDashboard">문제 은행 홈</CustomButton>
+      <CustomButton class="action-btn primary" @click="handleRetry">다시 풀기</CustomButton>
     </div>
   </div>
 </template>
@@ -98,7 +98,7 @@ onMounted(() => {
   }
   try {
     resultData.value = JSON.parse(raw);
-    
+
     // 틀린 문제는 기본적으로 상세 해설을 열어둠 (배려 깊은 피드백 제공)
     if (resultData.value) {
       resultData.value.historyRecord.answers.forEach((ans, index) => {
@@ -144,7 +144,7 @@ const getFeedbackMessage = (score: number): string => {
 // 사용자가 적은 답 텍스트 포맷터
 const getAnswerText = (question: Question, answerVal: any): string => {
   if (answerVal === null || answerVal === undefined) return '답을 선택하지 않음';
-  
+
   if (question.type === 'ox') {
     return answerVal ? 'O' : 'X';
   } else if (question.type === 'single-choice') {
@@ -174,5 +174,5 @@ const getCorrectAnswerText = (question: Question): string => {
 </script>
 
 <style lang="scss" scoped>
-@import '@/assets/scss/pages/_quiz.scss';
+@use '@/assets/scss/pages/_quiz.scss';
 </style>

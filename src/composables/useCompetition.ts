@@ -38,6 +38,7 @@ export function useCompetition() {
     federation: 'all',
     type: 'all',
     status: 'all',
+    registrationStatus: 'all',
     bookmarkedOnly: false
   });
 
@@ -47,6 +48,7 @@ export function useCompetition() {
       federation: 'all',
       type: 'all',
       status: 'all',
+      registrationStatus: 'all',
       bookmarkedOnly: false
     };
   };
@@ -63,6 +65,10 @@ export function useCompetition() {
         && (filters.value.federation === 'all' || competition.federation === filters.value.federation)
         && (filters.value.type === 'all' || competition.type === filters.value.type)
         && (filters.value.status === 'all' || getCompetitionStatus(competition) === filters.value.status)
+        && (
+          filters.value.registrationStatus === 'all'
+          || competition.registrationStatus === filters.value.registrationStatus
+        )
         && (!filters.value.bookmarkedOnly || store.isBookmarked(competition.id));
     });
     return sortCompetitions(matches);

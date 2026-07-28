@@ -3,11 +3,11 @@
     <div class="modal-card">
       <div class="modal-header">
         <h3>버디 서명 그리기 ✍️</h3>
-        <button class="close-modal-btn" @click="$emit('close')">&times;</button>
+        <CustomButton class="close-modal-btn" @click="$emit('close')">&times;</CustomButton>
       </div>
 
       <div class="canvas-wrapper" ref="canvasWrapper">
-        <canvas 
+        <canvas
           ref="canvasRef"
           @pointerdown="startDrawing"
           @pointermove="draw"
@@ -17,12 +17,12 @@
       </div>
 
       <div class="canvas-tools">
-        <button class="clear-btn" @click="clearCanvas">
+        <CustomButton class="clear-btn" @click="clearCanvas">
           <i class="fa-solid fa-eraser"></i> 지우기
-        </button>
-        <button class="save-sig-btn" @click="saveSignature">
+        </CustomButton>
+        <CustomButton class="save-sig-btn" @click="saveSignature">
           <i class="fa-solid fa-check"></i> 서명 저장
-        </button>
+        </CustomButton>
       </div>
     </div>
   </div>
@@ -107,7 +107,7 @@ const stopDrawing = (e: PointerEvent) => {
 const clearCanvas = () => {
   const canvas = canvasRef.value;
   if (!canvas || !ctx) return;
-  
+
   // 캔버스 크기에 상관없이 깨끗하게 비움
   ctx.clearRect(0, 0, canvas.width, canvas.height);
 };

@@ -70,7 +70,7 @@ test('rejects duplicate ids, malformed dates, non-Korean rows and unofficial URL
   );
 });
 
-test('requires the permanent AIDA-{eventId} key format', () => {
+test('accepts source-prefixed ids and requires the suffix to match sourceEventId', () => {
   assert.throws(
     () => normalizeSheetPayload({ rows: [{ ...publishedRow, id: 'aida-seoul-2026' }] }),
     /invalid id/
@@ -79,6 +79,21 @@ test('requires the permanent AIDA-{eventId} key format', () => {
     () => normalizeSheetPayload({ rows: [{ ...publishedRow, id: 'AIDA-99' }] }),
     /must match/
   );
+  const cmas = normalizeSheetPayload({
+    rows: [{
+      ...publishedRow,
+      id: 'CMAS-2026-77',
+      sourceEventId: '2026-77',
+      federation: 'CMAS',
+      officialUrl: 'https://www.cmas.org/freediving/calendar.html'
+    }]
+  });
+  assert.equal(cmas.events[0].id, 'CMAS-2026-77');
+
+  const custom = normalizeSheetPayload({
+    rows: [{ ...publishedRow, id: 'CUSTOM-korea-77', sourceEventId: 'korea-77' }]
+  });
+  assert.equal(custom.events[0].id, 'CUSTOM-korea-77');
 });
 
 test('normalizes Google Sheets date cells returned as ISO timestamps to KST dates', () => {

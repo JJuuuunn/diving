@@ -37,5 +37,54 @@ export interface CompetitionFilters {
   federation: 'all' | Federation;
   type: 'all' | CompetitionType;
   status: 'all' | EventStatus;
+  registrationStatus: 'all' | RegistrationStatus;
   bookmarkedOnly: boolean;
+}
+
+export interface CompetitionApiPayload {
+  ok?: boolean;
+  data?: unknown[];
+  rows?: unknown[];
+  meta?: { generatedAt?: string };
+}
+
+export type CrawlStatus = 'success' | 'failed' | 'running' | 'never';
+
+export interface CrawlState {
+  lastStartedAt: string;
+  lastSucceededAt: string;
+  lastFailedAt: string;
+  lastStatus: CrawlStatus;
+  lastRunId: string;
+  lastFetchedCount: number;
+  consecutiveFailures: number;
+}
+
+export interface CrawlLog {
+  runId: string;
+  startedAt: string;
+  finishedAt: string;
+  status: Exclude<CrawlStatus, 'never' | 'running'>;
+  triggerType: 'local' | 'scheduled' | 'manual';
+  fetchedCount: number;
+  insertedCount: number;
+  updatedCount: number;
+  unchangedCount: number;
+  deactivatedCount: number;
+  errorCount: number;
+  errorCode: string;
+  durationMs: number;
+}
+
+export interface CompetitionAdminApiResponse<T> {
+  ok: boolean;
+  data: T;
+  meta?: {
+    generatedAt: string;
+    count?: number;
+  };
+  error?: {
+    code: string;
+    message: string;
+  };
 }

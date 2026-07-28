@@ -3,8 +3,8 @@
     <!-- 상단 진행 바 및 타이머 -->
     <div class="quiz-top-bar">
       <span>{{ quizHelper.activeSet.value?.title }}</span>
-      <div 
-        v-if="quizHelper.timeRemaining.value !== null" 
+      <div
+        v-if="quizHelper.timeRemaining.value !== null"
         class="timer-box"
         :class="{ warning: quizHelper.timeRemaining.value < 30 }"
       >
@@ -32,25 +32,25 @@
       <!-- 문제 종류별 렌더링 분기 -->
       <!-- 1. OX 문제 -->
       <div v-if="quizHelper.currentQuestion.value.type === 'ox'" class="ox-container">
-        <button 
+        <CustomButton
           class="ox-btn o-btn"
           :class="{ selected: currentAnswer === true }"
           @click="handleOXSelect(true)"
         >
           O
-        </button>
-        <button 
+        </CustomButton>
+        <CustomButton
           class="ox-btn x-btn"
           :class="{ selected: currentAnswer === false }"
           @click="handleOXSelect(false)"
         >
           X
-        </button>
+        </CustomButton>
       </div>
 
       <!-- 2. 객관식 단일 선택 -->
       <div v-else-if="quizHelper.currentQuestion.value.type === 'single-choice'" class="options-list">
-        <button
+        <CustomButton
           v-for="(option, idx) in quizHelper.currentQuestion.value.options"
           :key="idx"
           class="option-item"
@@ -58,34 +58,33 @@
           @click="handleSingleSelect(idx)"
         >
           {{ option }}
-        </button>
+        </CustomButton>
       </div>
 
       <!-- 3. 객관식 복수 선택 -->
       <div v-else-if="quizHelper.currentQuestion.value.type === 'multi-choice'" class="options-list">
-        <p style="font-size: 0.85rem; color: var(--page-text-secondary); margin-bottom: 0.5rem;">
+        <p class="quiz-answer-hint">
           ※ 정답을 모두 선택하세요. (중복 선택 가능)
         </p>
-        <button
+        <CustomButton
           v-for="(option, idx) in quizHelper.currentQuestion.value.options"
           :key="idx"
           class="option-item"
           :class="{ selected: selectedMultiAnswers.includes(idx) }"
           @click="handleMultiSelect(idx)"
         >
-          <span style="margin-right: 0.5rem;">
+          <span class="quiz-answer-label">
             {{ selectedMultiAnswers.includes(idx) ? '☑' : '☐' }}
           </span>
           {{ option }}
-        </button>
+        </CustomButton>
       </div>
 
       <!-- 4. 주관식 단답형 -->
       <div v-else-if="quizHelper.currentQuestion.value.type === 'short-answer'" class="short-answer-container">
-        <input
-          type="text"
-          :value="currentAnswer || ''"
-          @input="handleShortAnswerInput"
+        <CustomInput
+          :model-value="String(currentAnswer || '')"
+          @update:model-value="handleShortAnswerValue"
           placeholder="단답식 정답을 입력하세요 (띄어쓰기 생략 가능)"
           @keyup.enter="handleEnterKey"
         />
@@ -93,29 +92,29 @@
 
       <!-- 하단 내비게이션 행 -->
       <div class="quiz-nav-row">
-        <button 
-          class="prev-btn" 
+        <CustomButton
+          class="prev-btn"
           :disabled="quizHelper.isFirstQuestion.value"
           @click="handlePrev"
         >
           이전 문제
-        </button>
+        </CustomButton>
 
-        <button 
+        <CustomButton
           v-if="!quizHelper.isLastQuestion.value"
           class="next-btn"
           @click="handleNext"
         >
           다음 문제
-        </button>
+        </CustomButton>
 
-        <button 
+        <CustomButton
           v-else
           class="submit-btn"
           @click="handleSubmit"
         >
           제출하기
-        </button>
+        </CustomButton>
       </div>
     </div>
 
@@ -139,6 +138,8 @@ import questionsData from '@/data/questions.json';
 import { useQuiz } from '@/composables/useQuiz';
 import type { Question } from '@/types/quiz';
 import ConfirmModal from '@/components/ConfirmModal.vue';
+import CustomButton from '@/components/CustomButton.vue';
+import CustomInput from '@/components/CustomInput.vue';
 
 const route = useRoute();
 const router = useRouter();
@@ -232,11 +233,10 @@ const handleMultiSelect = (index: number) => {
   quizHelper.saveAnswer(q.id, current);
 };
 
-const handleShortAnswerInput = (e: Event) => {
+const handleShortAnswerValue = (value: string | number) => {
   const q = quizHelper.currentQuestion.value;
-  const val = (e.target as HTMLInputElement).value;
   if (q) {
-    quizHelper.saveAnswer(q.id, val);
+    quizHelper.saveAnswer(q.id, String(value));
   }
 };
 
@@ -269,5 +269,5 @@ const formattedTime = computed(() => {
 </script>
 
 <style lang="scss" scoped>
-@import '@/assets/scss/pages/_quiz.scss';
+@use '@/assets/scss/pages/_quiz.scss';
 </style>

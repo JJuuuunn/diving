@@ -22,41 +22,41 @@
     <main class="main-content">
       <transition name="fade" mode="out-in">
         <div v-if="currentStep === 1" key="step1" class="step-content">
-          <SettingsCard 
+          <SettingsCard
             v-model:current-day-type="settings.currentDayType"
             v-model:selected-pool="settings.selectedPool"
             v-model:base-price="settings.basePrice"
             :pool-prices="poolPrices"
           />
           <div class="action-buttons center">
-            <button @click="goToStep(2)" class="calculate-btn full-width">
+            <CustomButton @click="goToStep(2)" class="calculate-btn full-width">
               <span>다음 단계 (인원 설정)</span>
               <i class="fa-solid fa-arrow-right"></i>
               <div class="hover-effect"></div>
-            </button>
+            </CustomButton>
           </div>
         </div>
 
         <div v-else-if="currentStep === 2" key="step2" class="step-content">
-          <PeopleCard 
-            v-model="people" 
-            @addPerson="addPerson" 
-            @removePerson="removePerson" 
+          <PeopleCard
+            v-model="people"
+            @addPerson="addPerson"
+            @removePerson="removePerson"
           />
           <div class="action-buttons row">
-            <button @click="goToStep(1)" class="secondary-btn prev-btn">
+            <CustomButton @click="goToStep(1)" class="secondary-btn prev-btn">
               <i class="fa-solid fa-arrow-left"></i> 이전
-            </button>
-            <button @click="calculateAndGoToResult" class="calculate-btn flex-grow">
+            </CustomButton>
+            <CustomButton @click="calculateAndGoToResult" class="calculate-btn flex-grow">
               <span>정산 결과 보기</span>
               <i class="fa-solid fa-calculator"></i>
               <div class="hover-effect"></div>
-            </button>
+            </CustomButton>
           </div>
         </div>
 
         <div v-else-if="currentStep === 3" key="step3" class="step-content">
-          <ResultSection 
+          <ResultSection
             :show-result-section="true"
             :member-cost-display="results.memberCostDisplay"
             :non-member-cost-display="results.nonMemberCostDisplay"
@@ -66,9 +66,9 @@
             @copy-account-text="copyText($event, '계좌가 복사되었습니다! 💳')"
           />
           <div class="action-buttons center">
-            <button @click="goToStep(2)" class="secondary-btn restart-btn full-width">
+            <CustomButton @click="goToStep(2)" class="secondary-btn restart-btn full-width">
               <i class="fa-solid fa-rotate-left"></i> 내용 수정하기
-            </button>
+            </CustomButton>
           </div>
         </div>
       </transition>
@@ -165,5 +165,5 @@ onMounted(() => {
 </script>
 
 <style lang="scss">
-@import '@/assets/scss/pages/_settlement.scss';
+@use '@/assets/scss/pages/_settlement.scss';
 </style>

@@ -1,24 +1,14 @@
 <template>
-  <section class="calendar-panel" aria-label="월간 대회 달력">
-    <div class="calendar-toolbar">
-      <button type="button" aria-label="이전 달" @click="moveMonth(-1)">‹</button>
-      <h2>{{ year }}년 {{ month + 1 }}월</h2>
-      <button type="button" aria-label="다음 달" @click="moveMonth(1)">›</button>
-    </div>
-    <div class="calendar-weekdays" aria-hidden="true">
-      <span v-for="day in weekdays" :key="day">{{ day }}</span>
-    </div>
-    <div class="calendar-grid">
-      <button
-        v-for="cell in cells"
-        :key="cell.key"
-        type="button"
-        class="calendar-day"
-        :class="{ muted: !cell.inMonth, selected: cell.date === selectedDate }"
-        :aria-label="`${cell.date}, 대회 ${cell.events.length}개`"
-        @click="selectedDate = cell.date"
-      >
-        <span class="calendar-day__number">{{ cell.day }}</span>
+  <CustomCalendarPanel
+    v-model="selectedDate"
+    :title="`${year}년 ${month + 1}월`"
+    :cells="cells"
+    :cell-aria-label="getCellAriaLabel"
+    @previous="moveMonth(-1)"
+    @next="moveMonth(1)"
+  >
+    <template #cell="{ cell }">
+      <template v-if="isCompetitionCell(cell)">
         <span
           v-for="event in cell.events.slice(0, 2)"
           :key="event.id"
@@ -30,9 +20,9 @@
         <span v-if="cell.events.length > 2" class="calendar-more">
           +{{ cell.events.length - 2 }}건
         </span>
-      </button>
-    </div>
-    <div class="calendar-selection">
+      </template>
+    </template>
+    <template #selection>
       <h3>{{ selectedDate }} 일정</h3>
       <p v-if="selectedEvents.length === 0" class="empty-state compact">선택한 날짜에 대회가 없습니다.</p>
       <CompetitionCard
@@ -40,47 +30,56 @@
         :key="event.id"
         :competition="event"
       />
-    </div>
-  </section>
+    </template>
+  </CustomCalendarPanel>
 </template>
 
 <script setup lang="ts">
 import { computed, ref } from 'vue';
 import type { Competition } from '@/types/competition';
+import type { CalendarPanelCell } from '@/types/calendar';
 import { getKstDateString } from '@/composables/useCompetition';
+import {
+  buildUtcCalendarDates,
+  createUtcDate,
+  moveUtcMonth
+} from '@/utils/competitionCalendar';
+import CustomCalendarPanel from '@/components/CustomCalendarPanel.vue';
 import CompetitionCard from './CompetitionCard.vue';
+
+interface CompetitionCalendarCell extends CalendarPanelCell {
+  events: Competition[];
+}
 
 const props = defineProps<{ events: Competition[] }>();
 const initial = getKstDateString();
-const cursor = ref(new Date(`${initial}T00:00:00+09:00`));
+const cursor = ref(createUtcDate(initial));
 const selectedDate = ref(initial);
-const weekdays = ['일', '월', '화', '수', '목', '금', '토'];
-const year = computed(() => cursor.value.getFullYear());
-const month = computed(() => cursor.value.getMonth());
-const toDate = (date: Date) =>
-  `${date.getFullYear()}-${String(date.getMonth() + 1).padStart(2, '0')}-${String(date.getDate()).padStart(2, '0')}`;
+const year = computed(() => cursor.value.getUTCFullYear());
+const month = computed(() => cursor.value.getUTCMonth());
 const eventsOn = (date: string) => props.events.filter((event) =>
   event.startDate <= date && (event.endDate ?? event.startDate) >= date
 );
-const cells = computed(() => {
-  const first = new Date(year.value, month.value, 1);
-  const start = new Date(year.value, month.value, 1 - first.getDay());
-  return Array.from({ length: 42 }, (_, index) => {
-    const date = new Date(start);
-    date.setDate(start.getDate() + index);
-    const value = toDate(date);
+const cells = computed<CompetitionCalendarCell[]>(() => {
+  return buildUtcCalendarDates(year.value, month.value).map((value) => {
+    const date = createUtcDate(value);
     return {
       key: value,
       date: value,
-      day: date.getDate(),
-      inMonth: date.getMonth() === month.value,
+      day: date.getUTCDate(),
+      isCurrentMonth: date.getUTCMonth() === month.value,
+      eventCount: eventsOn(value).length,
       events: eventsOn(value)
     };
   });
 });
 const selectedEvents = computed(() => eventsOn(selectedDate.value));
+const isCompetitionCell = (cell: CalendarPanelCell): cell is CompetitionCalendarCell =>
+  'events' in cell;
+const getCellAriaLabel = (cell: CalendarPanelCell): string =>
+  `${cell.date}, 대회 ${cell.eventCount ?? 0}개`;
 const moveMonth = (amount: number) => {
-  cursor.value = new Date(year.value, month.value + amount, 1);
-  selectedDate.value = toDate(cursor.value);
+  cursor.value = moveUtcMonth(cursor.value, amount);
+  selectedDate.value = `${year.value}-${String(month.value + 1).padStart(2, '0')}-01`;
 };
 </script>

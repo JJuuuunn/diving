@@ -12,10 +12,10 @@
         </div>
 
         <div class="action-area">
-            <button class="start-btn" @click="$emit('start')" aria-label="테스트 시작하기">
+            <CustomButton class="start-btn" @click="$emit('start')" aria-label="테스트 시작하기">
                 테스트 시작하기
                 <i class="fas fa-arrow-right"></i>
-            </button>
+            </CustomButton>
             <p class="info-text">소요 시간: 약 3 ~ 5분</p>
         </div>
 
@@ -25,9 +25,9 @@
                 나의 지난 기록
             </h2>
             <div class="history-list">
-                <div 
-                    v-for="(item, index) in history.slice(0, 3)" 
-                    :key="index" 
+                <div
+                    v-for="(item, index) in history.slice(0, 3)"
+                    :key="index"
                     class="history-item"
                     @click="$emit('view-history', item)"
                 >
@@ -52,7 +52,7 @@ defineProps<{
     history: DptiHistoryItem[];
 }>();
 
-defineEmits<{ 
+defineEmits<{
     (e: 'start'): void;
     (e: 'view-history', item: DptiHistoryItem): void;
 }>();

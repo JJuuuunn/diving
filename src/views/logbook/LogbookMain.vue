@@ -5,49 +5,49 @@
 
     <main class="main-content">
       <!-- 작성 폼 토글 아코디언 버튼 -->
-      <button class="form-toggle-btn" @click="isFormOpen = !isFormOpen">
+      <CustomButton class="form-toggle-btn" @click="isFormOpen = !isFormOpen">
         <span>
-          <i class="fa-solid fa-pen-nib"></i> 
+          <i class="fa-solid fa-pen-nib"></i>
           {{ isFormOpen ? '작성 폼 닫기' : '새로운 다이빙 로그 기록하기' }}
         </span>
         <i class="fa-solid fa-chevron-down toggle-icon" :class="{ 'is-active': isFormOpen }"></i>
-      </button>
+      </CustomButton>
 
       <!-- 로그 작성 폼 (트랜지션) -->
       <transition name="fade">
         <div v-if="isFormOpen" class="log-form-card">
           <!-- 스쿠버 / 프리다이빙 선택 세그먼트 탭 -->
           <div class="diving-type-tabs">
-            <button 
-              class="tab-btn" 
-              :class="{ 'is-active': form.type === 'scuba' }" 
+            <CustomButton
+              class="tab-btn"
+              :class="{ 'is-active': form.type === 'scuba' }"
               @click="form.type = 'scuba'"
             >
               <i class="fa-solid fa-water"></i> 스쿠버 다이빙
-            </button>
-            <button 
-              class="tab-btn" 
-              :class="{ 'is-active': form.type === 'freediving' }" 
+            </CustomButton>
+            <CustomButton
+              class="tab-btn"
+              :class="{ 'is-active': form.type === 'freediving' }"
               @click="form.type = 'freediving'"
             >
               <i class="fa-solid fa-fish"></i> 프리다이빙
-            </button>
+            </CustomButton>
           </div>
 
           <div class="form-row">
             <div class="form-group">
               <label for="location">📍 다이빙 포인트 / 장소</label>
-              <input 
-                id="location" 
-                v-model="form.location" 
-                type="text" 
-                placeholder="예: 가평 K26 / 제주도 문섬" 
+              <CustomInput
+                id="location"
+                v-model="form.location"
+                type="text"
+                placeholder="예: 가평 K26 / 제주도 문섬"
               />
             </div>
             <div class="form-group">
               <label for="date">📅 다이빙 일시</label>
-              <CustomDatePicker 
-                v-model="form.date" 
+              <CustomDatePicker
+                v-model="form.date"
               />
             </div>
           </div>
@@ -55,22 +55,22 @@
           <div class="form-row">
             <div class="form-group">
               <label for="maxDepth">🌊 최대 수심 (m)</label>
-              <CustomNumberInput 
-                id="maxDepth" 
-                v-model="form.maxDepth" 
-                :min="0" 
-                :step="0.1" 
+              <CustomNumberInput
+                id="maxDepth"
+                v-model="form.maxDepth"
+                :min="0"
+                :step="0.1"
                 placeholder="0.0"
               />
             </div>
             <div class="form-group">
               <label for="temp">🌡️ 수온 (℃)</label>
-              <CustomNumberInput 
-                id="temp" 
-                v-model="form.temp" 
-                :min="-10" 
-                :max="50" 
-                :step="1" 
+              <CustomNumberInput
+                id="temp"
+                v-model="form.temp"
+                :min="-10"
+                :max="50"
+                :step="1"
                 placeholder="0"
               />
             </div>
@@ -80,20 +80,20 @@
           <div v-if="form.type === 'scuba'" class="form-row">
             <div class="form-group">
               <label for="diveTime">⏱️ 다이빙 시간 (분)</label>
-              <CustomNumberInput 
-                id="diveTime" 
-                v-model="form.diveTime" 
-                :min="0" 
-                :step="1" 
+              <CustomNumberInput
+                id="diveTime"
+                v-model="form.diveTime"
+                :min="0"
+                :step="1"
                 placeholder="0"
               />
             </div>
             <div class="form-group">
               <label for="buddyName">👤 버디 이름</label>
-              <input 
-                id="buddyName" 
-                v-model="form.buddyName" 
-                type="text" 
+              <CustomInput
+                id="buddyName"
+                v-model="form.buddyName"
+                type="text"
                 placeholder="함께한 다이버 이름"
               />
             </div>
@@ -102,23 +102,23 @@
           <div v-if="form.type === 'scuba'" class="form-row">
             <div class="form-group">
               <label for="entryPsi">🏁 입수 기압 (bar)</label>
-              <CustomNumberInput 
-                id="entryPsi" 
-                v-model="form.entryPsi" 
-                :min="0" 
-                :max="350" 
-                :step="5" 
+              <CustomNumberInput
+                id="entryPsi"
+                v-model="form.entryPsi"
+                :min="0"
+                :max="350"
+                :step="5"
                 placeholder="200"
               />
             </div>
             <div class="form-group">
               <label for="exitPsi">🏳️ 출수 기압 (bar)</label>
-              <CustomNumberInput 
-                id="exitPsi" 
-                v-model="form.exitPsi" 
-                :min="0" 
-                :max="350" 
-                :step="5" 
+              <CustomNumberInput
+                id="exitPsi"
+                v-model="form.exitPsi"
+                :min="0"
+                :max="350"
+                :step="5"
                 placeholder="50"
               />
             </div>
@@ -128,19 +128,19 @@
           <div v-if="form.type === 'freediving'" class="form-row">
             <div class="form-group">
               <label for="apneaTime">⏱️ 최대 무호흡 시간 (분:초)</label>
-              <input 
-                id="apneaTime" 
-                v-model="form.apneaTime" 
-                type="text" 
+              <CustomInput
+                id="apneaTime"
+                v-model="form.apneaTime"
+                type="text"
                 placeholder="예: 01:45"
               />
             </div>
             <div class="form-group">
               <label for="discipline">🏆 시도 종목</label>
-              <CustomSelect 
-                id="discipline" 
-                v-model="form.discipline" 
-                :options="disciplineOptions" 
+              <CustomSelect
+                id="discipline"
+                v-model="form.discipline"
+                :options="disciplineOptions"
               />
             </div>
           </div>
@@ -148,21 +148,21 @@
           <div v-if="form.type === 'freediving'" class="form-row">
             <div class="form-group">
               <label for="weight">⚖️ 착용 웨이트 (kg)</label>
-              <CustomNumberInput 
-                id="weight" 
-                v-model="form.weight" 
-                :min="0" 
-                :max="50" 
-                :step="0.5" 
+              <CustomNumberInput
+                id="weight"
+                v-model="form.weight"
+                :min="0"
+                :max="50"
+                :step="0.5"
                 placeholder="0"
               />
             </div>
             <div class="form-group">
               <label for="eqType">👂 이퀄라이징 기법</label>
-              <CustomSelect 
-                id="eqType" 
-                v-model="form.eqType" 
-                :options="eqTypeOptions" 
+              <CustomSelect
+                id="eqType"
+                v-model="form.eqType"
+                :options="eqTypeOptions"
               />
             </div>
           </div>
@@ -170,20 +170,20 @@
           <div v-if="form.type === 'freediving'" class="form-row">
             <div class="form-group">
               <label for="buddyNameFree">👤 세이프티 버디</label>
-              <input 
-                id="buddyNameFree" 
-                v-model="form.buddyName" 
-                type="text" 
+              <CustomInput
+                id="buddyNameFree"
+                v-model="form.buddyName"
+                type="text"
                 placeholder="함께한 세이프티 이름"
               />
             </div>
             <div class="form-group">
               <label for="diveCount">⏱️ 세션 총 다이빙 횟수</label>
-              <CustomNumberInput 
-                id="diveCount" 
-                v-model="form.diveTime" 
-                :min="0" 
-                :step="1" 
+              <CustomNumberInput
+                id="diveCount"
+                v-model="form.diveTime"
+                :min="0"
+                :step="1"
                 placeholder="예: 8"
               />
             </div>
@@ -192,9 +192,9 @@
           <div class="form-row">
             <div class="form-group full-width">
               <label for="notes">📝 다이빙 메모</label>
-              <CustomTextarea 
-                id="notes" 
-                v-model="form.notes" 
+              <CustomTextarea
+                id="notes"
+                v-model="form.notes"
                 :max-length="300"
                 placeholder="오늘의 다이빙은 어떠셨나요? 본 수중 생물이나 특별했던 감상을 적어주세요. (최대 300자)"
               />
@@ -205,10 +205,10 @@
           <div class="signature-trigger-wrapper">
             <label>✍️ 버디(세이프티) 서명 인증</label>
             <div class="signature-preview-area" @click="showSignatureModal = true">
-              <img 
-                v-if="form.buddySignature" 
-                :src="form.buddySignature" 
-                alt="Buddy Signature Preview" 
+              <img
+                v-if="form.buddySignature"
+                :src="form.buddySignature"
+                alt="Buddy Signature Preview"
               />
               <div v-else class="placeholder-text">
                 <i class="fa-solid fa-signature"></i>
@@ -219,9 +219,9 @@
 
           <!-- 등록 버튼 -->
           <div class="form-actions">
-            <button class="submit-btn" @click="saveDiveLog">
+            <CustomButton class="submit-btn" @click="saveDiveLog">
               <i class="fa-solid fa-cloud-arrow-up"></i> 로그북 저장하기
-            </button>
+            </CustomButton>
           </div>
         </div>
       </transition>
@@ -229,7 +229,7 @@
       <!-- 로그 리스트 섹션 -->
       <section class="logs-section">
         <h3 class="section-title">
-          🤿 나의 다이빙 기록 로그북 
+          🤿 나의 다이빙 기록 로그북
           <span>{{ logbookStore.logs.length }}개의 로그</span>
         </h3>
 
@@ -239,9 +239,9 @@
         </div>
 
         <!-- 리스트 카드 렌더링 -->
-        <LogCard 
-          v-for="log in logbookStore.logs" 
-          :key="log.id" 
+        <LogCard
+          v-for="log in logbookStore.logs"
+          :key="log.id"
           :log="log"
           @delete="deleteLog"
         />
@@ -252,8 +252,8 @@
     </main>
 
     <!-- 캔버스 서명 드로잉 오버레이 모달 -->
-    <CanvasSignature 
-      v-if="showSignatureModal" 
+    <CanvasSignature
+      v-if="showSignatureModal"
       @close="showSignatureModal = false"
       @save="onSignatureSave"
     />
@@ -313,7 +313,7 @@ const form = reactive({
   buddyName: '',
   buddySignature: '',
   notes: '',
-  
+
   // 스쿠버다이빙 전용
   entryPsi: 200,
   exitPsi: 50,
@@ -411,7 +411,7 @@ const saveDiveLog = () => {
   form.buddyName = '';
   form.buddySignature = '';
   form.notes = '';
-  
+
   // 스쿠버값 초기화
   form.entryPsi = 200;
   form.exitPsi = 50;
@@ -428,5 +428,5 @@ const saveDiveLog = () => {
 </script>
 
 <style lang="scss">
-@import '@/assets/scss/pages/_logbook.scss';
+@use '@/assets/scss/pages/_logbook.scss';
 </style>

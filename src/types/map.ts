@@ -45,8 +45,13 @@ export interface KakaoCustomOverlay {
   setPosition: (latlng: KakaoLatLng) => void;
 }
 
+export interface ActiveMarkerInfo {
+  marker: KakaoMarker;
+  overlay: KakaoCustomOverlay | null;
+}
+
 export interface KakaoCustomOverlayOptions {
-  content: string;
+  content: string | HTMLElement;
   position: KakaoLatLng;
   clickable?: boolean;
   xAnchor?: number;

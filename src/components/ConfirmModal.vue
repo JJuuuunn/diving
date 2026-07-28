@@ -22,16 +22,9 @@
 </template>
 
 <script setup lang="ts">
+import type { ConfirmModalProps } from '@/types/components';
 
-interface Props {
-  show: boolean;
-  title: string;
-  message: string;
-  confirmText?: string;
-  cancelText?: string;
-}
-
-withDefaults(defineProps<Props>(), {
+withDefaults(defineProps<ConfirmModalProps>(), {
   confirmText: '확인',
   cancelText: '취소'
 });
@@ -154,7 +147,7 @@ const emit = defineEmits<{
 .modal-fade-enter-active,
 .modal-fade-leave-active {
   transition: opacity 0.25s ease;
-  
+
   .modal-card {
     transition: transform 0.25s cubic-bezier(0.34, 1.56, 0.64, 1);
   }
@@ -163,7 +156,7 @@ const emit = defineEmits<{
 .modal-fade-enter-from,
 .modal-fade-leave-to {
   opacity: 0;
-  
+
   .modal-card {
     transform: scale(0.92);
   }

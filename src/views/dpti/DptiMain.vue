@@ -3,10 +3,10 @@
         <main class="dpti-main-content">
     <h1 class="sr-only">다이빙 성향 테스트</h1>
             <transition name="slide-fade" mode="out-in">
-                <DptiIntro 
-                    v-if="currentStep === 'intro'" 
+                <DptiIntro
+                    v-if="currentStep === 'intro'"
                     :history="resultsHistory"
-                    @start="startTest" 
+                    @start="startTest"
                     @view-history="viewPastResult"
                 />
 
@@ -55,5 +55,5 @@ const {
 </script>
 
 <style lang="scss">
-@import '@/assets/scss/pages/_dpti.scss';
+@use '@/assets/scss/pages/_dpti.scss';
 </style>

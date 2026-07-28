@@ -22,6 +22,8 @@
     cursor: pointer;
     transition: all 0.25s ease;
     box-sizing: border-box;
+    font-family: inherit;
+    text-align: left;
 
     body:not(.dark) & {
       background: rgba(255, 255, 255, 0.8);
@@ -124,6 +126,9 @@
     margin-bottom: 16px;
 
     .datepicker-title {
+      border: 0;
+      background: transparent;
+      font-family: inherit;
       font-size: 0.98rem;
       font-weight: 700;
       color: #f8fafc;
@@ -406,6 +411,116 @@
         color: white;
         box-shadow: 0 4px 10px rgba(14, 165, 233, 0.25);
       }
+    }
+  }
+}
+
+.custom-date-range-picker {
+  .datepicker-trigger {
+    &:focus-visible {
+      outline: 3px solid rgba(56, 189, 248, .45);
+      outline-offset: 2px;
+    }
+
+    &.is-disabled {
+      cursor: not-allowed;
+      opacity: .55;
+    }
+  }
+
+  .range-selection-status {
+    margin: -4px 0 12px;
+    color: var(--page-text-secondary);
+    font-size: .75rem;
+    text-align: center;
+  }
+
+  .datepicker-day-cell,
+  .month-item,
+  .year-item {
+    padding: 0;
+    border: 0;
+    font: inherit;
+  }
+
+  .datepicker-day-cell {
+    background: transparent;
+
+    &.is-in-range {
+      border-radius: 10px;
+      color: var(--ocean-200);
+      background: rgba(14, 165, 233, .18);
+
+      body:not(.dark) & {
+        color: var(--ocean-800);
+        background: var(--ocean-100);
+      }
+    }
+
+    &.is-range-start,
+    &.is-range-end {
+      z-index: 1;
+      border-radius: 50%;
+      color: #fff;
+      background: linear-gradient(135deg, var(--ocean-400), var(--ocean-600));
+      box-shadow: 0 4px 10px rgba(56, 189, 248, .3);
+      font-weight: 800;
+    }
+  }
+
+  .month-item,
+  .year-item {
+    background: transparent;
+  }
+
+  .month-item {
+    &.is-in-range {
+      color: var(--ocean-200);
+      background: rgba(14, 165, 233, .18);
+
+      body:not(.dark) & {
+        color: var(--ocean-800);
+        background: var(--ocean-100);
+      }
+    }
+
+    &.is-range-start,
+    &.is-range-end {
+      color: #fff;
+      background: linear-gradient(135deg, var(--ocean-400), var(--ocean-600));
+      box-shadow: 0 4px 10px rgba(56, 189, 248, .3);
+      font-weight: 800;
+    }
+  }
+
+  .range-picker-actions {
+    display: flex;
+    justify-content: flex-end;
+    margin-top: 14px;
+    padding-top: 12px;
+    border-top: 1px solid rgba(148, 163, 184, .14);
+  }
+
+  .range-clear-button {
+    min-height: 32px;
+    padding: 0 11px;
+    border: 1px solid rgba(148, 163, 184, .22);
+    border-radius: 9px;
+    color: var(--page-text-secondary);
+    background: transparent;
+    font: inherit;
+    font-size: .75rem;
+    font-weight: 700;
+    cursor: pointer;
+
+    &:hover:not(:disabled) {
+      border-color: var(--ocean-400);
+      color: var(--ocean-400);
+    }
+
+    &:disabled {
+      cursor: not-allowed;
+      opacity: .4;
     }
   }
 }

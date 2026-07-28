@@ -9,7 +9,7 @@
 
     <!-- ───────── 섹션 목차 ───────── -->
     <nav class="section-nav fade-in-up delay">
-      <button
+      <CustomButton
         v-for="section in sections"
         :key="section.id"
         type="button"
@@ -19,8 +19,108 @@
       >
         <span class="nav-icon">{{ section.icon }}</span>
         <span>{{ section.label }}</span>
-      </button>
+      </CustomButton>
     </nav>
+
+    <section id="sec-button" class="test-section fade-in-up delay-more">
+      <div class="section-header">
+        <h2>🔘 CustomButton</h2>
+        <span class="component-tag">CustomButton.vue</span>
+      </div>
+      <div class="section-body">
+        <div class="demo-row">
+          <div class="demo-card">
+            <h4>Variant</h4>
+            <div class="inline-demo">
+              <CustomButton variant="default">Default</CustomButton>
+              <CustomButton variant="primary">Primary</CustomButton>
+              <CustomButton variant="secondary">Secondary</CustomButton>
+              <CustomButton variant="danger">Danger</CustomButton>
+              <CustomButton variant="ghost">Ghost</CustomButton>
+            </div>
+          </div>
+          <div class="demo-card">
+            <h4>Loading 및 중복 실행 방지</h4>
+            <CustomButton
+              variant="primary"
+              :loading="buttonLoading"
+              loading-label="저장 중"
+              @click="simulateButtonLoading"
+            >
+              <template #leading>💾</template>
+              {{ buttonLoading ? '저장 중' : '저장하기' }}
+            </CustomButton>
+            <span class="state-readout">실행 횟수: <strong>{{ buttonActionCount }}</strong></span>
+          </div>
+          <div class="demo-card">
+            <h4>Size, Shape 및 Disabled</h4>
+            <div class="inline-demo inline-demo--center">
+              <CustomButton size="xs">X-Small</CustomButton>
+              <CustomButton size="sm">Small</CustomButton>
+              <CustomButton size="md" shape="pill">Medium</CustomButton>
+              <CustomButton size="lg" shape="square" aria-label="즐겨찾기">★</CustomButton>
+              <CustomButton size="xl">X-Large</CustomButton>
+            </div>
+            <CustomButton disabled block>사용 불가</CustomButton>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section id="sec-input" class="test-section fade-in-up delay-more">
+      <div class="section-header">
+        <h2>⌨️ CustomInput</h2>
+        <span class="component-tag">CustomInput.vue</span>
+      </div>
+      <div class="section-body">
+        <div class="demo-row">
+          <div class="demo-card">
+            <h4>기본 텍스트 입력</h4>
+            <CustomInput
+              v-model="inputBasic"
+              label="다이버 이름"
+              hint="로그와 자격증에 표시할 이름입니다."
+              placeholder="예: 버디다이버"
+              required
+            >
+              <template #prefix>🤿</template>
+            </CustomInput>
+            <span class="state-readout">입력값: <strong>{{ inputBasic || '없음' }}</strong></span>
+          </div>
+          <div class="demo-card">
+            <h4>숫자 정규화</h4>
+            <CustomInput
+              v-model="inputNumber"
+              label="목표 수심"
+              type="number"
+              value-type="number"
+              placeholder="수심"
+            >
+              <template #suffix>m</template>
+            </CustomInput>
+            <span class="state-readout">
+              값: <strong>{{ inputNumber === '' ? '없음' : inputNumber }}</strong>
+              ({{ typeof inputNumber }})
+            </span>
+          </div>
+          <div class="demo-card">
+            <h4>Error 및 Disabled</h4>
+            <CustomInput
+              v-model="inputError"
+              size="xs"
+              error="필수 입력값입니다."
+              placeholder="XS 오류 입력"
+            />
+            <CustomInput
+              model-value="수정할 수 없음"
+              label="XL Disabled"
+              size="xl"
+              disabled
+            />
+          </div>
+        </div>
+      </div>
+    </section>
 
     <!-- ═══════════════════════════════ -->
     <!--  1. CustomSwitch                -->
@@ -99,7 +199,61 @@
     </section>
 
     <!-- ═══════════════════════════════ -->
-    <!--  3. CustomNumberInput           -->
+    <!--  3. CustomMultiSelect           -->
+    <!-- ═══════════════════════════════ -->
+    <section id="sec-multiselect" class="test-section fade-in-up delay-more">
+      <div class="section-header">
+        <h2>☑️ CustomMultiSelect</h2>
+        <span class="component-tag">CustomMultiSelect.vue</span>
+      </div>
+      <div class="section-body">
+        <div class="demo-row">
+          <div class="demo-card">
+            <h4>기본 복수 선택</h4>
+            <CustomMultiSelect
+              v-model="multiSelectBasic"
+              :options="selectOptions"
+              placeholder="활동을 여러 개 선택하세요"
+            />
+            <span class="state-readout">선택값: <strong>{{ multiSelectBasic.join(', ') || '없음' }}</strong></span>
+          </div>
+          <div class="demo-card">
+            <h4>Label/Value 객체 옵션</h4>
+            <CustomMultiSelect
+              v-model="multiSelectLabeled"
+              :options="multiSelectLabeledOptions"
+              placeholder="시설 선택"
+            />
+            <span class="state-readout">선택값: <strong>{{ multiSelectLabeled.join(', ') || '없음' }}</strong></span>
+          </div>
+        </div>
+        <div class="demo-row">
+          <div class="demo-card">
+            <h4>최대 3개 선택 · XL</h4>
+            <CustomMultiSelect
+              v-model="multiSelectLimited"
+              :options="selectOptions"
+              :max-selections="3"
+              size="xl"
+              placeholder="최대 3개"
+            />
+            <span class="state-readout">선택 수: <strong>{{ multiSelectLimited.length }} / 3</strong></span>
+          </div>
+          <div class="demo-card">
+            <h4>비활성화</h4>
+            <CustomMultiSelect
+              v-model="multiSelectDisabled"
+              :options="selectOptions"
+              :disabled="true"
+            />
+            <span class="state-readout">선택값: <strong>{{ multiSelectDisabled.join(', ') }}</strong></span>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ═══════════════════════════════ -->
+    <!--  4. CustomNumberInput           -->
     <!-- ═══════════════════════════════ -->
     <section id="sec-number" class="test-section fade-in-up delay-more">
       <div class="section-header">
@@ -145,7 +299,7 @@
     </section>
 
     <!-- ═══════════════════════════════ -->
-    <!--  4. CustomDatePicker            -->
+    <!--  5. CustomDatePicker            -->
     <!-- ═══════════════════════════════ -->
     <section id="sec-datepicker" class="test-section fade-in-up delay-more">
       <div class="section-header">
@@ -163,19 +317,86 @@
             <span class="state-readout">선택일: <strong>{{ dateBasic || '없음' }}</strong></span>
           </div>
           <div class="demo-card">
-            <h4>커스텀 플레이스홀더</h4>
+            <h4>월 단위 선택</h4>
             <CustomDatePicker
-              v-model="dateCustom"
-              placeholder="다이빙 출발일 🏄"
+              v-model="monthBasic"
+              mode="month"
+              placeholder="기준 월을 선택하세요"
             />
-            <span class="state-readout">선택일: <strong>{{ dateCustom || '없음' }}</strong></span>
+            <span class="state-readout">선택 월: <strong>{{ monthBasic || '없음' }}</strong></span>
+          </div>
+          <div class="demo-card">
+            <h4>기간 선택</h4>
+            <CustomDateRangePicker
+              v-model="dateRange"
+              placeholder="여행 기간 선택"
+            />
+            <span class="state-readout">
+              기간:
+              <strong>
+                {{ dateRange.start || '시작일 없음' }} ~ {{ dateRange.end || '종료일 없음' }}
+              </strong>
+            </span>
+          </div>
+        </div>
+        <div class="demo-row">
+          <div class="demo-card wide">
+            <h4>월 단위 기간 선택</h4>
+            <CustomDateRangePicker
+              v-model="monthRange"
+              mode="month"
+              placeholder="조회 기간을 월 단위로 선택하세요"
+            />
+            <span class="state-readout">
+              월 기간:
+              <strong>
+                {{ monthRange.start || '시작 월 없음' }} ~ {{ monthRange.end || '종료 월 없음' }}
+              </strong>
+            </span>
           </div>
         </div>
       </div>
     </section>
 
     <!-- ═══════════════════════════════ -->
-    <!--  5. CustomTextarea              -->
+    <!--  6. CustomCalendarPanel         -->
+    <!-- ═══════════════════════════════ -->
+    <section id="sec-calendar" class="test-section fade-in-up delay-more">
+      <div class="section-header">
+        <h2>🗓️ CustomCalendarPanel</h2>
+        <span class="component-tag">CustomCalendarPanel.vue</span>
+      </div>
+      <div class="section-body">
+        <div class="demo-row">
+          <div class="demo-card wide">
+            <h4>슬롯 기반 월간 일정</h4>
+            <p class="section-intro">
+              날짜 구조와 탐색은 공통으로 사용하고, 셀 일정과 선택 결과는 화면별 슬롯으로 구성합니다.
+            </p>
+            <CustomCalendarPanel
+              v-model="calendarSelectedDate"
+              title="2026년 7월"
+              :cells="calendarDemoCells"
+              @previous="calendarNavigation = '이전 달 요청'"
+              @next="calendarNavigation = '다음 달 요청'"
+            >
+              <template #cell="{ cell }">
+                <span v-if="cell.eventCount" class="calendar-demo-event">
+                  긴 일정 이름도 셀 내부에서 안전하게 표시됩니다
+                </span>
+              </template>
+              <template #selection="{ selectedDate }">
+                <strong>{{ selectedDate }} 선택</strong>
+                <span class="state-readout">{{ calendarNavigation }}</span>
+              </template>
+            </CustomCalendarPanel>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ═══════════════════════════════ -->
+    <!--  7. CustomTextarea              -->
     <!-- ═══════════════════════════════ -->
     <section id="sec-textarea" class="test-section fade-in-up delay-more">
       <div class="section-header">
@@ -208,7 +429,7 @@
     </section>
 
     <!-- ═══════════════════════════════ -->
-    <!--  6. CustomSkeleton              -->
+    <!--  7. CustomSkeleton              -->
     <!-- ═══════════════════════════════ -->
     <section id="sec-skeleton" class="test-section fade-in-up delay-more">
       <div class="section-header">
@@ -237,7 +458,7 @@
     </section>
 
     <!-- ═══════════════════════════════ -->
-    <!--  7. ConfirmModal                -->
+    <!--  8. ConfirmModal                -->
     <!-- ═══════════════════════════════ -->
     <section id="sec-modal" class="test-section fade-in-up delay-more">
       <div class="section-header">
@@ -248,16 +469,16 @@
         <div class="demo-row">
           <div class="demo-card">
             <h4>기본 확인 모달</h4>
-            <button class="trigger-btn" @click="showModalBasic = true">
+            <CustomButton class="trigger-btn" @click="showModalBasic = true">
               <i class="fa-solid fa-window-restore"></i> 모달 열기
-            </button>
+            </CustomButton>
             <span class="state-readout">마지막 응답: <strong>{{ modalResult }}</strong></span>
           </div>
           <div class="demo-card">
             <h4>커스텀 텍스트 모달</h4>
-            <button class="trigger-btn warning" @click="showModalCustom = true">
+            <CustomButton class="trigger-btn warning" @click="showModalCustom = true">
               <i class="fa-solid fa-triangle-exclamation"></i> 위험 모달 열기
-            </button>
+            </CustomButton>
             <span class="state-readout">마지막 응답: <strong>{{ modalCustomResult }}</strong></span>
           </div>
         </div>
@@ -265,7 +486,7 @@
     </section>
 
     <!-- ═══════════════════════════════ -->
-    <!--  8. Toast                       -->
+    <!--  9. Toast                       -->
     <!-- ═══════════════════════════════ -->
     <section id="sec-toast" class="test-section fade-in-up delay-more">
       <div class="section-header">
@@ -276,28 +497,28 @@
         <div class="demo-row">
           <div class="demo-card">
             <h4>성공 토스트</h4>
-            <button class="trigger-btn success" @click="fireSuccessToast">
+            <CustomButton class="trigger-btn success" @click="fireSuccessToast">
               <i class="fa-solid fa-check-circle"></i> 성공 토스트 발사
-            </button>
+            </CustomButton>
           </div>
           <div class="demo-card">
             <h4>에러 토스트</h4>
-            <button class="trigger-btn danger" @click="fireErrorToast">
+            <CustomButton class="trigger-btn danger" @click="fireErrorToast">
               <i class="fa-solid fa-xmark-circle"></i> 에러 토스트 발사
-            </button>
+            </CustomButton>
           </div>
           <div class="demo-card">
             <h4>연속 발사 (x3)</h4>
-            <button class="trigger-btn" @click="fireBurstToast">
+            <CustomButton class="trigger-btn" @click="fireBurstToast">
               <i class="fa-solid fa-layer-group"></i> 연속 3발
-            </button>
+            </CustomButton>
           </div>
         </div>
       </div>
     </section>
 
     <!-- ═══════════════════════════════ -->
-    <!--  9. DarkModeToggle              -->
+    <!--  10. DarkModeToggle             -->
     <!-- ═══════════════════════════════ -->
     <section id="sec-darkmode" class="test-section fade-in-up delay-more">
       <div class="section-header">
@@ -307,9 +528,9 @@
       <div class="section-body">
         <div class="demo-row">
           <div class="demo-card wide">
-            <h4>다크 모드 전환 스위치 (사이드바 확장 UI)</h4>
+            <h4>라이트 / 다크 테마 세그먼트</h4>
             <p class="demo-hint">
-              사이드바가 열려 있을 때와 동일한 와이드 다이브 컴퓨터 UI입니다. 클릭하면 전체 테마가 전환됩니다.
+              현재 테마를 명확하게 표시하고 키보드로도 전환할 수 있는 새로운 공용 테마 컨트롤입니다.
             </p>
             <div class="darkmode-demo-wrapper">
               <DarkModeToggle v-model="isDay" expanded />
@@ -321,7 +542,7 @@
     </section>
 
     <!-- ═══════════════════════════════ -->
-    <!--  10. MapTest                    -->
+    <!--  11. MapTest                    -->
     <!-- ═══════════════════════════════ -->
     <section id="sec-map" class="test-section fade-in-up delay-more">
       <div class="section-header">
@@ -337,7 +558,7 @@
     </section>
 
     <!-- ═══════════════════════════════ -->
-    <!--  11. ScrollToTop (설명만)        -->
+    <!--  12. ScrollToTop (설명만)        -->
     <!-- ═══════════════════════════════ -->
     <section id="sec-scroll" class="test-section fade-in-up delay-more">
       <div class="section-header">
@@ -361,6 +582,17 @@
       </div>
     </section>
 
+    <section id="sec-layout" class="test-section fade-in-up delay-more">
+      <div class="section-header">
+        <h2>🧱 Header / Footer</h2>
+        <span class="component-tag">Header.vue + Footer.vue</span>
+      </div>
+      <div class="section-body layout-demo">
+        <Header title="공용 헤더 미리보기" subtitle="제목과 부제목을 동일한 구조로 표시합니다." />
+        <Footer />
+      </div>
+    </section>
+
     <!-- ConfirmModal 인스턴스들 -->
     <ConfirmModal
       :show="showModalBasic"
@@ -379,7 +611,6 @@
       @cancel="onModalCustomCancel"
     />
 
-    <Footer />
   </div>
 </template>
 
@@ -388,30 +619,36 @@ import { ref, computed, onMounted, onUnmounted, nextTick } from 'vue';
 import { useRoute } from 'vue-router';
 import { useToast } from '@/composables/useToast';
 
+import CustomButton from '@/components/CustomButton.vue';
+import CustomInput from '@/components/CustomInput.vue';
 import CustomSwitch from '@/components/CustomSwitch.vue';
 import CustomSelect from '@/components/CustomSelect.vue';
+import CustomMultiSelect from '@/components/CustomMultiSelect.vue';
 import CustomNumberInput from '@/components/CustomNumberInput.vue';
 import CustomDatePicker from '@/components/CustomDatePicker.vue';
+import CustomDateRangePicker from '@/components/CustomDateRangePicker.vue';
+import CustomCalendarPanel from '@/components/CustomCalendarPanel.vue';
 import CustomTextarea from '@/components/CustomTextarea.vue';
 import CustomSkeleton from '@/components/CustomSkeleton.vue';
 import ConfirmModal from '@/components/ConfirmModal.vue';
 import DarkModeToggle from '@/components/DarkModeToggle.vue';
 import MapTestPanel from '@/components/dev/MapTestPanel.vue';
+import Header from '@/components/Header.vue';
 import Footer from '@/components/Footer.vue';
 import { useThemeStore } from '@/stores/theme';
+import type { PlaygroundNavSection } from '@/types/components';
+import type { CalendarPanelCell, DateRange } from '@/types/calendar';
 
 // ─── 섹션 목차 데이터 ───
-interface NavSection {
-  id: string;
-  icon: string;
-  label: string;
-}
-
-const sections: NavSection[] = [
+const sections: PlaygroundNavSection[] = [
+  { id: 'sec-button', icon: '🔘', label: 'Button' },
+  { id: 'sec-input', icon: '⌨️', label: 'Input' },
   { id: 'sec-switch', icon: '🔀', label: 'Switch' },
   { id: 'sec-select', icon: '📋', label: 'Select' },
+  { id: 'sec-multiselect', icon: '☑️', label: 'MultiSelect' },
   { id: 'sec-number', icon: '🔢', label: 'Number' },
   { id: 'sec-datepicker', icon: '📅', label: 'DatePicker' },
+  { id: 'sec-calendar', icon: '🗓️', label: 'Calendar' },
   { id: 'sec-textarea', icon: '📝', label: 'Textarea' },
   { id: 'sec-skeleton', icon: '💀', label: 'Skeleton' },
   { id: 'sec-modal', icon: '💬', label: 'Modal' },
@@ -419,10 +656,29 @@ const sections: NavSection[] = [
   { id: 'sec-darkmode', icon: '🌗', label: 'DarkMode' },
   { id: 'sec-map', icon: '🗺️', label: 'Map' },
   { id: 'sec-scroll', icon: '⬆️', label: 'ScrollTop' },
+  { id: 'sec-layout', icon: '🧱', label: 'Layout' },
 ];
 
 const route = useRoute();
-const activeSection = ref('sec-switch');
+const activeSection = ref('sec-button');
+
+// ─── CustomButton 상태 ───
+const buttonLoading = ref(false);
+const buttonActionCount = ref(0);
+
+const simulateButtonLoading = (): void => {
+  if (buttonLoading.value) return;
+  buttonLoading.value = true;
+  buttonActionCount.value += 1;
+  window.setTimeout(() => {
+    buttonLoading.value = false;
+  }, 900);
+};
+
+// ─── CustomInput 상태 ───
+const inputBasic = ref('');
+const inputNumber = ref<string | number>('');
+const inputError = ref('');
 
 const scrollToSection = (id: string): void => {
   activeSection.value = id;
@@ -485,6 +741,18 @@ const selectLabeledOptions = [
   { label: '💎 인스트럭터', value: 'instructor' },
 ];
 
+// ─── CustomMultiSelect 상태 ───
+const multiSelectBasic = ref<unknown[]>([]);
+const multiSelectLabeled = ref<unknown[]>(['pool']);
+const multiSelectLimited = ref<unknown[]>([]);
+const multiSelectDisabled = ref<unknown[]>(['스쿠버다이빙', '프리다이빙']);
+const multiSelectLabeledOptions = [
+  { label: '🏊 수영장', value: 'pool' },
+  { label: '🌊 바다', value: 'ocean' },
+  { label: '🚤 보트', value: 'boat' },
+  { label: '🧊 아이스 다이빙', value: 'ice' },
+];
+
 // ─── 3. CustomNumberInput 상태 ───
 const numberBasic = ref(0);
 const numberDecimal = ref(0);
@@ -492,7 +760,26 @@ const numberDisabled = ref(25);
 
 // ─── 4. CustomDatePicker 상태 ───
 const dateBasic = ref('');
-const dateCustom = ref('');
+const monthBasic = ref('');
+const dateRange = ref<DateRange>({ start: '', end: '' });
+const monthRange = ref<DateRange>({ start: '', end: '' });
+const calendarSelectedDate = ref('2026-07-14');
+const calendarNavigation = ref('월 이동 버튼을 눌러보세요.');
+const calendarDemoCells: CalendarPanelCell[] = Array.from({ length: 35 }, (_, index) => {
+  const day = index - 2;
+  const isCurrentMonth = day >= 1 && day <= 31;
+  const normalizedDay = isCurrentMonth ? day : day < 1 ? 30 + day : day - 31;
+  const month = day < 1 ? '06' : day > 31 ? '08' : '07';
+  const date = `2026-${month}-${String(normalizedDay).padStart(2, '0')}`;
+
+  return {
+    key: date,
+    date,
+    day: normalizedDay,
+    isCurrentMonth,
+    eventCount: date === '2026-07-14' ? 1 : 0
+  };
+});
 
 // ─── 5. CustomTextarea 상태 ───
 const textareaLimited = ref('');
@@ -667,7 +954,10 @@ const isDark = computed(() => themeStore.isDark);
   z-index: 0;
 
   /* backdrop-filter 쌓임 맥락 + DOM 순서: 아래 섹션이 달력을 덮는 문제 방지 */
-  &:has(.is-active) {
+  &:has(
+    .custom-select > .select-trigger.is-active,
+    .custom-datepicker > .datepicker-trigger.is-active
+  ) {
     z-index: var(--z-dropdown);
   }
 
@@ -729,6 +1019,10 @@ const isDark = computed(() => themeStore.isDark);
   }
 }
 
+.demo-row + .demo-row {
+  margin-top: 1.25rem;
+}
+
 .demo-card {
   background: rgba(255, 255, 255, 0.5);
   border: 1px solid rgba(0, 0, 0, 0.04);
@@ -740,7 +1034,10 @@ const isDark = computed(() => themeStore.isDark);
   overflow: visible;
   position: relative;
 
-  &:has(.is-active) {
+  &:has(
+    .custom-select > .select-trigger.is-active,
+    .custom-datepicker > .datepicker-trigger.is-active
+  ) {
     z-index: var(--z-dropdown);
   }
 
@@ -787,6 +1084,26 @@ const isDark = computed(() => themeStore.isDark);
   color: var(--page-text-secondary);
   line-height: 1.5;
   margin: 0;
+}
+
+.inline-demo {
+  display: flex;
+  flex-wrap: wrap;
+  gap: .5rem;
+
+  &--center { align-items: center; }
+}
+
+.layout-demo {
+  display: grid;
+  gap: 1rem;
+  overflow: hidden;
+  border-radius: 1rem;
+
+  :deep(.header),
+  :deep(.footer) {
+    width: 100%;
+  }
 }
 
 /* ── 트리거 버튼 ── */
@@ -854,6 +1171,21 @@ const isDark = computed(() => themeStore.isDark);
 
 .section-intro {
   margin: 0 0 1rem;
+}
+
+.calendar-demo-event {
+  display: block;
+  width: 100%;
+  overflow: hidden;
+  padding: .25rem;
+  border-radius: .25rem;
+  box-sizing: border-box;
+  background: var(--color-info-bg);
+  color: var(--color-info-text);
+  font-size: .65rem;
+  font-weight: 700;
+  text-overflow: ellipsis;
+  white-space: nowrap;
 }
 
 /* ── ScrollTop 테스트 힌트 ── */

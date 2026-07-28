@@ -24,3 +24,57 @@ export interface Hospital {
   reviews?: Review[];    // 정규화된 다이버 방문 후기 배열 객체
 }
 
+export interface ExtendedHospital extends Hospital {
+  distance?: number;
+}
+
+export interface ReviewForm {
+  author: string;
+  isSuccess: boolean;
+  actualFee: string;
+  content: string;
+  isSubmitting: boolean;
+  errorMessage: string;
+  successMessage: string;
+  showForm: boolean;
+}
+
+export interface MedicalApiResponse<T> {
+  status: 'success' | 'error';
+  insertedData?: T;
+  message?: string;
+}
+
+export interface AddReviewPayload {
+  action: 'addReview';
+  hospitalId: string;
+  author: string;
+  isSuccess: boolean;
+  actualFee: string;
+  content: string;
+  origin: string;
+}
+
+export interface AddReviewResult {
+  author: string;
+  isSuccess: boolean;
+  actualFee?: string;
+  content: string;
+  date: string;
+}
+
+export interface SuggestHospitalPayload {
+  action: 'suggestHospital';
+  name: string;
+  address: string;
+  tel: string;
+  fee: string;
+  tags: string;
+  tips: string;
+  origin: string;
+}
+
+export interface SuggestHospitalResult {
+  id: string;
+  date: string;
+}

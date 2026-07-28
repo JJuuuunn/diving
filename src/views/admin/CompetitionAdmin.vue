@@ -9,9 +9,9 @@
           <h1>대회 일정 수집 상태</h1>
           <p>이 화면에서는 자동 수집 결과만 확인할 수 있으며 데이터를 변경할 수 없습니다.</p>
         </div>
-        <button type="button" :disabled="isLoading" @click="loadStatus">
+        <CustomButton type="button" :disabled="isLoading" @click="loadStatus">
           {{ isLoading ? '확인 중…' : '기록 새로고침' }}
-        </button>
+        </CustomButton>
       </section>
 
       <div v-if="!apiConfigured" class="notice error" role="alert">
@@ -110,7 +110,7 @@ import {
   type CrawlLog,
   type CrawlState,
   type CrawlStatus
-} from '@/services/competitionAdminApi';
+} from '@/api/competitionAdminApi';
 
 const apiConfigured = hasCompetitionStatusApi();
 const state = ref<CrawlState | null>(null);

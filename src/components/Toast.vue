@@ -1,9 +1,9 @@
 <template>
   <div class="toast-container">
     <TransitionGroup name="toast-list">
-      <div 
-        v-for="item in toastState.items" 
-        :key="item.id" 
+      <div
+        v-for="item in toastState.items"
+        :key="item.id"
         class="toast"
         @click="removeToast(item.id)"
       >
@@ -24,5 +24,5 @@ const { toastState, removeToast } = useToast();
 </script>
 
 <style lang="scss">
-@import '@/assets/scss/components/_toast.scss';
+@use '@/assets/scss/components/_toast.scss';
 </style>

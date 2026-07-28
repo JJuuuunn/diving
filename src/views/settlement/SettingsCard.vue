@@ -6,14 +6,14 @@
     </div>
     <div class="card-body">
       <div class="day-type-toggle">
-        <button @click="currentDayType = 'weekday'"
+        <CustomButton @click="currentDayType = 'weekday'"
           :class="{ active: currentDayType === 'weekday', inactive: currentDayType !== 'weekday' }">
           평일
-        </button>
-        <button @click="currentDayType = 'weekend'"
+        </CustomButton>
+        <CustomButton @click="currentDayType = 'weekend'"
           :class="{ active: currentDayType === 'weekend', inactive: currentDayType !== 'weekend' }">
           주말/공휴일
-        </button>
+        </CustomButton>
       </div>
 
       <div class="pool-grid-label">다이빙 풀장 선택</div>
@@ -50,8 +50,13 @@
       <div class="price-input-row">
         <label class="price-label">입장료 (1인)</label>
         <div class="price-input-wrapper full-width">
-          <input type="text" inputmode="numeric" :value="basePrice" @input="updateBasePrice"
-            class="price-input" placeholder="0">
+          <CustomInput
+            :model-value="basePrice"
+            inputmode="numeric"
+            class="price-input"
+            placeholder="0"
+            @update:model-value="updateBasePrice"
+          />
           <span class="price-input-currency">원</span>
         </div>
       </div>
@@ -68,6 +73,8 @@ import k26Img from '@/assets/icons/k26.png';
 import tsnImg from '@/assets/icons/tsn.png';
 import aqualineImg from '@/assets/icons/aqualine.png';
 import suwonImg from '@/assets/icons/suwon.png';
+import CustomButton from '@/components/CustomButton.vue';
+import CustomInput from '@/components/CustomInput.vue';
 
 // defineModel 적용
 const currentDayType = defineModel<string>('currentDayType', { required: true });
@@ -87,8 +94,7 @@ const poolImages: Record<string, string> = {
   suwon: suwonImg,
 };
 
-const updateBasePrice = (event: Event) => {
-  const target = event.target as HTMLInputElement;
-  basePrice.value = formatNumber(getNumericPrice(target.value));
+const updateBasePrice = (value: string | number) => {
+  basePrice.value = formatNumber(getNumericPrice(value));
 };
 </script>

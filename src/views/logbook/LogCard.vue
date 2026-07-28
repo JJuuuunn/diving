@@ -2,21 +2,21 @@
   <div class="log-card-item">
     <!-- 카드 조작 옵션 -->
     <div class="card-options">
-      <button 
-        class="download-btn" 
-        @click.stop="downloadCardImage" 
+      <CustomButton
+        class="download-btn"
+        @click.stop="downloadCardImage"
         title="카드 다운로드"
         :disabled="isCapturing"
       >
         <i class="fa-solid" :class="isCapturing ? 'fa-spinner fa-spin' : 'fa-download'"></i>
-      </button>
-      <button 
-        class="delete-btn" 
-        @click.stop="emit('delete', log.id)" 
+      </CustomButton>
+      <CustomButton
+        class="delete-btn"
+        @click.stop="emit('delete', log.id)"
         title="로그 삭제"
       >
         <i class="fa-solid fa-trash-can"></i>
-      </button>
+      </CustomButton>
     </div>
 
     <!-- 고정 시각 디자인 템플릿 영역 (캡처용) -->
@@ -28,7 +28,7 @@
           <span class="date-label">📅 {{ log.date }}</span>
         </div>
         <div class="stamp-logo" :class="{ 'freediving-stamp': log.type === 'freediving' }">
-          <i class="fa-solid" :class="log.type === 'freediving' ? 'fa-fish' : 'fa-water'"></i> 
+          <i class="fa-solid" :class="log.type === 'freediving' ? 'fa-fish' : 'fa-water'"></i>
           {{ log.type === 'freediving' ? 'FREE DIVE' : 'DIVE LOG' }}
         </div>
       </div>
@@ -62,7 +62,7 @@
         </div>
         <div class="metric-cell">
           <span class="cell-label">Consumption</span>
-          <div class="cell-value" style="color: #f43f5e;">
+          <div class="cell-value cell-value--accent">
             {{ (log.entryPsi ?? 0) - (log.exitPsi ?? 0) }}<span>bar</span>
           </div>
         </div>
@@ -88,7 +88,7 @@
           <div class="cell-icon"><i class="fa-solid fa-weight-hanging"></i></div>
           <span class="cell-label">Weight / EQ</span>
           <div class="cell-value small-text">
-            {{ log.weight }}<span>kg</span> 
+            {{ log.weight }}<span>kg</span>
             <span class="eq-badge">{{ log.eqType }}</span>
           </div>
         </div>
@@ -105,7 +105,7 @@
           <span class="label">{{ log.type === 'freediving' ? 'Safety Buddy' : 'Buddy Diver' }}</span>
           <div class="value">👤 {{ log.buddyName || '익명의 버디' }}</div>
         </div>
-        
+
         <div class="buddy-sig-holder" v-if="log.buddySignature">
           <span class="label">Buddy Signature</span>
           <div class="sig-img-box">
@@ -135,18 +135,18 @@ const { isCapturing, capturedImageUrl, captureElement } = useCapture();
 
 const downloadCardImage = async () => {
   if (!captureRef.value) return;
-  
+
   try {
     // html2canvas 캡처 수행
     await captureElement(captureRef.value, 480, 3);
-    
+
     if (capturedImageUrl.value) {
       // 가상 링크를 이용해 이미지 파일 즉시 브라우저 다운로드 실행
       const link = document.createElement('a');
       link.href = capturedImageUrl.value;
       link.download = `divelog-${props.log.location.replace(/\s+/g, '-')}-${props.log.date}.png`;
       link.click();
-      
+
       triggerToast('다이빙 로그 카드가 성공적으로 다운로드되었습니다! 🌊');
     }
   } catch (error) {

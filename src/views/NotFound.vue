@@ -1,16 +1,16 @@
 <template>
   <div class="not-found-container">
-    <div 
-      v-for="n in 30" 
-      :key="n" 
-      class="bubble" 
+    <div
+      v-for="n in 30"
+      :key="n"
+      class="bubble"
       :style="getBubbleStyle()"
     ></div>
 
     <div class="content-box">
       <h1 class="error-code">404m</h1>
       <h2 class="error-message">앗! 너무 깊이 들어오셨어요.</h2>
-      
+
       <p class="description">
         여기는 빛도 닿지 않는 <strong>수심 404미터</strong>입니다.<br>
         찾으시는 페이지는 조류에 떠내려갔거나 존재하지 않습니다.<br>
@@ -47,5 +47,5 @@ const getBubbleStyle = () => {
 </script>
 
 <style lang="scss">
-@import '@/assets/scss/pages/_not-found.scss';
+@use '@/assets/scss/pages/_not-found.scss';
 </style>

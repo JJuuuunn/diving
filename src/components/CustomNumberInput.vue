@@ -2,31 +2,31 @@
   <div class="custom-number-input">
     <div class="number-stepper-container">
       <!-- 값 감소 버튼 -->
-      <button 
-        type="button" 
-        class="stepper-btn" 
-        :disabled="isDecrementDisabled || disabled" 
+      <button
+        type="button"
+        class="stepper-btn"
+        :disabled="isDecrementDisabled || disabled"
         @click="stepDown"
       >
         <i class="fa-solid fa-minus"></i>
       </button>
 
       <!-- 실제 숫자 입력 필드 -->
-      <input 
-        type="number" 
-        class="stepper-input" 
+      <input
+        type="number"
+        class="stepper-input"
         v-model.number="value"
-        :placeholder="placeholder" 
+        :placeholder="placeholder"
         :disabled="disabled"
         @blur="onBlur"
         @keydown.enter="onBlur"
       />
 
       <!-- 값 증가 버튼 -->
-      <button 
-        type="button" 
-        class="stepper-btn" 
-        :disabled="isIncrementDisabled || disabled" 
+      <button
+        type="button"
+        class="stepper-btn"
+        :disabled="isIncrementDisabled || disabled"
         @click="stepUp"
       >
         <i class="fa-solid fa-plus"></i>
@@ -38,18 +38,9 @@
 <script setup lang="ts">
 import { computed } from 'vue';
 import { useNumberInput } from '@/composables/useNumberInput';
+import type { NumberInputProps } from '@/types/inputs';
 
-// Props 정의 (Strict TypeScript 구조 활용)
-interface Props {
-  modelValue: number;
-  min?: number;
-  max?: number;
-  step?: number;
-  placeholder?: string;
-  disabled?: boolean;
-}
-
-const props = withDefaults(defineProps<Props>(), {
+const props = withDefaults(defineProps<NumberInputProps>(), {
   min: 0,
   max: Infinity,
   step: 1,

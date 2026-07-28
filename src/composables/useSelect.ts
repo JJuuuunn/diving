@@ -1,9 +1,9 @@
 import { ref, computed, type Ref } from 'vue';
-import type { SelectOption } from '@/types/inputs';
+import type { SelectItem, SelectOption } from '@/types/inputs';
 
 export function useSelect(
-  modelValue: Ref<any>,
-  options: Ref<any[] | SelectOption[]>,
+  modelValue: Ref<unknown>,
+  options: Ref<SelectItem[]>,
   placeholder: string
 ) {
   const isOpen = ref(false);
@@ -17,7 +17,7 @@ export function useSelect(
     isOpen.value = false;
   };
 
-  const select = (value: any) => {
+  const select = (value: unknown) => {
     modelValue.value = value;
     isOpen.value = false;
   };
@@ -53,12 +53,14 @@ export function useSelect(
       if (typeof opt === 'object' && opt !== null) {
         return {
           value: opt.value,
-          label: opt.label ?? String(opt.value)
+          label: opt.label ?? String(opt.value),
+          disabled: opt.disabled ?? false
         };
       }
       return {
         value: opt,
-        label: String(opt)
+        label: String(opt),
+        disabled: false
       };
     });
   });

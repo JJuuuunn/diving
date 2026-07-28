@@ -3,6 +3,7 @@ import { useStorage } from '@vueuse/core';
 import { computed, ref } from 'vue';
 import type { Competition, CompetitionFeed } from '@/types/competition';
 import rawFeed from '@/data/competition-feed.json';
+import { fetchCompetitionFeed, hasCompetitionApi } from '@/api/competitionApi';
 
 const toKstDate = (value: unknown): string => {
   const text = String(value ?? '');
@@ -30,17 +31,19 @@ const LEGACY_IDS: Record<string, string> = {
   'aida-freedivingfriends-cup-23-2026': 'AIDA-5076',
   'aida-freedivingfriends-cup-24-2026': 'AIDA-5166'
 };
-
-const competitionApiUrl = (
-  import.meta.env.VITE_COMPETITION_GOOGLE_APPS_SCRIPT_API_URL as string | undefined
-)?.trim() ?? '';
+const FEDERATION_SOURCE_URLS: Record<Competition['federation'], string> = {
+  AIDA: 'https://www.aidainternational.org/Events/',
+  CMAS: 'https://www.cmas.org/freediving/calendar.html'
+};
+const COMPETITION_ID_PATTERN = /^[A-Z][A-Z0-9]*-[A-Za-z0-9][A-Za-z0-9-]*$/;
 
 export const useCompetitionStore = defineStore('competition', () => {
   const feed = ref(rawFeed as CompetitionFeed);
   const competitions = computed(() => feed.value.events);
   const bookmarkedIds = useStorage<string[]>('bookmarked-competitions-ids', []);
   const hasLoadedApi = ref(false);
-  const isLoadingApi = ref(Boolean(competitionApiUrl));
+  const isRequestingApi = ref(false);
+  const isLoadingApi = ref(hasCompetitionApi());
 
   // One-time compatibility pass. Unknown legacy IDs are intentionally retained:
   // a future official event may provide a migration mapping.
@@ -58,27 +61,16 @@ export const useCompetitionStore = defineStore('competition', () => {
   const isBookmarked = (id: string): boolean => bookmarkedIds.value.includes(id);
 
   const loadLatestCompetitions = async (): Promise<void> => {
-    if (hasLoadedApi.value) return;
-    hasLoadedApi.value = true;
-    if (!competitionApiUrl) {
+    if (hasLoadedApi.value || isRequestingApi.value) return;
+    if (!hasCompetitionApi()) {
       isLoadingApi.value = false;
       return;
     }
 
+    isRequestingApi.value = true;
+    isLoadingApi.value = true;
     try {
-      const url = new URL(competitionApiUrl);
-      url.searchParams.set('action', 'competitions');
-      const response = await fetch(url, {
-        headers: { accept: 'application/json' },
-        redirect: 'follow'
-      });
-      if (!response.ok) return;
-      const payload = await response.json() as {
-        ok?: boolean;
-        data?: unknown[];
-        rows?: unknown[];
-        meta?: { generatedAt?: string };
-      };
+      const payload = await fetchCompetitionFeed();
       const rows = (payload.data ?? payload.rows) as Record<string, unknown>[] | undefined;
       if (payload.ok === false || !Array.isArray(rows)) return;
 
@@ -86,16 +78,24 @@ export const useCompetitionStore = defineStore('competition', () => {
         const id = String(row.id ?? '');
         const sourceEventId = String(row.sourceEventId ?? '');
         const title = String(row.title ?? '');
+        const federation = String(row.federation ?? '').toUpperCase();
         const startDate = toKstDate(row.startDate);
         const officialUrl = String(row.officialUrl ?? '');
-        if (!/^AIDA-[A-Za-z0-9-]+$/.test(id) || id !== `AIDA-${sourceEventId}` || !title || !startDate || !officialUrl) {
+        if (
+          !COMPETITION_ID_PATTERN.test(id)
+          || id.slice(id.indexOf('-') + 1) !== sourceEventId
+          || !['AIDA', 'CMAS'].includes(federation)
+          || !title
+          || !startDate
+          || !officialUrl
+        ) {
           return [];
         }
         return [{
           id,
           sourceEventId,
           title,
-          federation: 'AIDA',
+          federation: federation as Competition['federation'],
           type: ['pool', 'depth', 'mixed'].includes(String(row.type))
             ? row.type as Competition['type']
             : 'unknown',
@@ -108,7 +108,9 @@ export const useCompetitionStore = defineStore('competition', () => {
             ? row.registrationStatus as Competition['registrationStatus']
             : 'unknown',
           officialUrl,
-          sourceUrl: String(row.sourceUrl || 'https://www.aidainternational.org/Events/'),
+          sourceUrl: String(
+            row.sourceUrl || FEDERATION_SOURCE_URLS[federation as Competition['federation']]
+          ),
           verifiedAt: toKstDate(row.verifiedAt)
         }];
       });
@@ -125,9 +127,11 @@ export const useCompetitionStore = defineStore('competition', () => {
         ),
         events
       };
+      hasLoadedApi.value = true;
     } catch {
       // The committed, validated snapshot remains available as the offline fallback.
     } finally {
+      isRequestingApi.value = false;
       isLoadingApi.value = false;
     }
   };

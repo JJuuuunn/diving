@@ -5,13 +5,13 @@
         </div>
 
         <div class="step-header">
-            <button 
-                v-if="currentIndex > 0" 
-                class="back-step-btn" 
+            <CustomButton
+                v-if="currentIndex > 0"
+                class="back-step-btn"
                 @click="$emit('prev')"
             >
                 <i class="fas fa-chevron-left"></i> 이전 질문
-            </button>
+            </CustomButton>
             <span class="category">{{ question.category }}</span>
         </div>
 
@@ -20,10 +20,10 @@
         </div>
 
         <div class="options-group">
-            <button v-for="opt in question.options" :key="opt.value" class="option-btn" tabindex="0"
+            <CustomButton v-for="opt in question.options" :key="opt.value" class="option-btn" tabindex="0"
                 @click="$emit('select', opt.value)">
                 {{ opt.text }}
-            </button>
+            </CustomButton>
         </div>
     </div>
 </template>
@@ -37,7 +37,7 @@ defineProps<{
     currentIndex: number; // 현재 인덱스를 받아와서 0일 때는 뒤로가기 숨김
 }>();
 
-defineEmits<{ 
+defineEmits<{
     (e: 'select', value: string): void;
     (e: 'prev'): void; // 이전 단계 이벤트 추가
 }>();
