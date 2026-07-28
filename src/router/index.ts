@@ -79,6 +79,11 @@ const routes = [
         path: 'competition',
         name: RouterName.Competition,
         component: () => import('@/views/competition/CompetitionMain.vue')
+      },
+      {
+        path: 'ops/aida-sync-history',
+        name: RouterName.CompetitionAdmin,
+        component: () => import('@/views/admin/CompetitionAdmin.vue')
       }
     ]
   },

@@ -86,6 +86,7 @@ export function useCompetition() {
     upcomingCompetitions,
     getCompetitionStatus,
     toggleBookmark: store.toggleBookmark,
-    isBookmarked: store.isBookmarked
+    isBookmarked: store.isBookmarked,
+    loadLatestCompetitions: store.loadLatestCompetitions
   };
 }

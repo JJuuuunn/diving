@@ -7,7 +7,9 @@
     "dev": "vite",
     "build": "vite build && cp dist/index.html dist/404.html",
     "preview": "vite preview",
-    "collect:competitions": "node scripts/collect-competitions.mjs",
+    "sync:competitions": "node scripts/sync-competitions.mjs",
+    "validate:competitions": "node scripts/sync-competitions.mjs --validate-only",
+    "ingest:aida": "node --env-file-if-exists=.env.local scripts/scrape-aida.mjs",
     "test": "node --test",
     "typecheck": "vue-tsc --noEmit"
   },

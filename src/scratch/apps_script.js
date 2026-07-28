@@ -2,9 +2,9 @@
 // 구글 Apps Script 편집기(확장 프로그램 > Apps Script)에 기존 코드를 지우고 이 스크립트 전체를 덮어쓰기하여 배포하세요.
 // ⚠️ 보안 강화 (CORS & DB 노출 방지): 
 // 구글 스프레드시트 ID는 구글 Apps Script 편집기의 [프로젝트 설정(톱니바퀴) > 스크립트 속성] 메뉴에
-// 'SPREADSHEET_ID'라는 이름(Key)으로 실제 시트 ID를 등록해 두고 안전하게 읽어오는 방식(방법 B)을 사용합니다.
+// 'MEDICAL_SPREADSHEET_ID'라는 이름(Key)으로 메디컬 시트 ID를 등록해 두고 안전하게 읽습니다.
 // 만약 스크립트 속성을 등록하지 않는다면 아래의 기본 문자열 상수를 참조합니다.
-const SPREADSHEET_ID = PropertiesService.getScriptProperties().getProperty('SPREADSHEET_ID') || "YOUR_SPREADSHEET_ID_HERE";
+const MEDICAL_SPREADSHEET_ID = PropertiesService.getScriptProperties().getProperty('MEDICAL_SPREADSHEET_ID') || "YOUR_MEDICAL_SPREADSHEET_ID_HERE";
 
 
 /**
@@ -32,7 +32,7 @@ function doGet(e) {
       })).setMimeType(ContentService.MimeType.JSON);
     }
 
-    const ss = SpreadsheetApp.openById(SPREADSHEET_ID);
+    const ss = SpreadsheetApp.openById(MEDICAL_SPREADSHEET_ID);
     
     // Hospitals 시트 데이터 로드
     const hospitalsSheet = ss.getSheetByName("Hospitals");
@@ -162,7 +162,7 @@ function doPost(e) {
     // 30초 동시성 대기 잠금 설정
     lock.waitLock(30000);
     
-    const ss = SpreadsheetApp.openById(SPREADSHEET_ID);
+    const ss = SpreadsheetApp.openById(MEDICAL_SPREADSHEET_ID);
     
     // POST 페이로드 파싱
     const postData = JSON.parse(e.postData.contents);

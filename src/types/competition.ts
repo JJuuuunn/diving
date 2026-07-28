@@ -17,10 +17,12 @@ export interface Competition {
   registrationStatus: RegistrationStatus;
   officialUrl: string;
   sourceUrl: string;
+  verifiedAt: string;
 }
 
 export interface CompetitionFeed {
-  schemaVersion: 1;
+  schemaVersion: 2;
+  managementMode: 'google-sheets';
   generatedAt: string;
   sources: Array<{
     federation: Federation;

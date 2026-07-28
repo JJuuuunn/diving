@@ -83,7 +83,7 @@
 </template>
 
 <script setup lang="ts">
-import { computed, ref } from 'vue';
+import { computed, onMounted, ref } from 'vue';
 import Header from '@/components/Header.vue';
 import Footer from '@/components/Footer.vue';
 import CompetitionCard from './CompetitionCard.vue';
@@ -93,13 +93,15 @@ import { useCompetition } from '@/composables/useCompetition';
 const view = ref<'list' | 'calendar'>('list');
 const {
   feed, filters, resetFilters, filteredCompetitions,
-  bookmarkedCompetitions, upcomingCompetitions
+  bookmarkedCompetitions, upcomingCompetitions, loadLatestCompetitions
 } = useCompetition();
 const generatedAt = computed(() =>
   new Intl.DateTimeFormat('ko-KR', {
     timeZone: 'Asia/Seoul', dateStyle: 'medium', timeStyle: 'short'
   }).format(new Date(feed.generatedAt))
 );
+
+onMounted(loadLatestCompetitions);
 </script>
 
 <style lang="scss">

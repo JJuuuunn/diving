@@ -769,7 +769,8 @@ interface ExtendedHospital extends Hospital {
 
 
 // ⚠️ 구글 Apps Script 배포 후 발급받은 Web App URL 주소는 .env.local 파일에 설정되어 관리됩니다.
-const GOOGLE_SHEET_API_URL = (import.meta.env.VITE_GOOGLE_SHEET_API_URL as string) || "";
+const MEDICAL_GOOGLE_APPS_SCRIPT_API_URL =
+  (import.meta.env.VITE_MEDICAL_GOOGLE_APPS_SCRIPT_API_URL as string) || "";
  
 
 const searchQuery = ref('');
@@ -917,7 +918,7 @@ onMounted(async () => {
 
 // 비동기 구글 시트 REST API 로드 및 예외 발생 시 로컬 캐시 폴백 처리
 const loadHospitalsData = async (force = false) => {
-  if (!GOOGLE_SHEET_API_URL) {
+  if (!MEDICAL_GOOGLE_APPS_SCRIPT_API_URL) {
     // API 주소가 제공되지 않았을 때는 은은하게 즉시 로컬 JSON 로드 (폴백 경고 배지는 미표시)
     rawHospitals.value = sanitizeHospitalsCoordinates(hospitalsData as Hospital[]);
     isFallbackMode.value = false;
@@ -956,7 +957,7 @@ const loadHospitalsData = async (force = false) => {
   isCachedData.value = false;
 
   try {
-    const url = `${GOOGLE_SHEET_API_URL}?origin=${encodeURIComponent(window.location.origin)}`;
+    const url = `${MEDICAL_GOOGLE_APPS_SCRIPT_API_URL}?origin=${encodeURIComponent(window.location.origin)}`;
     const response = await fetch(url);
     if (!response.ok) {
       throw new Error(`HTTP error! status: ${response.status}`);
@@ -1169,8 +1170,8 @@ const submitReview = async (hospitalId: string) => {
       origin: window.location.origin
     };
     
-    // 만약 GOOGLE_SHEET_API_URL이 설정되어 있지 않다면 (로컬 모드 시뮬레이션 HMR)
-    if (!GOOGLE_SHEET_API_URL) {
+    // 메디컬 Apps Script API가 설정되어 있지 않다면 (로컬 모드 시뮬레이션 HMR)
+    if (!MEDICAL_GOOGLE_APPS_SCRIPT_API_URL) {
       await new Promise(resolve => setTimeout(resolve, 800));
       
       const newReview: Review = {
@@ -1197,7 +1198,7 @@ const submitReview = async (hospitalId: string) => {
     }
     
     // 실시간 POST API 전송
-    const response = await fetch(GOOGLE_SHEET_API_URL, {
+    const response = await fetch(MEDICAL_GOOGLE_APPS_SCRIPT_API_URL, {
       method: 'POST',
       body: JSON.stringify(payload),
       headers: {
@@ -1277,8 +1278,8 @@ const submitHospitalSuggestion = async () => {
       origin: window.location.origin
     };
     
-    // 만약 GOOGLE_SHEET_API_URL이 비어 있다면 (로컬 캐시/HMR 테스트 시뮬레이션)
-    if (!GOOGLE_SHEET_API_URL) {
+    // 메디컬 Apps Script API가 비어 있다면 (로컬 캐시/HMR 테스트 시뮬레이션)
+    if (!MEDICAL_GOOGLE_APPS_SCRIPT_API_URL) {
       await new Promise(resolve => setTimeout(resolve, 800));
       
       const dummyId = 'h_dummy_' + Date.now();
@@ -1319,7 +1320,7 @@ const submitHospitalSuggestion = async () => {
     }
     
     // 실시간 POST 전송
-    const response = await fetch(GOOGLE_SHEET_API_URL, {
+    const response = await fetch(MEDICAL_GOOGLE_APPS_SCRIPT_API_URL, {
       method: 'POST',
       body: JSON.stringify(payload),
       headers: {

@@ -1,11 +1,8 @@
-name: Collect official competitions and deploy
+name: Sync competitions and deploy
 
 on:
   push:
     branches: [main]
-  schedule:
-    # 06:00 KST (GitHub cron uses UTC)
-    - cron: '0 21 * * *'
   workflow_dispatch:
 
 permissions:
@@ -20,9 +17,14 @@ concurrency:
 jobs:
   build:
     runs-on: ubuntu-latest
+    outputs:
+      sync_status: ${{ steps.competition_sync.outputs.status }}
+      sync_message: ${{ steps.competition_sync.outputs.message }}
     steps:
       - name: Checkout
         uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
 
       - name: Set up Node
         uses: actions/setup-node@v4
@@ -33,20 +35,25 @@ jobs:
       - name: Install dependencies
         run: npm ci
 
-      - name: Test stored fixtures
-        run: npm test
+      - name: Sync managed competition sheet
+        id: competition_sync
+        env:
+          VITE_COMPETITION_GOOGLE_APPS_SCRIPT_API_URL: ${{ secrets.VITE_COMPETITION_GOOGLE_APPS_SCRIPT_API_URL }}
+        run: npm run sync:competitions -- --fallback
 
-      # The collector writes through a validated temporary file. If either
-      # official source fails, this step exits before the existing feed changes.
-      - name: Collect AIDA and CMAS official calendars
-        run: npm run collect:competitions
+      - name: Validate competition snapshot
+        run: npm run validate:competitions
+
+      - name: Test
+        run: npm test
 
       - name: Type check
         run: npm run typecheck
 
       - name: Build
         env:
-          VITE_GOOGLE_SHEET_API_URL: ${{ secrets.VITE_GOOGLE_SHEET_API_URL }}
+          VITE_MEDICAL_GOOGLE_APPS_SCRIPT_API_URL: ${{ secrets.VITE_MEDICAL_GOOGLE_APPS_SCRIPT_API_URL }}
+          VITE_COMPETITION_GOOGLE_APPS_SCRIPT_API_URL: ${{ secrets.VITE_COMPETITION_GOOGLE_APPS_SCRIPT_API_URL }}
           VITE_KAKAO_MAP_API_KEY: ${{ secrets.VITE_KAKAO_MAP_API_KEY }}
         run: npm run build
 
@@ -66,17 +73,33 @@ jobs:
         id: deployment
         uses: actions/deploy-pages@v4
 
-  notify-failure:
-    if: ${{ always() && (needs.build.result == 'failure' || needs.deploy.result == 'failure') }}
-    needs: [build, deploy]
+  notify-sync-warning:
+    if: needs.build.outputs.sync_status == 'fallback'
+    needs: build
     runs-on: ubuntu-latest
     steps:
-      - name: Telegram notification on failure
+      - name: Telegram competition fallback warning
         uses: appleboy/telegram-action@master
         with:
           to: ${{ secrets.TELEGRAM_TO }}
           token: ${{ secrets.TELEGRAM_TOKEN }}
           message: |
-            🚨 프리다이빙 공식 일정 수집 또는 배포 실패
+            ⚠️ 대회 일정 Google Sheets 동기화 실패 — 직전 정상본으로 배포
+            - 원인: ${{ needs.build.outputs.sync_message }}
+            - 실행: ${{ github.event_name }}
+            - 로그: https://github.com/${{ github.repository }}/actions/runs/${{ github.run_id }}
+
+  notify-failure:
+    if: ${{ always() && (needs.build.result == 'failure' || needs.deploy.result == 'failure') }}
+    needs: [build, deploy]
+    runs-on: ubuntu-latest
+    steps:
+      - name: Telegram deployment failure
+        uses: appleboy/telegram-action@master
+        with:
+          to: ${{ secrets.TELEGRAM_TO }}
+          token: ${{ secrets.TELEGRAM_TOKEN }}
+          message: |
+            🚨 프리다이빙 일정 빌드 또는 배포 실패
             - 실행: ${{ github.event_name }}
             - 로그: https://github.com/${{ github.repository }}/actions/runs/${{ github.run_id }}
