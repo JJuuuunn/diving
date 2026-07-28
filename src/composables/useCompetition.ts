@@ -87,6 +87,7 @@ export function useCompetition() {
     getCompetitionStatus,
     toggleBookmark: store.toggleBookmark,
     isBookmarked: store.isBookmarked,
+    isLoadingApi: computed(() => store.isLoadingApi),
     loadLatestCompetitions: store.loadLatestCompetitions
   };
 }

@@ -31,11 +31,16 @@ const LEGACY_IDS: Record<string, string> = {
   'aida-freedivingfriends-cup-24-2026': 'AIDA-5166'
 };
 
+const competitionApiUrl = (
+  import.meta.env.VITE_COMPETITION_GOOGLE_APPS_SCRIPT_API_URL as string | undefined
+)?.trim() ?? '';
+
 export const useCompetitionStore = defineStore('competition', () => {
   const feed = ref(rawFeed as CompetitionFeed);
   const competitions = computed(() => feed.value.events);
   const bookmarkedIds = useStorage<string[]>('bookmarked-competitions-ids', []);
   const hasLoadedApi = ref(false);
+  const isLoadingApi = ref(Boolean(competitionApiUrl));
 
   // One-time compatibility pass. Unknown legacy IDs are intentionally retained:
   // a future official event may provide a migration mapping.
@@ -55,13 +60,13 @@ export const useCompetitionStore = defineStore('competition', () => {
   const loadLatestCompetitions = async (): Promise<void> => {
     if (hasLoadedApi.value) return;
     hasLoadedApi.value = true;
-    const apiUrl = (
-      import.meta.env.VITE_COMPETITION_GOOGLE_APPS_SCRIPT_API_URL as string | undefined
-    )?.trim();
-    if (!apiUrl) return;
+    if (!competitionApiUrl) {
+      isLoadingApi.value = false;
+      return;
+    }
 
     try {
-      const url = new URL(apiUrl);
+      const url = new URL(competitionApiUrl);
       url.searchParams.set('action', 'competitions');
       const response = await fetch(url, {
         headers: { accept: 'application/json' },
@@ -122,6 +127,8 @@ export const useCompetitionStore = defineStore('competition', () => {
       };
     } catch {
       // The committed, validated snapshot remains available as the offline fallback.
+    } finally {
+      isLoadingApi.value = false;
     }
   };
 
@@ -131,6 +138,7 @@ export const useCompetitionStore = defineStore('competition', () => {
     bookmarkedIds,
     toggleBookmark,
     isBookmarked,
+    isLoadingApi,
     loadLatestCompetitions
   };
 });

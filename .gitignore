@@ -250,3 +250,10 @@ $RECYCLE.BIN/
 *.lnk
 
 # End of https://www.toptal.com/developers/gitignore/api/node,vuejs,visualstudiocode,macos,windows,linux,vue
+
+# Keep this shared frontend rule even when `.agents/` is ignored globally.
+!.agents/
+.agents/*
+!.agents/rules/
+.agents/rules/*
+!.agents/rules/frontend.md
