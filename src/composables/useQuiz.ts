@@ -3,6 +3,7 @@ import { ref, computed, onUnmounted } from 'vue';
 import { useRouter } from 'vue-router';
 import type { Question, QuizSet, UserAnswer, QuizHistory } from '@/types/quiz';
 import { useQuizStore } from '@/stores/quiz';
+import { RouterName } from '@/mappings/enum';
 
 // 전역 싱글톤 상태 대신 각각의 퀴즈 세션 독립 구동을 지원하도록 구성
 export function useQuiz() {
@@ -174,12 +175,12 @@ export function useQuiz() {
     quizStore.addHistory(historyRecord);
 
     // 결과 뷰로 이동할 수 있도록 세션 스토리지 또는 라우터 쿼리로 연동
-    sessionStorage.setItem('diving_last_quiz_result', JSON.stringify({
+    sessionStorage.setItem('diving:quiz:last_result:v1', JSON.stringify({
       historyRecord,
       questions: questions.value
     }));
 
-    router.push({ name: '퀴즈 결과' });
+    router.push({ name: RouterName.QuizResult });
   };
 
   onUnmounted(() => {

@@ -233,6 +233,10 @@
     column-gap: 4px;
 
     .datepicker-day-cell {
+      border: 0;
+      padding: 0;
+      background: transparent;
+      font-family: inherit;
       position: relative;
       aspect-ratio: 1;
       display: flex;
@@ -340,6 +344,9 @@
     padding: 8px 0;
 
     .month-item {
+      border: 0;
+      background: transparent;
+      font-family: inherit;
       display: flex;
       align-items: center;
       justify-content: center;
@@ -381,6 +388,9 @@
     padding: 8px 0;
 
     .year-item {
+      border: 0;
+      background: transparent;
+      font-family: inherit;
       display: flex;
       align-items: center;
       justify-content: center;

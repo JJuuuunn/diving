@@ -1052,7 +1052,86 @@
   padding-top: 1rem;
 }
 
+.result-actions-row {
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+
+  @media (min-width: 640px) {
+    flex-direction: row;
+    align-items: center;
+  }
+}
+
+.download-card-btn {
+  flex-shrink: 0;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.5rem;
+  padding: 1rem 1.25rem;
+  border-radius: 1.5rem;
+  font-weight: 700;
+  font-size: 0.9375rem;
+  height: 100%;
+}
+
+.settlement-result-card {
+  display: flex;
+  flex-direction: column;
+  gap: 1.25rem;
+  padding: 0.5rem;
+  border-radius: 1.5rem;
+}
+
+.settlement-quick-transfer {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  margin-top: 0.375rem;
+  flex-wrap: wrap;
+}
+
+.quick-transfer-label {
+  font-size: 0.75rem;
+  color: var(--slate-500);
+  font-weight: 500;
+
+  .dark & {
+    color: var(--slate-400);
+  }
+}
+
+.quick-transfer-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.375rem;
+  padding: 0.25rem 0.5rem;
+  font-size: 0.75rem;
+}
+
+.badge-toss {
+  background-color: #3182f6;
+  color: #ffffff;
+  font-size: 0.7rem;
+  font-weight: 700;
+  padding: 0.125rem 0.375rem;
+  border-radius: 0.25rem;
+  line-height: 1;
+}
+
+.badge-kakaopay {
+  background-color: #fee500;
+  color: #191919;
+  font-size: 0.7rem;
+  font-weight: 700;
+  padding: 0.125rem 0.375rem;
+  border-radius: 0.25rem;
+  line-height: 1;
+}
+
 .copy-result-card {
+  flex-grow: 1;
   cursor: pointer;
   background-color: var(--ocean-50);
   border: 1px solid var(--ocean-100);

@@ -2,6 +2,7 @@
   <div ref="containerRef" class="custom-select">
     <!-- 셀렉트 상단 활성화 트리거 바 -->
     <div
+      :id="id"
       class="select-trigger"
       :class="{ 'is-active': isOpen, 'is-disabled': disabled }"
       role="combobox"
@@ -9,6 +10,7 @@
       :aria-expanded="isOpen"
       aria-haspopup="listbox"
       :aria-disabled="disabled"
+      :aria-label="ariaLabel"
       @click="toggleWhenEnabled"
       @keydown.enter.prevent="toggleWhenEnabled"
       @keydown.space.prevent="toggleWhenEnabled"
@@ -57,6 +59,8 @@ import { useSelect } from '@/composables/useSelect';
 import type { SelectOption, SelectProps } from '@/types/inputs';
 
 const props = withDefaults(defineProps<SelectProps>(), {
+  id: '',
+  ariaLabel: '',
   placeholder: '선택해주세요',
   disabled: false
 });

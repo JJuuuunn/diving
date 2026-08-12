@@ -4,7 +4,12 @@
 <head>
   <meta charset="UTF-8" />
   <link rel="icon" type="image/svg+xml" href="/diving.svg" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover" />
+  <meta name="theme-color" content="#0f172a" />
+  <meta name="mobile-web-app-capable" content="yes" />
+  <meta name="apple-mobile-web-app-capable" content="yes" />
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
+  <meta name="apple-mobile-web-app-title" content="다이빙좋아" />
   <title>다이빙 좋아</title>
   <meta name="description" content="다이빙 성향 테스트를 통해 당신에게 어울리는 바다 생물을 찾아보고, 병원 정보를 손쉽게 확인하세요.">
   <meta name="keywords" content="다이빙, 성향 테스트, 바다 생물, 스쿠버 다이빙, 의료 병원, 스쿠버 병원">
@@ -24,7 +29,7 @@
 <body>
   <script>
     (function () {
-      const theme = localStorage.getItem('theme-mode');
+      const theme = localStorage.getItem('diving:theme:mode:v1') || localStorage.getItem('theme-mode');
       const prefersDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
       if (theme === 'dark' || (theme !== 'light' && prefersDark)) {
         document.body.classList.add('dark');

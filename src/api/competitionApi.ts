@@ -1,4 +1,5 @@
-import type { CompetitionApiPayload } from '@/types/competition';
+import type { CompetitionApiPayload } from '../types/competition';
+import { parseCompetitionFeed } from '../utils/competitionValidation.ts';
 
 const API_URL = (
   (import.meta.env?.VITE_COMPETITION_GOOGLE_APPS_SCRIPT_API_URL as string | undefined) ?? ''
@@ -30,7 +31,8 @@ export const fetchCompetitionFeed = async ({
       signal: controller.signal
     });
     if (!response.ok) throw new Error(`대회 데이터 요청에 실패했습니다. (${response.status})`);
-    return response.json() as Promise<CompetitionApiPayload>;
+    const data: unknown = await response.json();
+    return parseCompetitionFeed(data);
   } catch (error) {
     if (controller.signal.aborted) {
       throw new Error(`대회 데이터 요청 시간이 ${timeoutMs}ms를 초과했습니다.`);

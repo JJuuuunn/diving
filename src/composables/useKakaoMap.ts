@@ -59,14 +59,22 @@ const loadKakaoMapScript = (appKey: string): Promise<void> => {
   return scriptLoadingPromise;
 };
 
-const LIMIT_CACHE_KEY = 'kakao_map_call_limit';
+const LIMIT_CACHE_KEY = 'diving:map:call_limit:v1';
+const LEGACY_LIMIT_CACHE_KEY = 'kakao_map_call_limit';
 const CALL_DAILY_LIMIT = 50;
 
 // 일일 호출 횟수 관리 및 초과 여부 검사 함수
 const checkAndTrackDailyMapCallLimit = (): boolean => {
   try {
     const todayKst = new Date().toLocaleDateString('ko-KR'); // 한국 시간대 기준 날짜 스트링 (예: "2026. 5. 25.")
-    const cachedDataStr = localStorage.getItem(LIMIT_CACHE_KEY);
+    let cachedDataStr = localStorage.getItem(LIMIT_CACHE_KEY);
+    if (!cachedDataStr) {
+      const legacyStr = localStorage.getItem(LEGACY_LIMIT_CACHE_KEY);
+      if (legacyStr) {
+        cachedDataStr = legacyStr;
+        localStorage.setItem(LIMIT_CACHE_KEY, legacyStr);
+      }
+    }
     
     if (cachedDataStr) {
       const { date, count } = JSON.parse(cachedDataStr);
@@ -228,10 +236,19 @@ export function useKakaoMap() {
 
       const body = document.createElement('div');
       body.className = 'overlay-body';
-      const feeRow = appendTextElement(body, 'div', 'overlay-row', '💵 발급비: ');
-      appendTextElement(feeRow, 'strong', '', h.fee);
-      const addressRow = appendTextElement(body, 'div', 'overlay-row', '🏢 주소: ');
-      appendTextElement(addressRow, 'span', 'overlay-address', h.address);
+
+      const feeRow = document.createElement('div');
+      feeRow.className = 'overlay-row';
+      appendTextElement(feeRow, 'span', 'overlay-label', '💵 발급비: ');
+      appendTextElement(feeRow, 'strong', 'overlay-fee-val', h.fee);
+      body.appendChild(feeRow);
+
+      const addressRow = document.createElement('div');
+      addressRow.className = 'overlay-row';
+      appendTextElement(addressRow, 'span', 'overlay-label', '🏢 주소: ');
+      appendTextElement(addressRow, 'div', 'overlay-address', h.address);
+      body.appendChild(addressRow);
+
       content.appendChild(body);
       appendTextElement(content, 'div', 'overlay-arrow', '');
 

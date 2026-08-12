@@ -1,20 +1,36 @@
 <template>
   <Transition name="modal-fade">
     <div v-if="show" class="modal-overlay" @click.self="emit('cancel')">
-      <div class="modal-card" role="dialog" aria-modal="true">
+      <div
+        ref="modalCardRef"
+        class="modal-card"
+        role="dialog"
+        aria-modal="true"
+        aria-labelledby="confirm-modal-title"
+        aria-describedby="confirm-modal-description"
+        tabindex="-1"
+      >
         <div class="modal-header">
-          <h3>{{ title }}</h3>
+          <h3 id="confirm-modal-title">{{ title }}</h3>
         </div>
         <div class="modal-body">
-          <p>{{ message }}</p>
+          <p id="confirm-modal-description">{{ message }}</p>
         </div>
         <div class="modal-footer">
-          <button class="modal-btn cancel-btn" @click="emit('cancel')">
+          <CustomButton
+            ref="cancelBtnRef"
+            variant="ghost"
+            @click="emit('cancel')"
+          >
             {{ cancelText }}
-          </button>
-          <button class="modal-btn confirm-btn" @click="emit('confirm')">
+          </CustomButton>
+          <CustomButton
+            ref="confirmBtnRef"
+            variant="primary"
+            @click="emit('confirm')"
+          >
             {{ confirmText }}
-          </button>
+          </CustomButton>
         </div>
       </div>
     </div>
@@ -22,9 +38,11 @@
 </template>
 
 <script setup lang="ts">
+import { ref, watch, onMounted, onUnmounted, nextTick, type ComponentPublicInstance } from 'vue';
+import CustomButton from '@/components/CustomButton.vue';
 import type { ConfirmModalProps } from '@/types/components';
 
-withDefaults(defineProps<ConfirmModalProps>(), {
+const props = withDefaults(defineProps<ConfirmModalProps>(), {
   confirmText: '확인',
   cancelText: '취소'
 });
@@ -33,6 +51,44 @@ const emit = defineEmits<{
   (e: 'confirm'): void;
   (e: 'cancel'): void;
 }>();
+
+const modalCardRef = ref<HTMLElement | null>(null);
+const confirmBtnRef = ref<ComponentPublicInstance | null>(null);
+
+const focusModal = async () => {
+  await nextTick();
+  if (props.show) {
+    if (confirmBtnRef.value?.$el && typeof confirmBtnRef.value.$el.focus === 'function') {
+      confirmBtnRef.value.$el.focus();
+    } else if (modalCardRef.value) {
+      modalCardRef.value.focus();
+    }
+  }
+};
+
+watch(
+  () => props.show,
+  (newVal) => {
+    if (newVal) {
+      focusModal();
+    }
+  },
+  { immediate: true }
+);
+
+const handleKeyDown = (event: KeyboardEvent) => {
+  if (props.show && (event.key === 'Escape' || event.key === 'Esc')) {
+    emit('cancel');
+  }
+};
+
+onMounted(() => {
+  window.addEventListener('keydown', handleKeyDown);
+});
+
+onUnmounted(() => {
+  window.removeEventListener('keydown', handleKeyDown);
+});
 </script>
 
 <style lang="scss" scoped>
@@ -66,6 +122,7 @@ const emit = defineEmits<{
   gap: 1.25rem;
   transform: scale(1);
   transition: transform 0.3s cubic-bezier(0.34, 1.56, 0.64, 1);
+  outline: none;
 
   body.dark & {
     background: rgba(30, 41, 59, 0.85);
@@ -105,42 +162,6 @@ const emit = defineEmits<{
   justify-content: flex-end;
   gap: 0.75rem;
   margin-top: 0.5rem;
-}
-
-.modal-btn {
-  padding: 0.65rem 1.25rem;
-  border-radius: 0.75rem;
-  font-size: 0.9rem;
-  font-weight: 700;
-  cursor: pointer;
-  border: 1px solid transparent;
-  transition: all 0.2s ease;
-}
-
-.cancel-btn {
-  background: transparent;
-  border-color: rgba(0, 0, 0, 0.15);
-  color: var(--page-text-primary);
-
-  body.dark & {
-    border-color: rgba(255, 255, 255, 0.15);
-  }
-
-  &:hover {
-    background: rgba(0, 0, 0, 0.05);
-    body.dark & { background: rgba(255, 255, 255, 0.05); }
-  }
-}
-
-.confirm-btn {
-  background: linear-gradient(135deg, #0ea5e9, #2563eb);
-  color: #ffffff;
-  box-shadow: 0 4px 10px rgba(37, 99, 235, 0.15);
-
-  &:hover {
-    opacity: 0.95;
-    box-shadow: 0 4px 12px rgba(37, 99, 235, 0.25);
-  }
 }
 
 // 트랜지션 효과

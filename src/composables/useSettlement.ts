@@ -8,31 +8,71 @@ import banks from '@/data/banks.json';
 
 const poolPrices = poolPricesRaw as Record<string, PoolInfo>;
 
+export const SETTLEMENT_STORAGE_KEYS = {
+  STEP: 'diving:settlement:step:v1',
+  SETTINGS: 'diving:settlement:settings:v1',
+  PEOPLE: 'diving:settlement:people:v1',
+  RESULTS: 'diving:settlement:results:v1',
+} as const;
+
+export const SETTLEMENT_LEGACY_STORAGE_KEYS = {
+  STEP: 'settlement-current-step',
+  SETTINGS: 'settlement-settings',
+  PEOPLE: 'settlement-people',
+  RESULTS: 'settlement-results',
+} as const;
+
+export function migrateSettlementStorageKeys() {
+  if (typeof window === 'undefined' || !window.localStorage) return;
+  const keyPairs: Array<[string, string]> = [
+    [SETTLEMENT_LEGACY_STORAGE_KEYS.STEP, SETTLEMENT_STORAGE_KEYS.STEP],
+    [SETTLEMENT_LEGACY_STORAGE_KEYS.SETTINGS, SETTLEMENT_STORAGE_KEYS.SETTINGS],
+    [SETTLEMENT_LEGACY_STORAGE_KEYS.PEOPLE, SETTLEMENT_STORAGE_KEYS.PEOPLE],
+    [SETTLEMENT_LEGACY_STORAGE_KEYS.RESULTS, SETTLEMENT_STORAGE_KEYS.RESULTS],
+  ];
+
+  for (const [legacyKey, newKey] of keyPairs) {
+    try {
+      const legacyValue = localStorage.getItem(legacyKey);
+      if (legacyValue !== null) {
+        if (localStorage.getItem(newKey) === null) {
+          localStorage.setItem(newKey, legacyValue);
+        }
+        localStorage.removeItem(legacyKey);
+      }
+    } catch {
+      // Ignore storage errors in restricted environments
+    }
+  }
+}
+
 export function useSettlement() {
   const { triggerToast } = useToast();
-  const currentStep = useStorage('settlement-current-step', 1);
+  migrateSettlementStorageKeys();
+
+  const currentStep = useStorage(SETTLEMENT_STORAGE_KEYS.STEP, 1);
 
   // --- 상태 관리 (VueUse useStorage를 활용해 자동 저장) ---
-  const settings = useStorage('settlement-settings', {
+  const settings = useStorage(SETTLEMENT_STORAGE_KEYS.SETTINGS, {
     currentDayType: 'weekday' as 'weekday' | 'weekend',
     selectedPool: 'custom',
     basePrice: '0'
   });
 
-  const people = useStorage<Person[]>('settlement-people', [
+  const people = useStorage<Person[]>(SETTLEMENT_STORAGE_KEYS.PEOPLE, [
     { id: 1, name: '예약자 1', isBooker: true, isMember: true, prepaid: 0, bank: banks[0], account: '' },
     { id: 2, name: '참석자 2', isBooker: false, isMember: false, prepaid: 0, bank: banks[0], account: '' },
     { id: 3, name: '참석자 3', isBooker: false, isMember: false, prepaid: 0, bank: banks[0], account: '' }
   ]);
 
-  const results = useStorage('settlement-results', {
+  const results = useStorage(SETTLEMENT_STORAGE_KEYS.RESULTS, {
     memberCostDisplay: '0원',
     nonMemberCostDisplay: '0원',
     settlementList: [] as Settlement[],
     detailTableBody: [] as Person[]
   });
 
-  let globalResultText = "";
+  const globalResultText = ref('');
 
   // --- 비즈니스 로직 및 Watchers ---
 
@@ -127,7 +167,7 @@ export function useSettlement() {
 
     const poolName = settings.value.selectedPool === 'custom' ? '직접 입력' : (poolPrices[settings.value.selectedPool]?.name || settings.value.selectedPool);
     const dayLabel = settings.value.currentDayType === 'weekday' ? '평일' : '주말';
-    globalResultText = generateResultText(poolName, dayLabel, memberCost, nonMemberCost, transactions);
+    globalResultText.value = generateResultText(poolName, dayLabel, memberCost, nonMemberCost, transactions);
   };
 
   const generateResultText = (poolName: string, day: string, mCost: number, nmCost: number, txs: Settlement[]) => {
@@ -140,6 +180,10 @@ export function useSettlement() {
     }
     return text;
   };
+
+  if (getNumericPrice(settings.value.basePrice) > 0) {
+    calculate();
+  }
 
   // --- 헬퍼 함수 ---
   const addPerson = () => {
@@ -163,4 +207,3 @@ export function useSettlement() {
     poolPrices
   };
 }
-

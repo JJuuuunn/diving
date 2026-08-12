@@ -1,17 +1,70 @@
 <template>
   <div class="crawl-status-page">
-    <Header title="AIDA 데이터 수집 현황" subtitle="읽기 전용 운영 기록" />
+    <Header title="AIDA 데이터 수집 현황" subtitle="관리자 운영 기록" />
 
-    <main class="status-content">
+    <!-- 미인증 상태: 패스코드 입력 폼 / 모달 카드 -->
+    <div v-if="!authStore.isAuthenticated" class="auth-container">
+      <div class="auth-card" role="dialog" aria-labelledby="admin-auth-title">
+        <div class="auth-header">
+          <h2 id="admin-auth-title">관리자 인증 필요</h2>
+          <p>AIDA 데이터 수집 현황을 확인하려면 패스코드를 입력하세요.</p>
+        </div>
+        <form class="auth-form" @submit.prevent="handleVerifyPasscode">
+          <CustomInput
+            id="admin-passcode-input"
+            v-model="passcodeInput"
+            type="password"
+            label="패스코드"
+            placeholder="관리자 패스코드를 입력하세요"
+            :error="passcodeError"
+            required
+          />
+          <div class="auth-actions">
+            <CustomButton
+              type="button"
+              variant="ghost"
+              @click="goHome"
+            >
+              메인으로 이동
+            </CustomButton>
+            <CustomButton
+              type="submit"
+              variant="primary"
+              :disabled="!passcodeInput.trim()"
+            >
+              인증하기
+            </CustomButton>
+          </div>
+        </form>
+      </div>
+    </div>
+
+    <!-- 인증 완료 상태: 수집 현황 대시보드 -->
+    <main v-else class="status-content">
       <section class="status-heading">
         <div>
           <p class="eyebrow">SYSTEM OBSERVABILITY</p>
           <h1>대회 일정 수집 상태</h1>
           <p>이 화면에서는 자동 수집 결과만 확인할 수 있으며 데이터를 변경할 수 없습니다.</p>
         </div>
-        <CustomButton type="button" :disabled="isLoading" @click="loadStatus">
-          {{ isLoading ? '확인 중…' : '기록 새로고침' }}
-        </CustomButton>
+        <div class="status-heading-actions">
+          <CustomButton
+            type="button"
+            variant="primary"
+            :loading="isLoading"
+            loading-label="확인 중…"
+            @click="loadStatus"
+          >
+            기록 새로고침
+          </CustomButton>
+          <CustomButton
+            type="button"
+            variant="secondary"
+            @click="handleLogout"
+          >
+            로그아웃
+          </CustomButton>
+        </div>
       </section>
 
       <div v-if="!apiConfigured" class="notice error" role="alert">
@@ -52,7 +105,15 @@
             <h2>최근 수집 이력</h2>
             <p>최대 50개의 실행 기록을 제공합니다.</p>
           </div>
-          <span>{{ history.length }} records</span>
+          <div class="history-controls">
+            <CustomSelect
+              v-model="limit"
+              :options="limitOptions"
+              aria-label="조회 개수 선택"
+              @update:model-value="loadStatus"
+            />
+            <span>{{ history.length }} records</span>
+          </div>
         </header>
 
         <div v-if="isLoading && !history.length" class="empty-state">기록을 불러오고 있습니다.</div>
@@ -101,8 +162,14 @@
 
 <script setup lang="ts">
 import { onBeforeUnmount, onMounted, ref } from 'vue';
+import { useRouter } from 'vue-router';
 import Header from '@/components/Header.vue';
 import Footer from '@/components/Footer.vue';
+import CustomButton from '@/components/CustomButton.vue';
+import CustomInput from '@/components/CustomInput.vue';
+import CustomSelect from '@/components/CustomSelect.vue';
+import { RouterName } from '@/mappings/enum';
+import { useAuthStore } from '@/stores/auth';
 import {
   fetchCrawlHistory,
   fetchCrawlState,
@@ -112,12 +179,46 @@ import {
   type CrawlStatus
 } from '@/api/competitionAdminApi';
 
+const router = useRouter();
+const authStore = useAuthStore();
+
+const passcodeInput = ref('');
+const passcodeError = ref('');
+
 const apiConfigured = hasCompetitionStatusApi();
 const state = ref<CrawlState | null>(null);
 const history = ref<CrawlLog[]>([]);
+const limit = ref<number>(30);
+const limitOptions = [
+  { value: 10, label: '10개씩' },
+  { value: 20, label: '20개씩' },
+  { value: 30, label: '30개씩' },
+  { value: 50, label: '50개씩' }
+];
 const isLoading = ref(false);
 const errorMessage = ref('');
 let robotsMeta: HTMLMetaElement | null = null;
+
+const handleVerifyPasscode = () => {
+  passcodeError.value = '';
+  const success = authStore.verifyPasscode(passcodeInput.value);
+  if (success) {
+    passcodeInput.value = '';
+    loadStatus();
+  } else {
+    passcodeError.value = '패스코드가 올바르지 않습니다. 다시 확인해주세요.';
+  }
+};
+
+const handleLogout = () => {
+  authStore.logout();
+  passcodeInput.value = '';
+  passcodeError.value = '';
+};
+
+const goHome = () => {
+  router.push({ name: RouterName.Main });
+};
 
 const statusLabel = (status: CrawlStatus | CrawlLog['status']) => ({
   success: '정상',
@@ -169,7 +270,7 @@ const loadStatus = async () => {
   try {
     const [nextState, nextHistory] = await Promise.all([
       fetchCrawlState(),
-      fetchCrawlHistory(30)
+      fetchCrawlHistory(limit.value)
     ]);
     state.value = nextState;
     history.value = nextHistory;
@@ -185,7 +286,9 @@ onMounted(() => {
   robotsMeta.name = 'robots';
   robotsMeta.content = 'noindex,nofollow,noarchive';
   document.head.appendChild(robotsMeta);
-  loadStatus();
+  if (authStore.isAuthenticated) {
+    loadStatus();
+  }
 });
 
 onBeforeUnmount(() => robotsMeta?.remove());
@@ -206,6 +309,66 @@ onBeforeUnmount(() => robotsMeta?.remove());
   }
 }
 
+.auth-container {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  min-height: calc(100vh - 220px);
+  padding: 40px 16px;
+}
+
+.auth-card {
+  width: 100%;
+  max-width: 420px;
+  padding: 32px;
+  border-radius: 20px;
+  border: 1px solid rgba(14, 116, 144, 0.14);
+  background: rgba(255, 255, 255, 0.9);
+  box-shadow: 0 20px 48px rgba(15, 58, 78, 0.08);
+  backdrop-filter: blur(12px);
+
+  body.dark & {
+    border-color: rgba(125, 211, 252, 0.14);
+    background: rgba(12, 32, 46, 0.92);
+    box-shadow: 0 20px 48px rgba(0, 0, 0, 0.35);
+  }
+}
+
+.auth-header {
+  margin-bottom: 24px;
+
+  h2 {
+    margin: 0 0 8px;
+    font-size: 1.35rem;
+    font-weight: 800;
+    color: var(--page-text-primary);
+  }
+
+  p {
+    margin: 0;
+    font-size: 0.85rem;
+    color: var(--page-text-secondary);
+  }
+}
+
+.auth-form {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+}
+
+.auth-actions {
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+  gap: 12px;
+  margin-top: 8px;
+
+  :deep(.custom-ui-button) {
+    min-width: 100px;
+  }
+}
+
 .status-content {
   width: min(1120px, calc(100% - 32px));
   margin: 0 auto;
@@ -222,11 +385,16 @@ onBeforeUnmount(() => robotsMeta?.remove());
   .eyebrow { margin: 0 0 8px; color: #0284c7; font: 800 .7rem/1 monospace; letter-spacing: .13em; }
   h1 { margin: 0; font-size: clamp(1.55rem, 4vw, 2.35rem); letter-spacing: -.04em; }
   p:not(.eyebrow) { margin: 10px 0 0; color: var(--page-text-secondary); }
-  button {
-    min-width: 122px; min-height: 44px; padding: 0 16px; border: 1px solid rgba(2, 132, 199, .3);
-    border-radius: 11px; color: #0369a1; background: rgba(255,255,255,.72); cursor: pointer; font-weight: 800;
+}
+
+.status-heading-actions {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+
+  :deep(.custom-ui-button) {
+    min-width: 110px;
   }
-  button:disabled { opacity: .55; cursor: wait; }
 }
 
 .notice, .history-panel, .metric-grid article {
@@ -267,8 +435,17 @@ onBeforeUnmount(() => robotsMeta?.remove());
     border-bottom: 1px solid rgba(148,163,184,.16);
     h2 { margin: 0; font-size: 1rem; }
     p { margin: 5px 0 0; color: var(--page-text-secondary); font-size: .75rem; }
-    > span { color: var(--page-text-secondary); font: .7rem monospace; }
   }
+}
+.history-controls {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+
+  :deep(.custom-select) {
+    min-width: 100px;
+  }
+  > span { color: var(--page-text-secondary); font: .7rem monospace; }
 }
 .table-wrap { overflow-x: auto; }
 table { width: 100%; border-collapse: collapse; min-width: 820px; }
@@ -290,7 +467,8 @@ td code { color: #b91c1c; font-size: .68rem; }
 @media (max-width: 560px) {
   .status-content { width: min(100% - 20px, 1120px); padding-top: 22px; }
   .status-heading { align-items: stretch; flex-direction: column; }
-  .status-heading button { width: 100%; }
+  .status-heading-actions { flex-direction: column; width: 100%; }
+  .status-heading-actions :deep(.custom-ui-button) { width: 100%; }
   .metric-grid { grid-template-columns: 1fr; }
   .metric-grid article { min-height: 105px; }
 }

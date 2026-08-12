@@ -82,15 +82,23 @@
         </main>
 
         <Transition name="modal-fade">
-            <div v-if="isModalOpen" class="modal-overlay" @click.self="closeModal">
-                <div class="save-modal">
-                    <h3>기록 저장하기</h3>
+            <div v-if="isModalOpen" class="modal-overlay" @click.self="closeModal" @keydown.esc="closeModal">
+                <div
+                    class="save-modal"
+                    role="dialog"
+                    aria-modal="true"
+                    aria-labelledby="dpti-save-modal-title"
+                    tabindex="-1"
+                    @keydown.esc="closeModal"
+                    @keydown.enter="confirmSave"
+                >
+                    <h3 id="dpti-save-modal-title">기록 저장하기</h3>
                     <p>이미지에 표시될 다이버 이름을 입력해주세요.</p>
                     <CustomInput
                         v-model="userNameInput"
                         placeholder="이름을 입력하세요 (최대 10자)"
                         maxlength="10"
-                        @keyup.enter="confirmSave"
+                        @keydown.enter.prevent="confirmSave"
                         ref="nameInput"
                     />
                     <div class="modal-btns">
@@ -104,7 +112,7 @@
 </template>
 
 <script setup lang="ts">
-import { ref, computed, onMounted, nextTick, watch } from 'vue';
+import { ref, computed, onMounted, onUnmounted, nextTick, watch } from 'vue';
 import { useRoute, useRouter } from 'vue-router';
 
 import { useDptiStore } from '@/stores/dpti';
@@ -123,7 +131,7 @@ const { triggerToast } = useToast();
 const { capturedImageUrl, captureElement } = useCapture();
 
 const captureArea = ref<HTMLElement | null>(null);
-const nameInput = ref<HTMLInputElement | null>(null);
+const nameInput = ref<{ focus: () => void } | null>(null);
 const isModalOpen = ref(false);
 const userNameInput = ref("");
 const savedUserName = ref("");
@@ -163,8 +171,16 @@ const generateAndSetImage = async () => {
     }, 400);
 };
 
+const handleKeyDown = (event: KeyboardEvent) => {
+    if (!isModalOpen.value) return;
+    if (event.key === 'Escape' || event.key === 'Esc') {
+        closeModal();
+    }
+};
+
 // --- LifeCycle ---
 onMounted(async () => {
+    window.addEventListener('keydown', handleKeyDown);
     const fromTest = window.history.state?.fromTest;
 
     if (fromTest && result.value && hasScores.value) {
@@ -176,6 +192,10 @@ onMounted(async () => {
         // 모달을 안 띄울 경우 바로 이미지 생성 시작
         generateAndSetImage();
     }
+});
+
+onUnmounted(() => {
+    window.removeEventListener('keydown', handleKeyDown);
 });
 
 // 동일한 라우트에서 파라미터(params.code)만 변경될 경우 컴포넌트가 재사용되므로

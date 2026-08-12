@@ -2,12 +2,14 @@
   <div class="custom-textarea">
     <!-- 입력 텍스트 영역 -->
     <textarea
+      v-bind="$attrs"
       ref="textareaRef"
       v-model="value"
       class="grow-textarea"
       :placeholder="placeholder"
       :disabled="disabled"
       :rows="rows"
+      :maxlength="maxLength > 0 ? maxLength : undefined"
       @input="onInput"
     ></textarea>
 
@@ -43,6 +45,8 @@
 import { computed, onMounted, watch } from 'vue';
 import { useAutoGrow } from '@/composables/useAutoGrow';
 import type { TextareaProps } from '@/types/components';
+
+defineOptions({ inheritAttrs: false });
 
 const props = withDefaults(defineProps<TextareaProps>(), {
   placeholder: '메모를 입력해주세요...',

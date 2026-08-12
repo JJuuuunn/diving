@@ -19,6 +19,8 @@ export interface NumberInputProps {
 export interface SelectProps {
   modelValue: unknown;
   options: SelectItem[];
+  id?: string;
+  ariaLabel?: string;
   placeholder?: string;
   disabled?: boolean;
 }

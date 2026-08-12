@@ -37,20 +37,42 @@ const FEDERATION_SOURCE_URLS: Record<Competition['federation'], string> = {
 };
 const COMPETITION_ID_PATTERN = /^[A-Z][A-Z0-9]*-[A-Za-z0-9][A-Za-z0-9-]*$/;
 
+export const COMPETITION_BOOKMARKS_STORAGE_KEY = 'diving:competition:bookmarks:v1';
+export const LEGACY_BOOKMARKS_STORAGE_KEY = 'bookmarked-competitions-ids';
+export const LEGACY_BOOKMARKS_V4_FLAG_KEY = 'competition-bookmarks-v4';
+
 export const useCompetitionStore = defineStore('competition', () => {
   const feed = ref(rawFeed as CompetitionFeed);
   const competitions = computed(() => feed.value.events);
-  const bookmarkedIds = useStorage<string[]>('bookmarked-competitions-ids', []);
+
+  if (typeof window !== 'undefined' && typeof localStorage !== 'undefined') {
+    const current = localStorage.getItem(COMPETITION_BOOKMARKS_STORAGE_KEY);
+    const legacyBookmarks = localStorage.getItem(LEGACY_BOOKMARKS_STORAGE_KEY);
+    const legacyV4Flag = localStorage.getItem(LEGACY_BOOKMARKS_V4_FLAG_KEY);
+
+    if (!current && legacyBookmarks !== null) {
+      try {
+        const parsed = JSON.parse(legacyBookmarks);
+        if (Array.isArray(parsed)) {
+          const needsV4Mapping = !legacyV4Flag;
+          const mapped = needsV4Mapping
+            ? [...new Set(parsed.map((id: string) => LEGACY_IDS[id] ?? id))]
+            : parsed;
+          localStorage.setItem(COMPETITION_BOOKMARKS_STORAGE_KEY, JSON.stringify(mapped));
+        }
+      } catch {
+        // Safe handle malformed legacy data
+      }
+    }
+
+    if (legacyBookmarks !== null) localStorage.removeItem(LEGACY_BOOKMARKS_STORAGE_KEY);
+    if (legacyV4Flag !== null) localStorage.removeItem(LEGACY_BOOKMARKS_V4_FLAG_KEY);
+  }
+
+  const bookmarkedIds = useStorage<string[]>(COMPETITION_BOOKMARKS_STORAGE_KEY, []);
   const hasLoadedApi = ref(false);
   const isRequestingApi = ref(false);
   const isLoadingApi = ref(hasCompetitionApi());
-
-  // One-time compatibility pass. Unknown legacy IDs are intentionally retained:
-  // a future official event may provide a migration mapping.
-  if (typeof window !== 'undefined' && !localStorage.getItem('competition-bookmarks-v4')) {
-    bookmarkedIds.value = [...new Set(bookmarkedIds.value.map((id) => LEGACY_IDS[id] ?? id))];
-    localStorage.setItem('competition-bookmarks-v4', 'done');
-  }
 
   const toggleBookmark = (id: string): void => {
     bookmarkedIds.value = bookmarkedIds.value.includes(id)

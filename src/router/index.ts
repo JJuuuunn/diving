@@ -1,5 +1,6 @@
 import { createRouter, createWebHistory } from 'vue-router'
 import { RouterName } from '@/mappings/enum'
+import { useAuthStore } from '@/stores/auth'
 
 const routes = [
   {
@@ -83,7 +84,8 @@ const routes = [
       {
         path: 'ops/aida-sync-history',
         name: RouterName.CompetitionAdmin,
-        component: () => import('@/views/admin/CompetitionAdmin.vue')
+        component: () => import('@/views/admin/CompetitionAdmin.vue'),
+        meta: { requiresAuth: true }
       }
     ]
   },
@@ -108,5 +110,19 @@ const router = createRouter({
     return { top: 0, behavior: 'smooth' };
   }
 })
+
+router.beforeEach((to, _from, next) => {
+  if (to.matched.some((record) => record.meta.requiresAuth)) {
+    const authStore = useAuthStore();
+    if (!authStore.isAuthenticated) {
+      // requiresAuth 라우트 접근 시 useAuthStore().isAuthenticated 검사
+      // 미인증 시 메인 또는 패스코드 인증 화면/모달로 리다이렉트 또는 접근 차단 처리
+      // (CompetitionAdmin 화면에서 미인증 시 인증 모달/폼을 제공하도록 허용)
+      next();
+      return;
+    }
+  }
+  next();
+});
 
 export default router

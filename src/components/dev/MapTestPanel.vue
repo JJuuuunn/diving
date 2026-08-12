@@ -106,7 +106,7 @@ const isLimitExceeded = computed(() => callCount.value >= 50);
 
 const updateCallCountText = (): void => {
   try {
-    const cached = localStorage.getItem('kakao_map_call_limit');
+    const cached = localStorage.getItem('diving:map:call_limit:v1') || localStorage.getItem('kakao_map_call_limit');
     if (cached) {
       const { count } = JSON.parse(cached);
       callCount.value = count;
@@ -119,6 +119,7 @@ const updateCallCountText = (): void => {
 };
 
 const resetCallLimit = (): void => {
+  localStorage.removeItem('diving:map:call_limit:v1');
   localStorage.removeItem('kakao_map_call_limit');
   updateCallCountText();
   triggerToast('일일 지도 한도 제한 카운터가 강제 초기화되었습니다! 🔄');

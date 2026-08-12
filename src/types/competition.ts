@@ -60,6 +60,8 @@ export interface CrawlState {
   consecutiveFailures: number;
 }
 
+export type CrawlStateResponse = CrawlState;
+
 export interface CrawlLog {
   runId: string;
   startedAt: string;
@@ -75,6 +77,8 @@ export interface CrawlLog {
   errorCode: string;
   durationMs: number;
 }
+
+export type CrawlHistoryItem = CrawlLog;
 
 export interface CompetitionAdminApiResponse<T> {
   ok: boolean;

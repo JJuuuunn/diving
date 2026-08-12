@@ -18,8 +18,14 @@
 
       <div class="pool-grid-label">다이빙 풀장 선택</div>
       <div class="pool-grid">
-        <div class="pool-card custom-card" :class="{ active: selectedPool === 'custom' }"
-          @click="selectedPool = 'custom'">
+        <div
+          class="pool-card custom-card"
+          :class="{ active: selectedPool === 'custom' }"
+          @click="selectedPool = 'custom'"
+          role="button"
+          tabindex="0"
+          @keydown.enter.space.prevent="selectedPool = 'custom'"
+        >
           <div class="pool-logo-wrapper">
             <i class="fa-regular fa-keyboard custom-icon"></i>
           </div>
@@ -31,8 +37,16 @@
           </transition>
         </div>
 
-        <div v-for="(info, poolKey) in poolPrices" :key="poolKey" class="pool-card"
-          :class="{ active: selectedPool === String(poolKey) }" @click="selectedPool = String(poolKey)">
+        <div
+          v-for="(info, poolKey) in poolPrices"
+          :key="poolKey"
+          class="pool-card"
+          :class="{ active: selectedPool === String(poolKey) }"
+          @click="selectedPool = String(poolKey)"
+          role="button"
+          tabindex="0"
+          @keydown.enter.space.prevent="selectedPool = String(poolKey)"
+        >
           <div class="pool-logo-wrapper">
             <img v-if="poolImages[poolKey as keyof typeof poolImages]" :src="poolImages[poolKey as keyof typeof poolImages]" class="pool-logo-img" alt="logo">
             <i v-else class="fa-solid fa-water fallback-icon"></i>

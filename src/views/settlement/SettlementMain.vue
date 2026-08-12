@@ -135,7 +135,7 @@ const copyResultText = () => {
     settings.value.currentDayType
   );
   const url = `${location.origin}${location.pathname}?d=${serialized}`;
-  const finalText = `${globalResultText}\n🔗 상세 내역:\n${url}`;
+  const finalText = `${globalResultText.value}\n🔗 상세 내역:\n${url}`;
 
   if (navigator.share) {
     navigator.share({ title: '다이빙 정산', text: finalText });

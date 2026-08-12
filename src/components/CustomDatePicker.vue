@@ -2,6 +2,7 @@
   <div ref="containerRef" class="custom-datepicker">
     <!-- 1. 트리거 입력 필드 버튼 -->
     <button
+      :id="id"
       type="button"
       class="datepicker-trigger"
       :class="{ 'is-active': isOpen }"
@@ -49,47 +50,54 @@
           </div>
           <!-- 날짜 그리드 -->
           <div class="datepicker-days-grid">
-            <div
+            <button
               v-for="day in daysGrid"
               :key="day.dateString"
+              type="button"
               class="datepicker-day-cell"
               :class="{
                 'is-current-month': day.isCurrentMonth,
                 'is-today': day.isToday,
                 'is-selected': day.isSelected
               }"
+              :aria-label="day.dateString"
+              :aria-pressed="day.isSelected"
               @click="handleSelectDay(day.dateString)"
             >
               {{ day.dayNumber }}
               <span v-if="day.hasLog" class="datepicker-log-badge"></span>
-            </div>
+            </button>
           </div>
         </div>
 
         <!-- 보기 모드 B: 월 선택 뷰 -->
         <div v-else-if="viewMode === 'months'" class="datepicker-months-grid">
-          <div
+          <button
             v-for="month in monthsList"
             :key="month"
+            type="button"
             class="month-item"
             :class="{ 'is-selected': isMonthSelected(month) }"
+            :aria-pressed="isMonthSelected(month)"
             @click="handleSelectMonth(month)"
           >
             {{ month + 1 }}월
-          </div>
+          </button>
         </div>
 
         <!-- 보기 모드 C: 연도 선택 뷰 -->
         <div v-else-if="viewMode === 'years'" class="datepicker-years-grid">
-          <div
+          <button
             v-for="year in yearsGrid"
             :key="year"
+            type="button"
             class="year-item"
             :class="{ 'is-selected': isYearSelected(year) }"
+            :aria-pressed="isYearSelected(year)"
             @click="selectYear(year)"
           >
             {{ year }}년
-          </div>
+          </button>
         </div>
       </div>
     </transition>
@@ -112,6 +120,7 @@ dayjs.locale('ko');
 const props = withDefaults(
   defineProps<DatePickerProps>(),
   {
+    id: '',
     placeholder: '다이빙 일자 선택',
     mode: 'date'
   }

@@ -6,6 +6,7 @@
         type="button"
         class="stepper-btn"
         :disabled="isDecrementDisabled || disabled"
+        aria-label="값 줄이기"
         @click="stepDown"
       >
         <i class="fa-solid fa-minus"></i>
@@ -13,6 +14,7 @@
 
       <!-- 실제 숫자 입력 필드 -->
       <input
+        v-bind="$attrs"
         type="number"
         class="stepper-input"
         v-model.number="value"
@@ -27,6 +29,7 @@
         type="button"
         class="stepper-btn"
         :disabled="isIncrementDisabled || disabled"
+        aria-label="값 늘리기"
         @click="stepUp"
       >
         <i class="fa-solid fa-plus"></i>
@@ -39,6 +42,8 @@
 import { computed } from 'vue';
 import { useNumberInput } from '@/composables/useNumberInput';
 import type { NumberInputProps } from '@/types/inputs';
+
+defineOptions({ inheritAttrs: false });
 
 const props = withDefaults(defineProps<NumberInputProps>(), {
   min: 0,

@@ -83,6 +83,10 @@
 import { onMounted, ref, computed } from 'vue';
 import { useRouter } from 'vue-router';
 import type { QuizHistory, Question } from '@/types/quiz';
+import { RouterName } from '@/mappings/enum';
+
+const LAST_RESULT_KEY = 'diving:quiz:last_result:v1';
+const LEGACY_LAST_RESULT_KEY = 'diving_last_quiz_result';
 
 const router = useRouter();
 const resultData = ref<{ historyRecord: QuizHistory; questions: Question[] } | null>(null);
@@ -91,13 +95,22 @@ const resultData = ref<{ historyRecord: QuizHistory; questions: Question[] } | n
 const openReviews = ref<Record<number, boolean>>({});
 
 onMounted(() => {
-  const raw = sessionStorage.getItem('diving_last_quiz_result');
+  const currentRaw = sessionStorage.getItem(LAST_RESULT_KEY);
+  const legacyRaw = sessionStorage.getItem(LEGACY_LAST_RESULT_KEY);
+  const raw = currentRaw || legacyRaw;
+
   if (!raw) {
-    router.push({ name: '다이빙 문제 은행' });
+    router.push({ name: RouterName.QuizDashboard });
     return;
   }
   try {
     resultData.value = JSON.parse(raw);
+    if (!currentRaw && legacyRaw) {
+      sessionStorage.setItem(LAST_RESULT_KEY, legacyRaw);
+    }
+    if (legacyRaw !== null) {
+      sessionStorage.removeItem(LEGACY_LAST_RESULT_KEY);
+    }
 
     // 틀린 문제는 기본적으로 상세 해설을 열어둠 (배려 깊은 피드백 제공)
     if (resultData.value) {
@@ -108,7 +121,7 @@ onMounted(() => {
       });
     }
   } catch (e) {
-    router.push({ name: '다이빙 문제 은행' });
+    router.push({ name: RouterName.QuizDashboard });
   }
 });
 
@@ -121,12 +134,12 @@ const toggleReview = (index: number) => {
 
 const handleRetry = () => {
   if (history.value) {
-    router.push({ name: '퀴즈 풀기', params: { setId: history.value.setId } });
+    router.push({ name: RouterName.QuizPlay, params: { setId: history.value.setId } });
   }
 };
 
 const handleGoDashboard = () => {
-  router.push({ name: '다이빙 문제 은행' });
+  router.push({ name: RouterName.QuizDashboard });
 };
 
 const getQuestion = (qId: number): Question | undefined => {

@@ -3,24 +3,38 @@
     <!-- 카드 조작 옵션 -->
     <div class="card-options">
       <CustomButton
+        class="edit-btn"
+        @click.stop="emit('edit', log)"
+        aria-label="로그 수정"
+        title="로그 수정"
+      >
+        <i class="fa-solid fa-pen" aria-hidden="true"></i>
+      </CustomButton>
+      <CustomButton
         class="download-btn"
         @click.stop="downloadCardImage"
+        aria-label="카드 이미지 다운로드"
         title="카드 다운로드"
         :disabled="isCapturing"
       >
-        <i class="fa-solid" :class="isCapturing ? 'fa-spinner fa-spin' : 'fa-download'"></i>
+        <i class="fa-solid" :class="isCapturing ? 'fa-spinner fa-spin' : 'fa-download'" aria-hidden="true"></i>
       </CustomButton>
       <CustomButton
         class="delete-btn"
         @click.stop="emit('delete', log.id)"
+        aria-label="로그 삭제"
         title="로그 삭제"
       >
-        <i class="fa-solid fa-trash-can"></i>
+        <i class="fa-solid fa-trash-can" aria-hidden="true"></i>
       </CustomButton>
     </div>
 
     <!-- 고정 시각 디자인 템플릿 영역 (캡처용) -->
-    <div class="log-card-visual" :class="{ 'is-freediving': log.type === 'freediving' }" ref="captureRef">
+    <div
+      ref="captureRef"
+      class="log-card-visual"
+      :class="[`design-${design}`, { 'is-freediving': log.type === 'freediving' }]"
+    >
       <!-- 헤더 메타 -->
       <div class="card-header-meta">
         <div class="loc-info">
@@ -45,7 +59,10 @@
             <i class="fa-solid" :class="log.type === 'freediving' ? 'fa-hourglass-half' : 'fa-stopwatch'"></i>
           </div>
           <span class="cell-label">{{ log.type === 'freediving' ? 'Dive Count' : 'Dive Time' }}</span>
-          <div class="cell-value">{{ log.diveTime }}<span>{{ log.type === 'freediving' ? 'times' : 'min' }}</span></div>
+          <div class="cell-value">
+            {{ log.type === 'freediving' ? log.diveCount : log.durationMinutes }}
+            <span>{{ log.type === 'freediving' ? 'times' : 'min' }}</span>
+          </div>
         </div>
         <div class="metric-cell">
           <div class="cell-icon"><i class="fa-solid fa-temperature-half"></i></div>
@@ -58,17 +75,17 @@
       <div v-if="log.type === 'scuba'" class="metrics-grid">
         <div class="metric-cell">
           <span class="cell-label">Entry PSI</span>
-          <div class="cell-value">{{ log.entryPsi }}<span>bar</span></div>
+          <div class="cell-value">{{ log.entryPressureBar }}<span>bar</span></div>
         </div>
         <div class="metric-cell">
           <span class="cell-label">Consumption</span>
           <div class="cell-value cell-value--accent">
-            {{ (log.entryPsi ?? 0) - (log.exitPsi ?? 0) }}<span>bar</span>
+            {{ log.entryPressureBar - log.exitPressureBar }}<span>bar</span>
           </div>
         </div>
         <div class="metric-cell">
           <span class="cell-label">Exit PSI</span>
-          <div class="cell-value">{{ log.exitPsi }}<span>bar</span></div>
+          <div class="cell-value">{{ log.exitPressureBar }}<span>bar</span></div>
         </div>
       </div>
 
@@ -77,7 +94,7 @@
         <div class="metric-cell">
           <div class="cell-icon"><i class="fa-solid fa-stopwatch"></i></div>
           <span class="cell-label">Apnea Time</span>
-          <div class="cell-value">{{ log.apneaTime || '00:00' }}</div>
+          <div class="cell-value">{{ formatApneaTime(log.apneaSeconds) }}</div>
         </div>
         <div class="metric-cell">
           <div class="cell-icon"><i class="fa-solid fa-person-swimming"></i></div>
@@ -88,8 +105,8 @@
           <div class="cell-icon"><i class="fa-solid fa-weight-hanging"></i></div>
           <span class="cell-label">Weight / EQ</span>
           <div class="cell-value small-text">
-            {{ log.weight }}<span>kg</span>
-            <span class="eq-badge">{{ log.eqType }}</span>
+            {{ log.weightKg }}<span>kg</span>
+            <span class="eq-badge">{{ log.equalizingMethod }}</span>
           </div>
         </div>
       </div>
@@ -119,32 +136,41 @@
 
 <script setup lang="ts">
 import { ref } from 'vue';
-import type { DiveLog } from '@/types/logbook';
+import type { DiveLog, LogCardDesign } from '@/types/logbook';
 import { useCapture } from '@/composables/useCapture';
 import { useToast } from '@/composables/useToast';
+import { formatApneaTime } from '@/utils/logbook';
 
 const props = defineProps<{
   log: DiveLog;
+  design: LogCardDesign;
 }>();
 
-const emit = defineEmits(['delete']);
+const emit = defineEmits<{
+  (event: 'delete', id: string): void;
+  (event: 'edit', log: DiveLog): void;
+}>();
 const { triggerToast } = useToast();
 
 const captureRef = ref<HTMLElement | null>(null);
-const { isCapturing, capturedImageUrl, captureElement } = useCapture();
+const { isCapturing, captureElement } = useCapture();
 
 const downloadCardImage = async () => {
   if (!captureRef.value) return;
 
   try {
     // html2canvas 캡처 수행
-    await captureElement(captureRef.value, 480, 3);
+    const imageUrl = await captureElement(captureRef.value, 480, 3);
 
-    if (capturedImageUrl.value) {
+    if (imageUrl) {
       // 가상 링크를 이용해 이미지 파일 즉시 브라우저 다운로드 실행
       const link = document.createElement('a');
-      link.href = capturedImageUrl.value;
-      link.download = `divelog-${props.log.location.replace(/\s+/g, '-')}-${props.log.date}.png`;
+      link.href = imageUrl;
+      const safeLocation = props.log.location
+        .replace(/[<>:"/\\|?*\u0000-\u001F]/g, '-')
+        .replace(/\s+/g, '-')
+        .slice(0, 60);
+      link.download = `divelog-${safeLocation || 'dive'}-${props.log.date}.png`;
       link.click();
 
       triggerToast('다이빙 로그 카드가 성공적으로 다운로드되었습니다! 🌊');

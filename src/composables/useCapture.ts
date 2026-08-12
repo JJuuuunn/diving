@@ -9,8 +9,9 @@ export function useCapture() {
   const capturedImageUrl = ref<string | null>(null);
   const isCapturing = ref(false);
 
-  const captureElement = async (element: HTMLElement, width = 480, scale = 3) => {
+  const captureElement = async (element: HTMLElement, width = 480, scale = 3): Promise<string | null> => {
     const isDark = themeStore.isDark;
+    capturedImageUrl.value = null;
     isCapturing.value = true;
     try {
       const canvas = await html2canvas(element, {
@@ -24,7 +25,12 @@ export function useCapture() {
             clonedDoc.body.className = isDark ? 'dark' : '';
           }
 
-          const el = clonedDoc.querySelector('.result-card') as HTMLElement;
+          const selector = element.classList.contains('result-card')
+            ? '.result-card'
+            : element.classList.contains('log-card-visual')
+              ? '.log-card-visual'
+              : null;
+          const el = selector ? clonedDoc.querySelector(selector) as HTMLElement | null : null;
           if (el) {
             el.style.width = `${width}px`;
             el.style.maxWidth = `${width}px`;
@@ -72,9 +78,11 @@ export function useCapture() {
         }
       });
       capturedImageUrl.value = canvas.toDataURL('image/png');
+      return capturedImageUrl.value;
     } catch (error) {
       console.error("Capture failed:", error);
       triggerToast("결과 이미지를 생성하는 데 실패했습니다.", true);
+      return null;
     } finally {
       isCapturing.value = false;
     }

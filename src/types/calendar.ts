@@ -23,6 +23,7 @@ export type DatePickerMode = 'date' | 'month';
 
 export interface DatePickerProps {
   modelValue: string;
+  id?: string;
   placeholder?: string;
   mode?: DatePickerMode;
 }
