@@ -1,6 +1,6 @@
 import { ref, watch } from 'vue';
 import { useStorage } from '@vueuse/core';
-import type { Person, PoolInfo, Settlement } from '@/types/settlement';
+import type { Person, PoolInfo, Settlement, SettlementHistoryItem, SettlementSettings } from '@/types/settlement';
 import { formatNumber, getNumericPrice } from '@/utils/formatter';
 import { useToast } from '@/composables/useToast';
 import poolPricesRaw from '@/data/poolPrices.json';
@@ -13,6 +13,7 @@ export const SETTLEMENT_STORAGE_KEYS = {
   SETTINGS: 'diving:settlement:settings:v1',
   PEOPLE: 'diving:settlement:people:v1',
   RESULTS: 'diving:settlement:results:v1',
+  HISTORY: 'diving:settlement:history:v1',
 } as const;
 
 export const SETTLEMENT_LEGACY_STORAGE_KEYS = {
@@ -53,16 +54,25 @@ export function useSettlement() {
   const currentStep = useStorage(SETTLEMENT_STORAGE_KEYS.STEP, 1);
 
   // --- 상태 관리 (VueUse useStorage를 활용해 자동 저장) ---
-  const settings = useStorage(SETTLEMENT_STORAGE_KEYS.SETTINGS, {
+  const settings = useStorage<SettlementSettings>(SETTLEMENT_STORAGE_KEYS.SETTINGS, {
     currentDayType: 'weekday' as 'weekday' | 'weekend',
     selectedPool: 'custom',
-    basePrice: '0'
+    basePrice: '0',
+    extraCosts: {
+      carpoolFee: 0,
+      extraTankFee: 0,
+      mealFee: 0,
+    }
   });
 
+  if (!settings.value.extraCosts) {
+    settings.value.extraCosts = { carpoolFee: 0, extraTankFee: 0, mealFee: 0 };
+  }
+
   const people = useStorage<Person[]>(SETTLEMENT_STORAGE_KEYS.PEOPLE, [
-    { id: 1, name: '예약자 1', isBooker: true, isMember: true, prepaid: 0, bank: banks[0], account: '' },
-    { id: 2, name: '참석자 2', isBooker: false, isMember: false, prepaid: 0, bank: banks[0], account: '' },
-    { id: 3, name: '참석자 3', isBooker: false, isMember: false, prepaid: 0, bank: banks[0], account: '' }
+    { id: 1, name: '예약자 1', isBooker: true, isMember: true, prepaid: 0, bank: banks[0], account: '', isPaid: false },
+    { id: 2, name: '참석자 2', isBooker: false, isMember: false, prepaid: 0, bank: banks[0], account: '', isPaid: false },
+    { id: 3, name: '참석자 3', isBooker: false, isMember: false, prepaid: 0, bank: banks[0], account: '', isPaid: false }
   ]);
 
   const results = useStorage(SETTLEMENT_STORAGE_KEYS.RESULTS, {
@@ -71,6 +81,8 @@ export function useSettlement() {
     settlementList: [] as Settlement[],
     detailTableBody: [] as Person[]
   });
+
+  const historyItems = useStorage<SettlementHistoryItem[]>(SETTLEMENT_STORAGE_KEYS.HISTORY, []);
 
   const globalResultText = ref('');
 
@@ -114,24 +126,53 @@ export function useSettlement() {
   }, { deep: true });
 
   /**
+   * 송금 상태 (송금 완료 / 미송금) 토글
+   */
+  const togglePaidStatus = (personId: number) => {
+    const targetPerson = people.value.find(p => p.id === personId);
+    if (targetPerson) {
+      targetPerson.isPaid = !targetPerson.isPaid;
+    }
+    const targetDetail = results.value.detailTableBody.find(p => p.id === personId);
+    if (targetDetail) {
+      targetDetail.isPaid = !targetDetail.isPaid;
+    }
+  };
+
+  /**
    * 정산 결과 계산 및 송금 플랜 생성
    */
   const calculate = () => {
     const price = getNumericPrice(settings.value.basePrice);
-    if (!price) return;
+
+    const carpool = Number(settings.value.extraCosts?.carpoolFee || 0);
+    const extraTank = Number(settings.value.extraCosts?.extraTankFee || 0);
+    const meal = Number(settings.value.extraCosts?.mealFee || 0);
+    const totalExtra = carpool + extraTank + meal;
+
+    const totalPeople = people.value.length;
+    const extraPerPerson = totalPeople > 0 ? totalExtra / totalPeople : 0;
 
     const allMembers = people.value.filter(p => p.isMember);
     const memberAttendees = people.value.filter(p => p.isMember && !p.isBooker);
-    
-    const nonMemberCost = price;
-    const memberCost = allMembers.length > 0 
-      ? (memberAttendees.length * price) / allMembers.length 
+
+    const baseNonMemberCost = price;
+    const baseMemberCost = allMembers.length > 0
+      ? (memberAttendees.length * price) / allMembers.length
       : 0;
+
+    const nonMemberCost = baseNonMemberCost + extraPerPerson;
+    const memberCost = baseMemberCost + extraPerPerson;
 
     const detailedResults = people.value.map(p => {
       const cost = p.isMember ? memberCost : nonMemberCost;
       const balance = p.prepaid - cost;
-      return { ...p, myCost: cost, balance };
+      return {
+        ...p,
+        isPaid: p.isPaid ?? false,
+        myCost: cost,
+        balance
+      };
     });
 
     const primaryBooker = detailedResults.find(p => p.isBooker) || detailedResults[0];
@@ -167,11 +208,15 @@ export function useSettlement() {
 
     const poolName = settings.value.selectedPool === 'custom' ? '직접 입력' : (poolPrices[settings.value.selectedPool]?.name || settings.value.selectedPool);
     const dayLabel = settings.value.currentDayType === 'weekday' ? '평일' : '주말';
-    globalResultText.value = generateResultText(poolName, dayLabel, memberCost, nonMemberCost, transactions);
+    globalResultText.value = generateResultText(poolName, dayLabel, memberCost, nonMemberCost, transactions, totalExtra);
   };
 
-  const generateResultText = (poolName: string, day: string, mCost: number, nmCost: number, txs: Settlement[]) => {
-    let text = `🤿 [다이빙 정산 결과]\n📍 ${poolName} (${day})\n▪️ 회원: ${formatNumber(Math.round(mCost))}원\n▪️ 비회원: ${formatNumber(Math.round(nmCost))}원\n\n💸 [송금 플랜]\n`;
+  const generateResultText = (poolName: string, day: string, mCost: number, nmCost: number, txs: Settlement[], totalExtra: number = 0) => {
+    let text = `🤿 [다이빙 정산 결과]\n📍 ${poolName} (${day})\n▪️ 회원: ${formatNumber(Math.round(mCost))}원\n▪️ 비회원: ${formatNumber(Math.round(nmCost))}원\n`;
+    if (totalExtra > 0) {
+      text += `▪️ 부가 비용 총액: ${formatNumber(totalExtra)}원\n`;
+    }
+    text += `\n💸 [송금 플랜]\n`;
     if (!txs.length) text += `✅ 정산할 내역이 없습니다.\n`;
     else {
       txs.forEach(t => {
@@ -185,9 +230,47 @@ export function useSettlement() {
     calculate();
   }
 
+  // --- 히스토리 로직 ---
+  const saveHistory = () => {
+    const poolName = settings.value.selectedPool === 'custom'
+      ? '직접 입력'
+      : (poolPrices[settings.value.selectedPool]?.name || settings.value.selectedPool);
+    const now = new Date();
+    const dateStr = `${now.getFullYear()}.${String(now.getMonth() + 1).padStart(2, '0')}.${String(now.getDate()).padStart(2, '0')} ${String(now.getHours()).padStart(2, '0')}:${String(now.getMinutes()).padStart(2, '0')}`;
+
+    const newItem: SettlementHistoryItem = {
+      id: `hist_${Date.now()}_${Math.random().toString(36).substring(2, 7)}`,
+      createdAt: dateStr,
+      title: `${poolName} 정산 (${dateStr})`,
+      settings: JSON.parse(JSON.stringify(settings.value)),
+      people: JSON.parse(JSON.stringify(people.value)),
+      results: JSON.parse(JSON.stringify(results.value)),
+      globalResultText: globalResultText.value
+    };
+
+    historyItems.value.unshift(newItem);
+    triggerToast('정산 내역이 히스토리에 저장되었습니다! 💾');
+    return newItem;
+  };
+
+  const deleteHistory = (id: string) => {
+    historyItems.value = historyItems.value.filter(item => item.id !== id);
+    triggerToast('정산 히스토리가 삭제되었습니다.');
+  };
+
+  const loadHistoryItem = (item: SettlementHistoryItem) => {
+    settings.value = JSON.parse(JSON.stringify(item.settings));
+    if (!settings.value.extraCosts) {
+      settings.value.extraCosts = { carpoolFee: 0, extraTankFee: 0, mealFee: 0 };
+    }
+    people.value = JSON.parse(JSON.stringify(item.people));
+    calculate();
+    triggerToast('히스토리 내역을 불러왔습니다. 🤿');
+  };
+
   // --- 헬퍼 함수 ---
   const addPerson = () => {
-    people.value.push({ id: Date.now(), name: `참석자 ${people.value.length + 1}`, isBooker: false, isMember: false, prepaid: 0, bank: banks[0], account: '' });
+    people.value.push({ id: Date.now(), name: `참석자 ${people.value.length + 1}`, isBooker: false, isMember: false, prepaid: 0, bank: banks[0], account: '', isPaid: false });
   };
 
   const removePerson = (id: number) => {
@@ -201,9 +284,14 @@ export function useSettlement() {
     people,
     results,
     globalResultText,
+    historyItems,
     addPerson,
     removePerson,
     calculate,
+    togglePaidStatus,
+    saveHistory,
+    deleteHistory,
+    loadHistoryItem,
     poolPrices
   };
 }

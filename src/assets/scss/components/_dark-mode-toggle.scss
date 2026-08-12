@@ -58,6 +58,32 @@
       inset 0 1px 0 rgba(255, 255, 255, 0.06);
   }
 
+  &.theme-toggle--coral {
+    --toggle-accent: #f0533c;
+    border-color: rgba(240, 83, 60, 0.3);
+    background: linear-gradient(145deg, #fdfaf6, #f3e8dc);
+    color: #543e30;
+
+    .theme-toggle__indicator {
+      border-color: rgba(240, 83, 60, 0.4);
+      background: linear-gradient(145deg, #ffffff, #ffedd5);
+      color: #f0533c;
+    }
+  }
+
+  &.theme-toggle--abyss {
+    --toggle-accent: #00f2fe;
+    border-color: rgba(0, 242, 254, 0.3);
+    background: linear-gradient(145deg, #040814, #0b193c);
+    color: #bce3ff;
+
+    .theme-toggle__indicator {
+      border-color: rgba(0, 242, 254, 0.5);
+      background: linear-gradient(145deg, rgba(0, 242, 254, 0.2), rgba(255, 0, 127, 0.3));
+      color: #00f2fe;
+    }
+  }
+
   &:hover {
     border-color: color-mix(in srgb, var(--toggle-accent) 55%, transparent);
     box-shadow:

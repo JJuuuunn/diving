@@ -522,23 +522,28 @@
     <!-- ═══════════════════════════════ -->
     <section id="sec-darkmode" class="test-section fade-in-up delay-more">
       <div class="section-header">
-        <h2>🌗 DarkModeToggle</h2>
+        <h2>🌗 DarkModeToggle & ThemeSelectorModal</h2>
         <span class="component-tag">DarkModeToggle.vue</span>
+        <span class="component-tag">ThemeSelectorModal.vue</span>
       </div>
       <div class="section-body">
         <div class="demo-row">
           <div class="demo-card wide">
-            <h4>라이트 / 다크 테마 세그먼트</h4>
+            <h4>비주얼 커스텀 테마 세그먼트 (4가지 모드)</h4>
             <p class="demo-hint">
-              현재 테마를 명확하게 표시하고 키보드로도 전환할 수 있는 새로운 공용 테마 컨트롤입니다.
+              ☀️ 라이트 해변, 🌙 다크 심해, 🪸 산호초 코랄, 🌌 초심해 어비스 모드를 지원하는 비주얼 테마 컨트롤입니다.
             </p>
-            <div class="darkmode-demo-wrapper">
+            <div class="darkmode-demo-wrapper" style="display: flex; gap: 12px; align-items: center; flex-wrap: wrap;">
               <DarkModeToggle v-model="isDay" expanded />
+              <CustomButton size="sm" variant="secondary" @click="isThemeModalOpen = true">
+                🎨 테마 선택 모달 열기
+              </CustomButton>
             </div>
-            <span class="state-readout">현재 테마: <strong>{{ isDark ? '🌙 다크' : '☀️ 라이트' }}</strong></span>
+            <span class="state-readout">현재 모드: <strong>{{ themeStore.themeMode }}</strong></span>
           </div>
         </div>
       </div>
+      <ThemeSelectorModal v-model:is-open="isThemeModalOpen" />
     </section>
 
     <!-- ═══════════════════════════════ -->
@@ -632,6 +637,7 @@ import CustomTextarea from '@/components/CustomTextarea.vue';
 import CustomSkeleton from '@/components/CustomSkeleton.vue';
 import ConfirmModal from '@/components/ConfirmModal.vue';
 import DarkModeToggle from '@/components/DarkModeToggle.vue';
+import ThemeSelectorModal from '@/components/ThemeSelectorModal.vue';
 import MapTestPanel from '@/components/dev/MapTestPanel.vue';
 import Header from '@/components/Header.vue';
 import Footer from '@/components/Footer.vue';
@@ -825,6 +831,7 @@ const fireBurstToast = (): void => {
 
 // ─── 9. DarkMode 상태 ───
 const themeStore = useThemeStore();
+const isThemeModalOpen = ref(false);
 const isDay = computed({
   get: () => !themeStore.isDark,
   set: (val: boolean) => {

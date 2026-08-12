@@ -74,12 +74,62 @@
           <span class="price-input-currency">원</span>
         </div>
       </div>
+
+      <div class="extra-costs-section">
+        <div class="extra-costs-header">
+          <i class="fa-solid fa-coins"></i>
+          <span class="extra-costs-title">부가 비용 (선택 입력)</span>
+        </div>
+        <div class="extra-costs-grid">
+          <div class="extra-cost-item">
+            <label class="extra-cost-label">카풀 / 유류비</label>
+            <div class="extra-cost-input-wrapper">
+              <CustomNumberInput
+                :model-value="extraCosts.carpoolFee"
+                :min="0"
+                :step="1000"
+                placeholder="0"
+                @update:model-value="val => extraCosts.carpoolFee = Number(val) || 0"
+              />
+              <span class="extra-cost-currency">원</span>
+            </div>
+          </div>
+
+          <div class="extra-cost-item">
+            <label class="extra-cost-label">추가 탱크비</label>
+            <div class="extra-cost-input-wrapper">
+              <CustomNumberInput
+                :model-value="extraCosts.extraTankFee"
+                :min="0"
+                :step="1000"
+                placeholder="0"
+                @update:model-value="val => extraCosts.extraTankFee = Number(val) || 0"
+              />
+              <span class="extra-cost-currency">원</span>
+            </div>
+          </div>
+
+          <div class="extra-cost-item">
+            <label class="extra-cost-label">뒤풀이 / 식대</label>
+            <div class="extra-cost-input-wrapper">
+              <CustomNumberInput
+                :model-value="extraCosts.mealFee"
+                :min="0"
+                :step="1000"
+                placeholder="0"
+                @update:model-value="val => extraCosts.mealFee = Number(val) || 0"
+              />
+              <span class="extra-cost-currency">원</span>
+            </div>
+          </div>
+        </div>
+      </div>
     </div>
   </section>
 </template>
 
 <script setup lang="ts">
-import type { PoolInfo } from '@/types/settlement';
+import type { ExtraCosts, PoolInfo } from '@/types/settlement';
 import { formatNumber, getNumericPrice } from '@/utils/formatter';
 import deepstationImg from '@/assets/icons/deepstation.png';
 import paradiveImg from '@/assets/icons/paradive.png';
@@ -89,11 +139,13 @@ import aqualineImg from '@/assets/icons/aqualine.png';
 import suwonImg from '@/assets/icons/suwon.png';
 import CustomButton from '@/components/CustomButton.vue';
 import CustomInput from '@/components/CustomInput.vue';
+import CustomNumberInput from '@/components/CustomNumberInput.vue';
 
 // defineModel 적용
 const currentDayType = defineModel<string>('currentDayType', { required: true });
 const selectedPool = defineModel<string>('selectedPool', { required: true });
 const basePrice = defineModel<string>('basePrice', { required: true });
+const extraCosts = defineModel<ExtraCosts>('extraCosts', { required: true });
 
 const props = defineProps<{
   poolPrices: Record<string, PoolInfo>;

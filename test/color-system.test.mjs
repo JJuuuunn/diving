@@ -26,7 +26,7 @@ test('light and dark themes expose the shared semantic color contract', async ()
 
   for (const token of tokens) {
     const occurrences = source.match(new RegExp(`--color-${token}:`, 'g')) ?? [];
-    assert.equal(occurrences.length, 2, `--color-${token} must exist in both themes`);
+    assert.equal(occurrences.length, 4, `--color-${token} must exist in all four themes`);
   }
 });
 

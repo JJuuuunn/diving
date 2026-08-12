@@ -5,6 +5,13 @@ export interface PoolInfo {
     weekend: number;
 }
 
+// 부가 비용 타입
+export interface ExtraCosts {
+    carpoolFee: number;
+    extraTankFee: number;
+    mealFee: number;
+}
+
 // 참여 인원 정보 타입
 export interface Person {
     id: number;
@@ -16,6 +23,7 @@ export interface Person {
     account: string;
     myCost?: number;  // 정산 후 개별 부담금
     balance?: number; // 정산 후 차액 (받을 돈/줄 돈)
+    isPaid?: boolean; // 송금 완료/미송금 체크리스트 필드
 }
 
 // 송금 내역 타입
@@ -32,6 +40,23 @@ export interface SettlementSettings {
     currentDayType: 'weekday' | 'weekend';
     selectedPool: string;
     basePrice: string;
+    extraCosts: ExtraCosts;
+}
+
+// 정산 히스토리 아이템 타입
+export interface SettlementHistoryItem {
+    id: string;
+    createdAt: string;
+    title?: string;
+    settings: SettlementSettings;
+    people: Person[];
+    results: {
+        memberCostDisplay: string;
+        nonMemberCostDisplay: string;
+        settlementList: Settlement[];
+        detailTableBody: Person[];
+    };
+    globalResultText?: string;
 }
 
 export interface StructuredSettlementData {

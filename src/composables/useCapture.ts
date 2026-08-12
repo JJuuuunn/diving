@@ -22,7 +22,7 @@ export function useCapture() {
         onclone: (clonedDoc) => {
           // 1. 테마 상태(isDark)를 복제 문서의 body에 정직하게 선언하여 CSS 변수 적용 유도
           if (clonedDoc.body) {
-            clonedDoc.body.className = isDark ? 'dark' : '';
+            clonedDoc.body.className = document.body.className;
           }
 
           const selector = element.classList.contains('result-card')

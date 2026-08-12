@@ -1618,4 +1618,251 @@
   opacity: 0;
   transform: scale(0);
 }
-.result-heading-row { display: flex; align-items: center; }
+
+.result-heading-row {
+  display: flex;
+  align-items: center;
+}
+
+// --------------------------------------------------
+// 12. Extra Costs & Paid Badges & History Modal
+// --------------------------------------------------
+
+.extra-costs-section {
+  margin-top: 1.5rem;
+  padding-top: 1.25rem;
+  border-top: 1px solid var(--slate-100);
+
+  .dark & {
+    border-color: var(--slate-800);
+  }
+
+  .extra-costs-header {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    margin-bottom: 0.75rem;
+    font-size: 0.875rem;
+    font-weight: 700;
+    color: var(--slate-600);
+
+    .dark & {
+      color: var(--slate-400);
+    }
+
+    i {
+      color: var(--ocean-500);
+
+      .dark & {
+        color: var(--ocean-400);
+      }
+    }
+  }
+
+  .extra-costs-grid {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: 0.75rem;
+
+    @media (min-width: 640px) {
+      grid-template-columns: repeat(3, 1fr);
+    }
+  }
+
+  .extra-cost-item {
+    display: flex;
+    flex-direction: column;
+    gap: 0.375rem;
+  }
+
+  .extra-cost-label {
+    font-size: 0.75rem;
+    font-weight: 600;
+    color: var(--slate-500);
+
+    .dark & {
+      color: var(--slate-400);
+    }
+  }
+
+  .extra-cost-input-wrapper {
+    position: relative;
+    display: flex;
+    align-items: center;
+    width: 100%;
+
+    .custom-number-input {
+      width: 100%;
+    }
+  }
+}
+
+.settlement-amount-box {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.paid-cell {
+  text-align: right;
+}
+
+.paid-toggle-badge {
+  font-size: 0.75rem;
+  padding: 0.25rem 0.5rem;
+  border-radius: 0.5rem;
+  transition: all 0.2s ease;
+  white-space: nowrap;
+
+  &.is-paid {
+    background-color: var(--ocean-500);
+    color: var(--white);
+
+    .dark & {
+      background-color: var(--ocean-600);
+    }
+  }
+
+  &.is-unpaid {
+    background-color: var(--slate-100);
+    color: var(--slate-500);
+
+    .dark & {
+      background-color: var(--slate-800);
+      color: var(--slate-400);
+    }
+  }
+}
+
+// History Modal Specifics
+.history-modal-card {
+  max-width: 520px;
+  width: 92%;
+}
+
+.history-modal-body {
+  max-height: 380px;
+  overflow-y: auto;
+  padding: 0.5rem 0;
+}
+
+.empty-history {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 0.75rem;
+  padding: 2.5rem 1rem;
+  color: var(--slate-400);
+  text-align: center;
+
+  .empty-icon {
+    font-size: 2.5rem;
+    color: var(--slate-300);
+
+    .dark & {
+      color: var(--slate-600);
+    }
+  }
+
+  p {
+    margin: 0;
+    font-size: 0.875rem;
+    font-weight: 500;
+  }
+}
+
+.history-list {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+
+  .history-item {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 0.875rem 1rem;
+    border-radius: 1rem;
+    border: 1px solid var(--slate-200);
+    background-color: var(--slate-50);
+    transition: all 0.2s ease;
+
+    .dark & {
+      border-color: var(--slate-700);
+      background-color: var(--slate-800);
+    }
+
+    &:hover {
+      border-color: var(--ocean-300);
+
+      .dark & {
+        border-color: var(--ocean-600);
+      }
+    }
+  }
+
+  .history-info {
+    display: flex;
+    flex-direction: column;
+    gap: 0.25rem;
+  }
+
+  .history-title {
+    font-weight: 700;
+    font-size: 0.9375rem;
+    color: var(--slate-800);
+
+    .dark & {
+      color: var(--slate-200);
+    }
+  }
+
+  .history-date {
+    font-size: 0.75rem;
+    color: var(--slate-400);
+
+    .dark & {
+      color: var(--slate-500);
+    }
+  }
+
+  .history-meta {
+    font-size: 0.75rem;
+    color: var(--slate-500);
+    font-weight: 500;
+
+    .dark & {
+      color: var(--slate-400);
+    }
+  }
+
+  .history-actions {
+    display: flex;
+    gap: 0.375rem;
+    align-items: center;
+  }
+}
+
+.close-btn {
+  background: none;
+  border: none;
+  font-size: 1.25rem;
+  color: var(--slate-400);
+  cursor: pointer;
+  padding: 0.25rem;
+  border-radius: 0.375rem;
+  transition: color 0.2s;
+
+  &:hover {
+    color: var(--slate-700);
+  }
+
+  .dark & {
+    &:hover {
+      color: var(--slate-200);
+    }
+  }
+}

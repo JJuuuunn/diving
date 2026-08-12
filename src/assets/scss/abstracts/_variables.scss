@@ -113,3 +113,101 @@ body:not(.dark) {
   --color-disabled-text: var(--slate-400);
   --color-disabled-bg: var(--slate-100);
 }
+
+// 🪸 산호초 코랄 테마 (Coral reef theme: warm sand waterbubble, coral orange, teal main accent)
+body.theme-coral {
+  // Base
+  --bg-color: #fdfaf6;
+  --text-color: #443427;
+  --icon-color: #f0533c;
+
+  // Menu Button
+  --menu-button-bg: rgba(255, 248, 240, 0.85);
+  --menu-button-hover-bg: rgba(255, 255, 255, 1);
+  --menu-button-border: rgba(240, 83, 60, 0.2);
+
+  // Sidebar
+  --sidebar-bg: rgba(253, 246, 238, 0.85);
+  --sidebar-border: rgba(240, 83, 60, 0.15);
+  --sidebar-shadow: 0 8px 32px 0 rgba(220, 100, 80, 0.12);
+  --sidebar-text: #543e30;
+  --sidebar-icon-color: #0d9488;
+  --sidebar-hover-bg: rgba(240, 83, 60, 0.08);
+  --sidebar-active-bg: #f0533c;
+  --sidebar-active-text: #ffffff;
+  --logo-icon-color: #f0533c;
+
+  // Page (Home)
+  --page-text-primary: #3d2c20;
+  --page-text-secondary: #7c6859;
+  --page-accent: #0d9488;
+  --page-card-bg: rgba(255, 251, 245, 0.85);
+  --page-card-border: #f3e6d8;
+  --page-card-shadow: 0 4px 16px -1px rgba(220, 100, 80, 0.08), 0 2px 4px -1px rgba(0, 0, 0, 0.04);
+  --page-bg-image: radial-gradient(circle at 10% 20%, rgba(240, 83, 60, 0.05) 0%, transparent 50%), radial-gradient(circle at 90% 80%, rgba(13, 148, 136, 0.06) 0%, transparent 50%);
+
+  // Semantic colors
+  --color-action: #0d9488;
+  --color-action-strong: #0f766e;
+  --color-info-text: #0f766e;
+  --color-info-bg: #ccfbf1;
+  --color-success-text: #15803d;
+  --color-success-bg: #dcfce7;
+  --color-warning-text: #c2410c;
+  --color-warning-bg: #ffedd5;
+  --color-danger-text: #b91c1c;
+  --color-danger-bg: #fee2e2;
+  --color-neutral-text: #6b584a;
+  --color-neutral-bg: #f3e8dc;
+  --color-disabled-text: #a89687;
+  --color-disabled-bg: #f8efea;
+}
+
+// 🌌 초심해 어비스 테마 (Abyss ocean theme: deep midnight space navy, neon cyan / hot pink accent)
+body.theme-abyss {
+  // Base
+  --bg-color: #040814;
+  --text-color: #e2f1ff;
+  --icon-color: #00f2fe;
+
+  // Menu Button
+  --menu-button-bg: rgba(0, 242, 254, 0.08);
+  --menu-button-hover-bg: rgba(0, 242, 254, 0.18);
+  --menu-button-border: rgba(0, 242, 254, 0.3);
+
+  // Sidebar
+  --sidebar-bg: rgba(4, 12, 30, 0.88);
+  --sidebar-border: rgba(0, 242, 254, 0.2);
+  --sidebar-shadow: 0 8px 32px 0 rgba(0, 242, 254, 0.15);
+  --sidebar-text: #bce3ff;
+  --sidebar-icon-color: #ff007f;
+  --sidebar-hover-bg: rgba(255, 0, 127, 0.12);
+  --sidebar-active-bg: linear-gradient(135deg, #00c6ff, #0072ff);
+  --sidebar-active-text: #ffffff;
+  --logo-icon-color: #00f2fe;
+
+  // Page (Home)
+  --page-text-primary: #f0f9ff;
+  --page-text-secondary: #7dd3fc;
+  --page-accent: #00f2fe;
+  --page-card-bg: rgba(6, 16, 38, 0.78);
+  --page-card-border: rgba(0, 242, 254, 0.2);
+  --page-card-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.5), 0 0 15px rgba(0, 242, 254, 0.1);
+  --page-bg-image: radial-gradient(circle at 50% 0%, rgba(0, 242, 254, 0.15) 0%, transparent 60%), radial-gradient(circle at 100% 100%, rgba(255, 0, 127, 0.12) 0%, transparent 50%);
+
+  // Semantic colors
+  --color-action: #00f2fe;
+  --color-action-strong: #38ef7d;
+  --color-info-text: #38bdf8;
+  --color-info-bg: rgba(0, 242, 254, 0.2);
+  --color-success-text: #4ade80;
+  --color-success-bg: rgba(34, 197, 94, 0.22);
+  --color-warning-text: #fbbf24;
+  --color-warning-bg: rgba(245, 158, 11, 0.22);
+  --color-danger-text: #ff5277;
+  --color-danger-bg: rgba(255, 0, 127, 0.25);
+  --color-neutral-text: #94a3b8;
+  --color-neutral-bg: rgba(30, 41, 59, 0.8);
+  --color-disabled-text: #475569;
+  --color-disabled-bg: rgba(15, 23, 42, 0.6);
+}
