@@ -62,12 +62,39 @@ export function useSettlement() {
       carpoolFee: 0,
       extraTankFee: 0,
       mealFee: 0,
-    }
+    },
+    customExpenses: []
   });
 
   if (!settings.value.extraCosts) {
     settings.value.extraCosts = { carpoolFee: 0, extraTankFee: 0, mealFee: 0 };
   }
+  if (!settings.value.customExpenses) {
+    settings.value.customExpenses = [];
+  }
+
+  /**
+   * 동적 부가 정산 항목 추가 (카카오 1/N 정산 방식)
+   */
+  const addCustomExpense = (name: string = '차수/부가 항목', amount: number = 0) => {
+    if (!settings.value.customExpenses) {
+      settings.value.customExpenses = [];
+    }
+    settings.value.customExpenses.push({
+      id: `exp_${Date.now()}_${Math.random().toString(36).substring(2, 7)}`,
+      name,
+      amount
+    });
+  };
+
+  /**
+   * 동적 부가 정산 항목 삭제
+   */
+  const removeCustomExpense = (id: string) => {
+    if (settings.value.customExpenses) {
+      settings.value.customExpenses = settings.value.customExpenses.filter(e => e.id !== id);
+    }
+  };
 
   const people = useStorage<Person[]>(SETTLEMENT_STORAGE_KEYS.PEOPLE, [
     { id: 1, name: '예약자 1', isBooker: true, isMember: true, prepaid: 0, bank: banks[0], account: '', isPaid: false },
@@ -145,10 +172,16 @@ export function useSettlement() {
   const calculate = () => {
     const price = getNumericPrice(settings.value.basePrice);
 
-    const carpool = Number(settings.value.extraCosts?.carpoolFee || 0);
-    const extraTank = Number(settings.value.extraCosts?.extraTankFee || 0);
-    const meal = Number(settings.value.extraCosts?.mealFee || 0);
-    const totalExtra = carpool + extraTank + meal;
+    const legacyCarpool = Number(settings.value.extraCosts?.carpoolFee || 0);
+    const legacyExtraTank = Number(settings.value.extraCosts?.extraTankFee || 0);
+    const legacyMeal = Number(settings.value.extraCosts?.mealFee || 0);
+    const legacyTotal = legacyCarpool + legacyExtraTank + legacyMeal;
+
+    const customTotal = (settings.value.customExpenses || []).reduce(
+      (sum, item) => sum + (Number(item.amount) || 0),
+      0
+    );
+    const totalExtra = legacyTotal + customTotal;
 
     const totalPeople = people.value.length;
     const extraPerPerson = totalPeople > 0 ? totalExtra / totalPeople : 0;
@@ -263,6 +296,9 @@ export function useSettlement() {
     if (!settings.value.extraCosts) {
       settings.value.extraCosts = { carpoolFee: 0, extraTankFee: 0, mealFee: 0 };
     }
+    if (!settings.value.customExpenses) {
+      settings.value.customExpenses = [];
+    }
     people.value = JSON.parse(JSON.stringify(item.people));
     calculate();
     triggerToast('히스토리 내역을 불러왔습니다. 🤿');
@@ -287,6 +323,8 @@ export function useSettlement() {
     historyItems,
     addPerson,
     removePerson,
+    addCustomExpense,
+    removeCustomExpense,
     calculate,
     togglePaidStatus,
     saveHistory,

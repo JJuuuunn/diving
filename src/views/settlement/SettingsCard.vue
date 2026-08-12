@@ -75,53 +75,76 @@
         </div>
       </div>
 
+      <!-- Kakao Style Dynamic Extra Expenses Section -->
       <div class="extra-costs-section">
         <div class="extra-costs-header">
           <i class="fa-solid fa-coins"></i>
-          <span class="extra-costs-title">부가 비용 (선택 입력)</span>
+          <span class="extra-costs-title">⚡ 부가 정산 항목 (선택 입력)</span>
         </div>
-        <div class="extra-costs-grid">
-          <div class="extra-cost-item">
-            <label class="extra-cost-label">카풀 / 유류비</label>
-            <div class="extra-cost-input-wrapper">
-              <CustomNumberInput
-                :model-value="extraCosts.carpoolFee"
-                :min="0"
-                :step="1000"
-                placeholder="0"
-                @update:model-value="val => extraCosts.carpoolFee = Number(val) || 0"
-              />
-              <span class="extra-cost-currency">원</span>
-            </div>
-          </div>
+        <p class="extra-costs-desc">카풀비, 뒤풀이 식대, 추가 탱크비 등 원하는 항목을 자유롭게 추가하여 정산할 수 있습니다.</p>
 
-          <div class="extra-cost-item">
-            <label class="extra-cost-label">추가 탱크비</label>
-            <div class="extra-cost-input-wrapper">
-              <CustomNumberInput
-                :model-value="extraCosts.extraTankFee"
-                :min="0"
-                :step="1000"
-                placeholder="0"
-                @update:model-value="val => extraCosts.extraTankFee = Number(val) || 0"
-              />
-              <span class="extra-cost-currency">원</span>
-            </div>
-          </div>
+        <!-- 1초 빠른 프리셋 버튼 모음 -->
+        <div class="preset-chips">
+          <span class="preset-chip-label">🚀 빠른 추가:</span>
+          <CustomButton class="preset-chip" @click="emit('addCustomExpense', '🚗 카풀/유류비', 0)">
+            🚗 카풀비
+          </CustomButton>
+          <CustomButton class="preset-chip" @click="emit('addCustomExpense', '🍻 1차 뒤풀이 식대', 0)">
+            🍻 뒤풀이 식대
+          </CustomButton>
+          <CustomButton class="preset-chip" @click="emit('addCustomExpense', '🤿 추가 탱크 대여', 0)">
+            🤿 추가 탱크
+          </CustomButton>
+          <CustomButton class="preset-chip" @click="emit('addCustomExpense', '☕ 카페/음료', 0)">
+            ☕ 카페/음료
+          </CustomButton>
+        </div>
 
-          <div class="extra-cost-item">
-            <label class="extra-cost-label">뒤풀이 / 식대</label>
-            <div class="extra-cost-input-wrapper">
+        <!-- 동적 정산 항목 목록 -->
+        <div class="custom-expense-list" v-if="customExpenses && customExpenses.length > 0">
+          <div
+            v-for="(item, idx) in customExpenses"
+            :key="item.id"
+            class="custom-expense-row"
+          >
+            <span class="expense-idx">{{ idx + 1 }}</span>
+            <div class="expense-name-input">
+              <CustomInput
+                v-model="item.name"
+                placeholder="항목명 (예: 1차 식당)"
+              />
+            </div>
+            <div class="expense-amount-input">
               <CustomNumberInput
-                :model-value="extraCosts.mealFee"
+                :model-value="item.amount"
                 :min="0"
                 :step="1000"
-                placeholder="0"
-                @update:model-value="val => extraCosts.mealFee = Number(val) || 0"
+                placeholder="금액 (원)"
+                @update:model-value="val => item.amount = Number(val) || 0"
               />
               <span class="extra-cost-currency">원</span>
             </div>
+            <CustomButton
+              variant="ghost"
+              class="expense-remove-btn"
+              @click="emit('removeCustomExpense', item.id)"
+              title="이 항목 삭제"
+            >
+              <i class="fa-solid fa-trash-can"></i>
+            </CustomButton>
           </div>
+        </div>
+
+        <!-- 항목 추가 버튼 -->
+        <div class="add-expense-btn-row">
+          <CustomButton
+            variant="secondary"
+            class="add-expense-btn"
+            @click="emit('addCustomExpense', '부가 정산 항목', 0)"
+          >
+            <i class="fa-solid fa-plus"></i>
+            <span>+ 정산 항목 추가</span>
+          </CustomButton>
         </div>
       </div>
     </div>
@@ -129,7 +152,7 @@
 </template>
 
 <script setup lang="ts">
-import type { ExtraCosts, PoolInfo } from '@/types/settlement';
+import type { ExtraExpenseItem, PoolInfo } from '@/types/settlement';
 import { formatNumber, getNumericPrice } from '@/utils/formatter';
 import deepstationImg from '@/assets/icons/deepstation.png';
 import paradiveImg from '@/assets/icons/paradive.png';
@@ -145,10 +168,15 @@ import CustomNumberInput from '@/components/CustomNumberInput.vue';
 const currentDayType = defineModel<string>('currentDayType', { required: true });
 const selectedPool = defineModel<string>('selectedPool', { required: true });
 const basePrice = defineModel<string>('basePrice', { required: true });
-const extraCosts = defineModel<ExtraCosts>('extraCosts', { required: true });
+const customExpenses = defineModel<ExtraExpenseItem[]>('customExpenses', { default: () => [] });
 
-const props = defineProps<{
+defineProps<{
   poolPrices: Record<string, PoolInfo>;
+}>();
+
+const emit = defineEmits<{
+  (e: 'addCustomExpense', name?: string, amount?: number): void;
+  (e: 'removeCustomExpense', id: string): void;
 }>();
 
 const poolImages: Record<string, string> = {

@@ -26,8 +26,10 @@
             v-model:current-day-type="settings.currentDayType"
             v-model:selected-pool="settings.selectedPool"
             v-model:base-price="settings.basePrice"
-            v-model:extra-costs="settings.extraCosts"
+            v-model:custom-expenses="settings.customExpenses"
             :pool-prices="poolPrices"
+            @add-custom-expense="addCustomExpense"
+            @remove-custom-expense="removeCustomExpense"
           />
           <div class="action-buttons center">
             <CustomButton @click="goToStep(2)" class="calculate-btn full-width">
@@ -63,13 +65,8 @@
             :non-member-cost-display="results.nonMemberCostDisplay"
             :settlement-list="results.settlementList"
             :detail-table-body="results.detailTableBody"
-            :history-items="historyItems"
             @copy-result-text="copyResultText"
             @copy-account-text="copyText($event, '계좌가 복사되었습니다! 💳')"
-            @toggle-paid-status="togglePaidStatus"
-            @save-history="saveHistory"
-            @delete-history="deleteHistory"
-            @load-history="loadHistoryItem"
           />
           <div class="action-buttons center">
             <CustomButton @click="goToStep(2)" class="secondary-btn restart-btn full-width">
@@ -107,14 +104,11 @@ const {
   people,
   results,
   globalResultText,
-  historyItems,
   addPerson,
   removePerson,
+  addCustomExpense,
+  removeCustomExpense,
   calculate,
-  togglePaidStatus,
-  saveHistory,
-  deleteHistory,
-  loadHistoryItem,
   poolPrices
 } = useSettlement();
 

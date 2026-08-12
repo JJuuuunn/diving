@@ -5,11 +5,18 @@ export interface PoolInfo {
     weekend: number;
 }
 
-// 부가 비용 타입
+// 부가 정산 항목 (카카오 1/N 정산 방식)
+export interface ExtraExpenseItem {
+    id: string;
+    name: string;
+    amount: number;
+}
+
+// 부가 비용 타입 (하위 호환성 유지)
 export interface ExtraCosts {
-    carpoolFee: number;
-    extraTankFee: number;
-    mealFee: number;
+    carpoolFee?: number;
+    extraTankFee?: number;
+    mealFee?: number;
 }
 
 // 참여 인원 정보 타입
@@ -40,23 +47,8 @@ export interface SettlementSettings {
     currentDayType: 'weekday' | 'weekend';
     selectedPool: string;
     basePrice: string;
-    extraCosts: ExtraCosts;
-}
-
-// 정산 히스토리 아이템 타입
-export interface SettlementHistoryItem {
-    id: string;
-    createdAt: string;
-    title?: string;
-    settings: SettlementSettings;
-    people: Person[];
-    results: {
-        memberCostDisplay: string;
-        nonMemberCostDisplay: string;
-        settlementList: Settlement[];
-        detailTableBody: Person[];
-    };
-    globalResultText?: string;
+    extraCosts?: ExtraCosts;
+    customExpenses?: ExtraExpenseItem[];
 }
 
 export interface StructuredSettlementData {
@@ -72,4 +64,20 @@ export interface StructuredSettlementData {
     bk: string;
     ac: string;
   }[];
+}
+
+// 정산 히스토리 아이템 타입
+export interface SettlementHistoryItem {
+  id: string;
+  createdAt: string;
+  title: string;
+  settings: SettlementSettings;
+  people: Person[];
+  results: {
+    memberCostDisplay: string;
+    nonMemberCostDisplay: string;
+    settlementList: Settlement[];
+    detailTableBody: Person[];
+  };
+  globalResultText: string;
 }

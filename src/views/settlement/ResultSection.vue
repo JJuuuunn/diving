@@ -32,26 +32,6 @@
         <i class="fa-solid fa-download"></i>
         <span>이미지 카드 저장</span>
       </CustomButton>
-
-      <CustomButton
-        @click="emit('saveHistory')"
-        variant="secondary"
-        size="md"
-        class="save-history-btn"
-      >
-        <i class="fa-solid fa-bookmark"></i>
-        <span>히스토리에 저장</span>
-      </CustomButton>
-
-      <CustomButton
-        @click="showHistoryModal = true"
-        variant="secondary"
-        size="md"
-        class="view-history-btn"
-      >
-        <i class="fa-solid fa-clock-rotate-left"></i>
-        <span>히스토리 ({{ historyItems?.length || 0 }})</span>
-      </CustomButton>
     </div>
 
     <div ref="resultCardRef" class="settlement-result-card result-card">
@@ -80,20 +60,7 @@
               <div class="settlement-names">
                 {{ t.from }} <i class="fa-solid fa-arrow-right"></i> {{ t.to }}
               </div>
-              <div class="settlement-amount-box">
-                <span class="settlement-amount">{{ formatNumber(t.amount) }}원</span>
-                <CustomButton
-                  v-if="getPersonFromDetail(t.from)"
-                  size="sm"
-                  :variant="getPersonFromDetail(t.from)?.isPaid ? 'primary' : 'secondary'"
-                  class="paid-toggle-badge"
-                  :class="getPersonFromDetail(t.from)?.isPaid ? 'is-paid' : 'is-unpaid'"
-                  @click.stop="emit('togglePaidStatus', getPersonFromDetail(t.from)!.id)"
-                >
-                  <i :class="getPersonFromDetail(t.from)?.isPaid ? 'fa-solid fa-circle-check' : 'fa-regular fa-circle'"></i>
-                  <span>{{ getPersonFromDetail(t.from)?.isPaid ? '송금 완료' : '미송금' }}</span>
-                </CustomButton>
-              </div>
+              <div class="settlement-amount">{{ formatNumber(t.amount) }}원</div>
             </div>
 
             <div v-if="t.bank || t.account" class="settlement-account-info">
@@ -147,7 +114,6 @@
                 <th>선결제</th>
                 <th>부담금</th>
                 <th>정산</th>
-                <th>송금 상태</th>
               </tr>
             </thead>
             <tbody>
@@ -164,32 +130,12 @@
                   <span v-else-if="(r.balance || 0) < 0" class="balance-negative">{{ formatNumber(Math.round((r.balance || 0)/10)*10) }}</span>
                   <span v-else class="balance-zero">-</span>
                 </td>
-                <td class="paid-cell">
-                  <CustomButton
-                    size="sm"
-                    :variant="r.isPaid ? 'primary' : 'secondary'"
-                    class="paid-toggle-badge"
-                    :class="r.isPaid ? 'is-paid' : 'is-unpaid'"
-                    @click="emit('togglePaidStatus', r.id)"
-                  >
-                    <i :class="r.isPaid ? 'fa-solid fa-circle-check' : 'fa-regular fa-circle'"></i>
-                    <span>{{ r.isPaid ? '송금 완료' : '미송금' }}</span>
-                  </CustomButton>
-                </td>
               </tr>
             </tbody>
           </table>
         </div>
       </div>
     </div>
-
-    <HistoryModal
-      :show="showHistoryModal"
-      :history-items="historyItems || []"
-      @close="showHistoryModal = false"
-      @load="item => emit('loadHistory', item)"
-      @delete="id => emit('deleteHistory', id)"
-    />
   </section>
 </template>
 
@@ -199,27 +145,19 @@ import { useClipboard } from '@vueuse/core';
 import { useToast } from '@/composables/useToast';
 import { useCapture } from '@/composables/useCapture';
 import CustomButton from '@/components/CustomButton.vue';
-import HistoryModal from './HistoryModal.vue';
-import type { Person, Settlement, SettlementHistoryItem } from '@/types/settlement';
+import type { Person, Settlement } from '@/types/settlement';
 
-const props = withDefaults(defineProps<{
+const props = defineProps<{
   showResultSection: boolean;
   memberCostDisplay: string;
   nonMemberCostDisplay: string;
   settlementList: Settlement[];
   detailTableBody: Person[];
-  historyItems?: SettlementHistoryItem[];
-}>(), {
-  historyItems: () => []
-});
+}>();
 
 const emit = defineEmits<{
   (e: 'copyResultText'): void;
   (e: 'copyAccountText', text: string): void;
-  (e: 'togglePaidStatus', personId: number): void;
-  (e: 'saveHistory'): void;
-  (e: 'deleteHistory', id: string): void;
-  (e: 'loadHistory', item: SettlementHistoryItem): void;
 }>();
 
 const { copy } = useClipboard();
@@ -228,11 +166,6 @@ const { isCapturing, captureElement } = useCapture();
 
 const resultCardRef = ref<HTMLElement | null>(null);
 const copiedAccountIndex = ref<number | null>(null);
-const showHistoryModal = ref(false);
-
-const getPersonFromDetail = (name: string) => {
-  return props.detailTableBody.find(p => p.name === name);
-};
 
 const formatNumber = (n: number | string | undefined) => {
   if (n === undefined || n === null || (typeof n === 'string' && n === '')) return '';

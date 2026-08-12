@@ -48,36 +48,15 @@ test('ResultSection implements Phase 1 features: 1-sec copy, deeplinks, useCaptu
   assert.match(source, /result-card/);
 });
 
-test('useSettlement supports Phase 2 & 3 extraCosts, togglePaidStatus, and history operations', async () => {
+test('useSettlement and SettingsCard support Kakao-style customExpenses and preset chips', async () => {
   const source = await read('src/composables/useSettlement.ts');
-  assert.match(source, /HISTORY:\s*['"]diving:settlement:history:v1['"]/);
-  assert.match(source, /carpoolFee/);
-  assert.match(source, /extraTankFee/);
-  assert.match(source, /mealFee/);
-  assert.match(source, /togglePaidStatus/);
-  assert.match(source, /saveHistory/);
-  assert.match(source, /deleteHistory/);
-  assert.match(source, /loadHistoryItem/);
-});
+  assert.match(source, /customExpenses/);
+  assert.match(source, /addCustomExpense/);
+  assert.match(source, /removeCustomExpense/);
 
-test('SettingsCard renders extraCosts input section with CustomNumberInput', async () => {
-  const source = await read('src/views/settlement/SettingsCard.vue');
-  assert.match(source, /extra-costs-section/);
-  assert.match(source, /CustomNumberInput/);
-  assert.match(source, /carpoolFee/);
-  assert.match(source, /extraTankFee/);
-  assert.match(source, /mealFee/);
-});
-
-test('ResultSection and HistoryModal render paid status badges and history modal list', async () => {
-  const resultSource = await read('src/views/settlement/ResultSection.vue');
-  assert.match(resultSource, /paid-toggle-badge/);
-  assert.match(resultSource, /togglePaidStatus/);
-  assert.match(resultSource, /HistoryModal/);
-
-  const historySource = await read('src/views/settlement/HistoryModal.vue');
-  assert.match(historySource, /history-modal-card/);
-  assert.match(historySource, /CustomButton/);
-  assert.match(historySource, /불러오기/);
-  assert.match(historySource, /삭제/);
+  const cardSource = await read('src/views/settlement/SettingsCard.vue');
+  assert.match(cardSource, /preset-chips/);
+  assert.match(cardSource, /customExpenses/);
+  assert.match(cardSource, /addCustomExpense/);
+  assert.match(cardSource, /removeCustomExpense/);
 });
