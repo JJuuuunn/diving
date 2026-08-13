@@ -1,3 +1,5 @@
+import type { ComponentSize, ComponentState } from './inputs';
+
 export interface SwitchProps {
   modelValue: boolean;
   activeText: string;
@@ -5,6 +7,7 @@ export interface SwitchProps {
   activeIcon?: string;
   inactiveIcon?: string;
   disabled?: boolean;
+  size?: ComponentSize;
 }
 
 export interface TextareaProps {
@@ -13,10 +16,14 @@ export interface TextareaProps {
   maxLength?: number;
   disabled?: boolean;
   rows?: number;
+  size?: ComponentSize;
+  state?: ComponentState;
+  clearable?: boolean;
 }
 
 export interface SkeletonProps {
   type?: 'card' | 'list' | 'text';
+  size?: ComponentSize;
 }
 
 export interface SidebarProps {
@@ -27,6 +34,7 @@ export interface DarkModeToggleProps {
   modelValue?: boolean;
   /** 사이드바 확장 상태와 동일한 와이드 UI를 강제 표시 (플레이그라운드 등) */
   expanded?: boolean;
+  size?: ComponentSize;
 }
 
 export interface ConfirmModalProps {

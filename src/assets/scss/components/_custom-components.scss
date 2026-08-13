@@ -201,6 +201,18 @@
     }
   }
 
+  // 10단계 크기 스케일 오버라이드 (기본 스타일 하단 선언)
+  &.custom-ui-textarea--size-1 .grow-textarea { min-height: 40px; padding: 4px 8px 24px 8px; font-size: .65rem; border-radius: 6px; }
+  &.custom-ui-textarea--size-2 .grow-textarea { min-height: 48px; padding: 5px 9px 26px 9px; font-size: .70rem; border-radius: 7px; }
+  &.custom-ui-textarea--size-3, &.custom-ui-textarea--xs .grow-textarea { min-height: 56px; padding: 6px 10px 28px 10px; font-size: .75rem; border-radius: 8px; }
+  &.custom-ui-textarea--size-4, &.custom-ui-textarea--sm .grow-textarea { min-height: 64px; padding: 7px 11px 30px 11px; font-size: .80rem; border-radius: 9px; }
+  &.custom-ui-textarea--size-5 .grow-textarea { min-height: 72px; padding: 8px 12px 32px 12px; font-size: .85rem; border-radius: 10px; }
+  &.custom-ui-textarea--size-6, &.custom-ui-textarea--md .grow-textarea { min-height: 80px; padding: 9px 13px 34px 13px; font-size: .90rem; border-radius: 11px; }
+  &.custom-ui-textarea--size-7 .grow-textarea { min-height: 88px; padding: 10px 14px 36px 14px; font-size: .95rem; border-radius: 12px; }
+  &.custom-ui-textarea--size-8, &.custom-ui-textarea--lg .grow-textarea { min-height: 96px; padding: 11px 15px 38px 15px; font-size: 1.00rem; border-radius: 13px; }
+  &.custom-ui-textarea--size-9 .grow-textarea { min-height: 104px; padding: 12px 16px 40px 16px; font-size: 1.05rem; border-radius: 14px; }
+  &.custom-ui-textarea--size-10, &.custom-ui-textarea--xl .grow-textarea { min-height: 112px; padding: 13px 17px 42px 17px; font-size: 1.10rem; border-radius: 15px; }
+
   // 우측 하단 미니 도넛 글자 한계 배지 패널
   .textarea-limit-panel {
     position: absolute;
@@ -367,6 +379,58 @@
       color: #ffffff !important;
     }
   }
+
+  // 10단계 사이즈 오버라이드 (기본 스타일 하단 배치로 확실하게 적용)
+  &--size-1 {
+    min-height: 24px; padding: 2px; border-radius: 6px;
+    .switch-sliding-pill { top: 2px; left: 2px; width: calc(50% - 2px); height: calc(100% - 4px); border-radius: 4px; }
+    .switch-option-btn { padding: 2px 4px; font-size: .62rem; .switch-icon { font-size: .62rem; } }
+  }
+  &--size-2 {
+    min-height: 28px; padding: 2px; border-radius: 8px;
+    .switch-sliding-pill { top: 2px; left: 2px; width: calc(50% - 2px); height: calc(100% - 4px); border-radius: 6px; }
+    .switch-option-btn { padding: 3px 6px; font-size: .68rem; .switch-icon { font-size: .68rem; } }
+  }
+  &--size-3, &--xs {
+    min-height: 32px; padding: 3px; border-radius: 9px;
+    .switch-sliding-pill { top: 3px; left: 3px; width: calc(50% - 3px); height: calc(100% - 6px); border-radius: 6px; }
+    .switch-option-btn { padding: 4px 8px; font-size: .74rem; .switch-icon { font-size: .74rem; } }
+  }
+  &--size-4, &--sm {
+    min-height: 36px; padding: 3px; border-radius: 10px;
+    .switch-sliding-pill { top: 3px; left: 3px; width: calc(50% - 3px); height: calc(100% - 6px); border-radius: 7px; }
+    .switch-option-btn { padding: 6px 10px; font-size: .80rem; .switch-icon { font-size: .80rem; } }
+  }
+  &--size-5 {
+    min-height: 40px; padding: 4px; border-radius: 11px;
+    .switch-sliding-pill { top: 4px; left: 4px; width: calc(50% - 4px); height: calc(100% - 8px); border-radius: 8px; }
+    .switch-option-btn { padding: 8px 12px; font-size: .84rem; .switch-icon { font-size: .84rem; } }
+  }
+  &--size-6, &--md {
+    min-height: 44px; padding: 4px; border-radius: 12px;
+    .switch-sliding-pill { top: 4px; left: 4px; width: calc(50% - 4px); height: calc(100% - 8px); border-radius: 8px; }
+    .switch-option-btn { padding: 10px 14px; font-size: .88rem; .switch-icon { font-size: .88rem; } }
+  }
+  &--size-7 {
+    min-height: 48px; padding: 4px; border-radius: 12px;
+    .switch-sliding-pill { top: 4px; left: 4px; width: calc(50% - 4px); height: calc(100% - 8px); border-radius: 9px; }
+    .switch-option-btn { padding: 12px 16px; font-size: .94rem; .switch-icon { font-size: .94rem; } }
+  }
+  &--size-8, &--lg {
+    min-height: 52px; padding: 5px; border-radius: 13px;
+    .switch-sliding-pill { top: 5px; left: 5px; width: calc(50% - 5px); height: calc(100% - 10px); border-radius: 9px; }
+    .switch-option-btn { padding: 13px 18px; font-size: .98rem; .switch-icon { font-size: .98rem; } }
+  }
+  &--size-9 {
+    min-height: 56px; padding: 5px; border-radius: 13px;
+    .switch-sliding-pill { top: 5px; left: 5px; width: calc(50% - 5px); height: calc(100% - 10px); border-radius: 10px; }
+    .switch-option-btn { padding: 15px 20px; font-size: 1.03rem; .switch-icon { font-size: 1.03rem; } }
+  }
+  &--size-10, &--xl {
+    min-height: 60px; padding: 6px; border-radius: 14px;
+    .switch-sliding-pill { top: 6px; left: 6px; width: calc(50% - 6px); height: calc(100% - 12px); border-radius: 10px; }
+    .switch-option-btn { padding: 16px 22px; font-size: 1.08rem; .switch-icon { font-size: 1.08rem; } }
+  }
 }
 
 
@@ -483,6 +547,93 @@
       height: 16px;
       width: 100%;
     }
+  }
+}
+
+.custom-skeleton {
+  width: 100%;
+  max-width: 100%;
+  box-sizing: border-box;
+
+  &--size-1 {
+    .skeleton-card-layout { padding: 10px; gap: 8px; border-radius: 10px; }
+    .header-bar { height: 14px; }
+    .detail-bar { height: 8px; }
+    .tip-bar { height: 10px; }
+    .list-item-avatar { width: 24px; height: 24px; }
+    .text-bar { height: 10px; }
+  }
+  &--size-2 {
+    .skeleton-card-layout { padding: 12px; gap: 10px; border-radius: 12px; }
+    .header-bar { height: 16px; }
+    .detail-bar { height: 9px; }
+    .tip-bar { height: 11px; }
+    .list-item-avatar { width: 28px; height: 28px; }
+    .text-bar { height: 11px; }
+  }
+  &--size-3, &--xs {
+    .skeleton-card-layout { padding: 14px; gap: 11px; border-radius: 14px; }
+    .header-bar { height: 18px; }
+    .detail-bar { height: 10px; }
+    .tip-bar { height: 12px; }
+    .list-item-avatar { width: 32px; height: 32px; }
+    .text-bar { height: 12px; }
+  }
+  &--size-4, &--sm {
+    .skeleton-card-layout { padding: 16px; gap: 12px; border-radius: 15px; }
+    .header-bar { height: 20px; }
+    .detail-bar { height: 11px; }
+    .tip-bar { height: 13px; }
+    .list-item-avatar { width: 36px; height: 36px; }
+    .text-bar { height: 13px; }
+  }
+  &--size-5 {
+    .skeleton-card-layout { padding: 18px; gap: 14px; border-radius: 16px; }
+    .header-bar { height: 22px; }
+    .detail-bar { height: 12px; }
+    .tip-bar { height: 14px; }
+    .list-item-avatar { width: 38px; height: 38px; }
+    .text-bar { height: 14px; }
+  }
+  &--size-6, &--md {
+    .skeleton-card-layout { padding: 20px; gap: 15px; border-radius: 18px; }
+    .header-bar { height: 24px; }
+    .detail-bar { height: 13px; }
+    .tip-bar { height: 15px; }
+    .list-item-avatar { width: 42px; height: 42px; }
+    .text-bar { height: 15px; }
+  }
+  &--size-7 {
+    .skeleton-card-layout { padding: 22px; gap: 16px; border-radius: 20px; }
+    .header-bar { height: 26px; }
+    .detail-bar { height: 14px; }
+    .tip-bar { height: 16px; }
+    .list-item-avatar { width: 46px; height: 46px; }
+    .text-bar { height: 16px; }
+  }
+  &--size-8, &--lg {
+    .skeleton-card-layout { padding: 24px; gap: 18px; border-radius: 22px; }
+    .header-bar { height: 28px; }
+    .detail-bar { height: 15px; }
+    .tip-bar { height: 18px; }
+    .list-item-avatar { width: 50px; height: 50px; }
+    .text-bar { height: 18px; }
+  }
+  &--size-9 {
+    .skeleton-card-layout { padding: 26px; gap: 19px; border-radius: 24px; }
+    .header-bar { height: 30px; }
+    .detail-bar { height: 16px; }
+    .tip-bar { height: 19px; }
+    .list-item-avatar { width: 54px; height: 54px; }
+    .text-bar { height: 19px; }
+  }
+  &--size-10, &--xl {
+    .skeleton-card-layout { padding: 28px; gap: 20px; border-radius: 26px; }
+    .header-bar { height: 32px; }
+    .detail-bar { height: 18px; }
+    .tip-bar { height: 20px; }
+    .list-item-avatar { width: 58px; height: 58px; }
+    .text-bar { height: 20px; }
   }
 }
 

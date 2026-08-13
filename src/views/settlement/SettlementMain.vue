@@ -2,15 +2,16 @@
   <div class="settlement-container">
     <Header />
 
+    <!-- Step 1 (정산 내용) -> Step 2 (인원/계좌) -> Step 3 (정산 결과) 위저드 -->
     <div class="stepper-container">
       <div class="step-item" :class="{ active: currentStep >= 1 }">
         <div class="step-circle">1</div>
-        <span class="step-label">장소/시간</span>
+        <span class="step-label">정산 내용</span>
       </div>
       <div class="step-line" :class="{ active: currentStep >= 2 }"></div>
       <div class="step-item" :class="{ active: currentStep >= 2 }">
         <div class="step-circle">2</div>
-        <span class="step-label">인원/금액</span>
+        <span class="step-label">인원/계좌</span>
       </div>
       <div class="step-line" :class="{ active: currentStep >= 3 }"></div>
       <div class="step-item" :class="{ active: currentStep >= 3 }">
@@ -21,25 +22,25 @@
 
     <main class="main-content">
       <transition name="fade" mode="out-in">
+        <!-- Step 1: 정산 내용 & 모듈 구성 (What) -->
         <div v-if="currentStep === 1" key="step1" class="step-content">
-          <SettingsCard
-            v-model:current-day-type="settings.currentDayType"
-            v-model:selected-pool="settings.selectedPool"
-            v-model:base-price="settings.basePrice"
-            v-model:custom-expenses="settings.customExpenses"
+          <SettlementExtensionManager
+            v-model:settings="settings"
+            v-model:people="people"
             :pool-prices="poolPrices"
             @add-custom-expense="addCustomExpense"
             @remove-custom-expense="removeCustomExpense"
           />
           <div class="action-buttons center">
             <CustomButton @click="goToStep(2)" class="calculate-btn full-width">
-              <span>다음 단계 (인원 설정)</span>
+              <span>다음 단계 (인원 및 계좌 설정)</span>
               <i class="fa-solid fa-arrow-right"></i>
               <div class="hover-effect"></div>
             </CustomButton>
           </div>
         </div>
 
+        <!-- Step 2: 참여 인원 & 총무 계좌 (Who) -->
         <div v-else-if="currentStep === 2" key="step2" class="step-content">
           <PeopleCard
             v-model="people"
@@ -48,7 +49,7 @@
           />
           <div class="action-buttons row">
             <CustomButton @click="goToStep(1)" class="secondary-btn prev-btn">
-              <i class="fa-solid fa-arrow-left"></i> 이전
+              <i class="fa-solid fa-arrow-left"></i> 이전 (정산 내용)
             </CustomButton>
             <CustomButton @click="calculateAndGoToResult" class="calculate-btn flex-grow">
               <span>정산 결과 보기</span>
@@ -58,6 +59,7 @@
           </div>
         </div>
 
+        <!-- Step 3: 정산 결과 -->
         <div v-else-if="currentStep === 3" key="step3" class="step-content">
           <ResultSection
             :show-result-section="true"
@@ -92,8 +94,9 @@ import { serializeSettlement, deserializeSettlement } from '@/utils/serializatio
 // 컴포넌트 임포트
 import Header from '@/components/Header.vue';
 import Footer from '@/components/Footer.vue';
-import SettingsCard from './SettingsCard.vue';
+import CustomButton from '@/components/CustomButton.vue';
 import PeopleCard from './PeopleCard.vue';
+import SettlementExtensionManager from './SettlementExtensionManager.vue';
 import ResultSection from './ResultSection.vue';
 
 const { triggerToast } = useToast();
@@ -113,8 +116,8 @@ const {
 } = useSettlement();
 
 const goToStep = (step: number) => {
-  if (step === 2 && !getNumericPrice(settings.value.basePrice)) {
-    return triggerToast("입장료를 입력해주세요.", true);
+  if (step === 2 && people.value.length === 0) {
+    return triggerToast("최소 1명 이상의 인원을 등록해주세요.", true);
   }
   window.scrollTo({ top: 0, behavior: 'smooth' });
   currentStep.value = step;
@@ -122,7 +125,7 @@ const goToStep = (step: number) => {
 
 const calculateAndGoToResult = () => {
   calculate();
-  if (getNumericPrice(settings.value.basePrice)) goToStep(3);
+  goToStep(3);
 };
 
 const { copy } = useClipboard();

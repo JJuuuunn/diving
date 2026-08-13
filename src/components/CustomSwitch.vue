@@ -1,7 +1,10 @@
 <template>
   <div
     class="custom-switch-container"
-    :class="{ 'is-disabled': disabled }"
+    :class="[
+      getSizeClass('custom-switch-container', size),
+      { 'is-disabled': disabled }
+    ]"
   >
     <!-- 활성 슬라이딩 배경 필 -->
     <div
@@ -39,9 +42,11 @@
 import { computed } from 'vue';
 import { useElasticToggle } from '@/composables/useElasticToggle';
 import type { SwitchProps } from '@/types/components';
+import { getSizeClass } from '@/utils/size';
 
 const props = withDefaults(defineProps<SwitchProps>(), {
-  disabled: false
+  disabled: false,
+  size: 'md'
 });
 
 const emit = defineEmits<{

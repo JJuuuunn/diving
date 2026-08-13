@@ -19,10 +19,21 @@
     <!-- 문제 카드 -->
     <div class="quiz-card fade-in-up">
       <div class="question-header">
-        <span class="category-chip">{{ quizHelper.currentQuestion.value.category }}</span>
-        <span class="q-number">
-          {{ quizHelper.currentQuestionIndex.value + 1 }} / {{ quizHelper.questions.value.length }}문제
-        </span>
+        <div class="header-left">
+          <span class="category-chip">{{ quizHelper.currentQuestion.value.category }}</span>
+          <span class="q-number">
+            {{ quizHelper.currentQuestionIndex.value + 1 }} / {{ quizHelper.questions.value.length }}문제
+          </span>
+        </div>
+
+        <CustomButton
+          class="star-toggle-btn"
+          :class="{ active: quizStore.isBookmarked(quizHelper.currentQuestion.value.id) }"
+          :aria-label="quizStore.isBookmarked(quizHelper.currentQuestion.value.id) ? '즐겨찾기 해제' : '즐겨찾기 추가'"
+          @click="quizStore.toggleBookmark(quizHelper.currentQuestion.value.id)"
+        >
+          {{ quizStore.isBookmarked(quizHelper.currentQuestion.value.id) ? '⭐' : '☆' }}
+        </CustomButton>
       </div>
 
       <div class="question-text">
@@ -136,14 +147,17 @@ import { onMounted, computed, ref, watch } from 'vue';
 import { useRoute, useRouter } from 'vue-router';
 import questionsData from '@/data/questions.json';
 import { useQuiz } from '@/composables/useQuiz';
+import { useQuizStore } from '@/stores/quiz';
 import type { Question } from '@/types/quiz';
 import ConfirmModal from '@/components/ConfirmModal.vue';
 import CustomButton from '@/components/CustomButton.vue';
 import CustomInput from '@/components/CustomInput.vue';
+import { RouterName } from '@/mappings/enum';
 
 const route = useRoute();
 const router = useRouter();
 const quizHelper = useQuiz();
+const quizStore = useQuizStore();
 
 const setId = computed(() => String(route.params.setId));
 
@@ -164,12 +178,27 @@ const syncMultiAnswer = () => {
 };
 
 onMounted(() => {
-  const setInfo = questionsData.quizSets.find(s => s.id === setId.value);
-  if (!setInfo) {
-    router.push({ name: '다이빙 문제 은행' });
-    return;
+  const allQ = questionsData.questions as Question[];
+  if (setId.value === 'wrong-notes') {
+    quizHelper.startWrongNotesQuiz(allQ);
+    if (quizHelper.questions.value.length === 0) {
+      router.push({ name: RouterName.QuizDashboard });
+      return;
+    }
+  } else if (setId.value === 'bookmarks') {
+    quizHelper.startBookmarksQuiz(allQ);
+    if (quizHelper.questions.value.length === 0) {
+      router.push({ name: RouterName.QuizDashboard });
+      return;
+    }
+  } else {
+    const setInfo = questionsData.quizSets.find(s => s.id === setId.value);
+    if (!setInfo) {
+      router.push({ name: RouterName.QuizDashboard });
+      return;
+    }
+    quizHelper.startQuiz(setInfo as any, allQ);
   }
-  quizHelper.startQuiz(setInfo as any, questionsData.questions as Question[]);
   syncMultiAnswer();
 });
 
@@ -196,7 +225,6 @@ const handleOXSelect = (val: boolean) => {
   const q = quizHelper.currentQuestion.value;
   if (q) {
     quizHelper.saveAnswer(q.id, val);
-    // OX 선택 시 편의를 위해 0.3초 후 다음 문제로 자동 전진
     setTimeout(() => {
       if (!quizHelper.isLastQuestion.value) {
         quizHelper.nextQuestion();
@@ -209,7 +237,6 @@ const handleSingleSelect = (index: number) => {
   const q = quizHelper.currentQuestion.value;
   if (q) {
     quizHelper.saveAnswer(q.id, index);
-    // 객관식 선택 시 0.3초 후 다음 문제로 자동 전진
     setTimeout(() => {
       if (!quizHelper.isLastQuestion.value) {
         quizHelper.nextQuestion();

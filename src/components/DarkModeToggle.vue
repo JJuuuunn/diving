@@ -5,6 +5,7 @@
       class="theme-toggle"
       :class="[
         `theme-toggle--${currentMode}`,
+        getSizeClass('theme-toggle', size),
         { 'is-day': isDay, 'is-expanded': expanded }
       ]"
       :aria-label="toggleLabel"
@@ -39,6 +40,7 @@ import { ref, computed } from 'vue';
 import type { DarkModeToggleProps } from '@/types/components';
 import type { ThemeMode } from '@/stores/theme';
 import { useThemeStore } from '@/stores/theme';
+import { getSizeClass } from '@/utils/size';
 import ThemeSelectorModal from '@/components/ThemeSelectorModal.vue';
 import sunIcon from '@/assets/icons/sun.svg?raw';
 import moonStarsIcon from '@/assets/icons/moon-stars.svg?raw';
@@ -46,6 +48,7 @@ import moonStarsIcon from '@/assets/icons/moon-stars.svg?raw';
 const props = withDefaults(defineProps<DarkModeToggleProps>(), {
   modelValue: true,
   expanded: false,
+  size: 'md'
 });
 
 const emit = defineEmits<{

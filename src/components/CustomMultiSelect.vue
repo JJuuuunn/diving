@@ -3,8 +3,9 @@
     <div
       class="select-trigger multi-select-trigger"
       :class="[
-        `multi-select-trigger--${size}`,
-        { 'is-active': isOpen, 'is-disabled': disabled }
+        getSizeClass('multi-select-trigger', size),
+        { 'is-active': isOpen, 'is-disabled': disabled },
+        state && state !== 'default' ? `is-${state}` : ''
       ]"
       role="combobox"
       tabindex="0"
@@ -81,13 +82,15 @@ import { computed, ref } from 'vue';
 import { onClickOutside } from '@vueuse/core';
 import { useMultiSelect } from '@/composables/useMultiSelect';
 import type { MultiSelectProps } from '@/types/inputs';
+import { getSizeClass } from '@/utils/size';
 
 const props = withDefaults(defineProps<MultiSelectProps>(), {
   placeholder: '여러 항목 선택',
   disabled: false,
   clearable: true,
   maxSelections: 0,
-  size: 'md'
+  size: 'md',
+  state: 'default'
 });
 
 const emit = defineEmits<{

@@ -126,6 +126,63 @@ export function useQuiz() {
     return sortedUser.every((val, index) => val === sortedCorrect[index]);
   };
 
+  // 오답 문제만 모아서 퀴즈 세션 생성
+  const startWrongNotesQuiz = (questionsList: Question[]) => {
+    const wrongMap = new Map(quizStore.wrongNotes.map((n) => [n.questionId, n.question]));
+    const wrongIds = new Set(quizStore.wrongNotes.map((n) => n.questionId));
+
+    let targetQuestions = questionsList.filter((q) => wrongIds.has(q.id));
+    if (targetQuestions.length === 0 && wrongMap.size > 0) {
+      targetQuestions = Array.from(wrongMap.values());
+    }
+
+    const setInfo: QuizSet = {
+      id: 'wrong-notes',
+      title: '📝 오답 복습 모드',
+      description: '저장된 오답 문제들을 복습합니다.',
+      totalQuestions: targetQuestions.length
+    };
+
+    activeSet.value = setInfo;
+    isFinished.value = false;
+    currentQuestionIndex.value = 0;
+    userAnswers.value = {};
+    timeRemaining.value = null;
+
+    const shuffled = [...targetQuestions];
+    for (let i = shuffled.length - 1; i > 0; i--) {
+      const j = Math.floor(Math.random() * (i + 1));
+      [shuffled[i], shuffled[j]] = [shuffled[j], shuffled[i]];
+    }
+    questions.value = shuffled;
+  };
+
+  // 즐겨찾기(북마크) 문제만 모아서 퀴즈 세션 생성
+  const startBookmarksQuiz = (questionsList: Question[]) => {
+    const bookmarkedSet = new Set(quizStore.bookmarkedIds);
+    const targetQuestions = questionsList.filter((q) => bookmarkedSet.has(q.id));
+
+    const setInfo: QuizSet = {
+      id: 'bookmarks',
+      title: '⭐ 즐겨찾기 모아 풀기',
+      description: '북마크한 문제들을 모아서 풀이합니다.',
+      totalQuestions: targetQuestions.length
+    };
+
+    activeSet.value = setInfo;
+    isFinished.value = false;
+    currentQuestionIndex.value = 0;
+    userAnswers.value = {};
+    timeRemaining.value = null;
+
+    const shuffled = [...targetQuestions];
+    for (let i = shuffled.length - 1; i > 0; i--) {
+      const j = Math.floor(Math.random() * (i + 1));
+      [shuffled[i], shuffled[j]] = [shuffled[j], shuffled[i]];
+    }
+    questions.value = shuffled;
+  };
+
   // 최종 채점 및 제출
   const submitQuiz = () => {
     if (isFinished.value || !activeSet.value) return;
@@ -147,6 +204,13 @@ export function useQuiz() {
         } else if (q.type === 'short-answer') {
           isCorrect = verifyShortAnswer(String(userAns), q.answer);
         }
+      }
+
+      // 틀린 문제는 오답 노트 자동 저장, 맞춘 문제는 오답 노트에서 해제
+      if (isCorrect) {
+        quizStore.removeWrongNote(q.id);
+      } else {
+        quizStore.addWrongNote(q, userAns);
       }
 
       return {
@@ -174,7 +238,7 @@ export function useQuiz() {
     // Pinia 스토어에 기록 적재
     quizStore.addHistory(historyRecord);
 
-    // 결과 뷰로 이동할 수 있도록 세션 스토리지 또는 라우터 쿼리로 연동
+    // 결과 뷰로 이동할 수 있도록 세션 스토리지 연동
     sessionStorage.setItem('diving:quiz:last_result:v1', JSON.stringify({
       historyRecord,
       questions: questions.value
@@ -199,6 +263,8 @@ export function useQuiz() {
     isFirstQuestion,
     isLastQuestion,
     startQuiz,
+    startWrongNotesQuiz,
+    startBookmarksQuiz,
     saveAnswer,
     nextQuestion,
     prevQuestion,

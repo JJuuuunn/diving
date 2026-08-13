@@ -1,6 +1,6 @@
 <template>
-  <div class="custom-number-input">
-    <div class="number-stepper-container">
+  <div class="custom-number-input" :class="[getSizeClass('custom-number-input', size), state && state !== 'default' ? `custom-number-input--${state}` : '']">
+    <div class="number-stepper-container" :class="{ 'is-disabled': disabled }">
       <!-- 값 감소 버튼 -->
       <button
         type="button"
@@ -42,6 +42,7 @@
 import { computed } from 'vue';
 import { useNumberInput } from '@/composables/useNumberInput';
 import type { NumberInputProps } from '@/types/inputs';
+import { getSizeClass } from '@/utils/size';
 
 defineOptions({ inheritAttrs: false });
 
@@ -50,7 +51,10 @@ const props = withDefaults(defineProps<NumberInputProps>(), {
   max: Infinity,
   step: 1,
   placeholder: '0',
-  disabled: false
+  disabled: false,
+  size: 'md',
+  state: 'default',
+  clearable: false
 });
 
 const emit = defineEmits<{

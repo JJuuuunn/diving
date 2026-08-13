@@ -48,15 +48,74 @@ test('ResultSection implements Phase 1 features: 1-sec copy, deeplinks, useCaptu
   assert.match(source, /result-card/);
 });
 
-test('useSettlement and SettingsCard support Kakao-style customExpenses and preset chips', async () => {
+test('useSettlement and ExtensionCardCustom support Kakao-style customExpenses and preset chips', async () => {
   const source = await read('src/composables/useSettlement.ts');
   assert.match(source, /customExpenses/);
   assert.match(source, /addCustomExpense/);
   assert.match(source, /removeCustomExpense/);
 
-  const cardSource = await read('src/views/settlement/SettingsCard.vue');
+  const cardSource = await read('src/views/settlement/ExtensionCardCustom.vue');
   assert.match(cardSource, /preset-chips/);
-  assert.match(cardSource, /customExpenses/);
+  assert.match(cardSource, /custom-expense-list/);
   assert.match(cardSource, /addCustomExpense/);
-  assert.match(cardSource, /removeCustomExpense/);
+});
+
+test('useSettlement exports extension management methods and types', async () => {
+  const typeSource = await read('src/types/settlement.ts');
+  assert.match(typeSource, /export type SettlementExtensionType =/);
+  assert.match(typeSource, /export interface SettlementExtensionItem/);
+  assert.match(typeSource, /activeExtensions\?: SettlementExtensionItem\[\]/);
+  assert.match(typeSource, /baseSimpleAmount\?: number/);
+
+  const composableSource = await read('src/composables/useSettlement.ts');
+  assert.match(composableSource, /toggleExtension/);
+  assert.match(composableSource, /addExtensionItem/);
+  assert.match(composableSource, /removeExtensionItem/);
+  assert.match(composableSource, /updateExtensionItem/);
+});
+
+test('SettlementExtensionManager and specialized extension cards exist and use shared UI components', async () => {
+  const managerSource = await read('src/views/settlement/SettlementExtensionManager.vue');
+  assert.match(managerSource, /extension-chipbar/);
+  assert.match(managerSource, /ExtensionCardPool/);
+  assert.match(managerSource, /ExtensionCardCarpool/);
+  assert.match(managerSource, /ExtensionCardMeal/);
+  assert.match(managerSource, /ExtensionCardTank/);
+  assert.match(managerSource, /ExtensionCardCustom/);
+
+  const poolSource = await read('src/views/settlement/ExtensionCardPool.vue');
+  assert.match(poolSource, /pool-grid/);
+  assert.match(poolSource, /day-type-toggle/);
+  assert.match(poolSource, /CustomInput/);
+
+  const carpoolSource = await read('src/views/settlement/ExtensionCardCarpool.vue');
+  assert.match(carpoolSource, /CustomSelect/);
+  assert.match(carpoolSource, /CustomSwitch/);
+  assert.match(carpoolSource, /driver-select/);
+
+  const mealSource = await read('src/views/settlement/ExtensionCardMeal.vue');
+  assert.match(mealSource, /attendee-chips/);
+  assert.match(mealSource, /CustomNumberInput/);
+
+  const customSource = await read('src/views/settlement/ExtensionCardCustom.vue');
+  assert.match(customSource, /preset-chips/);
+  assert.match(customSource, /custom-expense-list/);
+});
+
+test('SettlementMain implements Step 1 (정산 내용) -> Step 2 (인원/계좌) -> Step 3 (정산 결과) wizard flow', async () => {
+  const mainSource = await read('src/views/settlement/SettlementMain.vue');
+  assert.match(mainSource, /정산 내용/);
+  assert.match(mainSource, /인원\/계좌/);
+  assert.match(mainSource, /정산 결과/);
+  assert.match(mainSource, /SettlementExtensionManager/);
+  assert.match(mainSource, /PeopleCard/);
+  assert.match(mainSource, /ResultSection/);
+});
+
+test('PersonCard uses compact 1-line toggles and CustomSelect without legacy arrows', async () => {
+  const cardSource = await read('src/views/settlement/PersonCard.vue');
+  assert.match(cardSource, /person-toggles/);
+  assert.match(cardSource, /person-toggle-btn/);
+  assert.match(cardSource, /CustomSelect/);
+  assert.match(cardSource, /bank-select/);
 });

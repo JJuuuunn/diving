@@ -1,4 +1,5 @@
 import type { Dayjs } from 'dayjs';
+import type { ComponentSize, ComponentState } from '@/types/inputs';
 
 export interface CalendarDay {
   date: Dayjs;
@@ -26,6 +27,8 @@ export interface DatePickerProps {
   id?: string;
   placeholder?: string;
   mode?: DatePickerMode;
+  size?: ComponentSize;
+  state?: ComponentState;
 }
 
 export interface DateRange {
@@ -38,4 +41,6 @@ export interface DateRangePickerProps {
   placeholder?: string;
   disabled?: boolean;
   mode?: DatePickerMode;
+  size?: ComponentSize;
+  state?: ComponentState;
 }

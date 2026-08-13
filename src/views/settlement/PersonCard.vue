@@ -5,23 +5,25 @@
         <CustomInput v-model="person.name" class="person-name-input" placeholder="이름" />
       </div>
       <div class="person-toggles">
-        <CustomSwitch
-          v-model="person.isBooker"
-          active-text="예약자"
-          inactive-text="참석자"
-          active-icon="fa-crown"
-          inactive-icon="fa-user"
-          class="switch-is-booker"
-        />
-        <CustomSwitch
-          v-model="person.isMember"
-          active-text="회원"
-          inactive-text="비회원"
-          active-icon="fa-medal"
-          inactive-icon="fa-user-slash"
-          class="switch-is-member"
-        />
-        <CustomButton v-if="canBeDeleted" class="person-remove-btn" aria-label="참여자 삭제" @click="emit('remove', person.id)">
+        <CustomButton
+          type="button"
+          :class="['person-toggle-btn', person.isBooker ? 'booker' : 'attendee']"
+          @click="person.isBooker = !person.isBooker"
+        >
+          <i v-if="person.isBooker" class="fa-solid fa-crown"></i>
+          <i v-else class="fa-solid fa-user"></i>
+          <span class="toggle-text">{{ person.isBooker ? '예약자' : '참석자' }}</span>
+        </CustomButton>
+        <CustomButton
+          type="button"
+          :class="['person-toggle-btn', person.isMember ? 'member' : 'non-member']"
+          @click="person.isMember = !person.isMember"
+        >
+          <i v-if="person.isMember" class="fa-solid fa-medal"></i>
+          <i v-else class="fa-solid fa-user-slash"></i>
+          <span class="toggle-text">{{ person.isMember ? '회원' : '비회원' }}</span>
+        </CustomButton>
+        <CustomButton v-if="canBeDeleted" type="button" class="person-remove-btn" aria-label="참여자 삭제" @click="emit('remove', person.id)">
           <i class="fa-solid fa-xmark"></i>
         </CustomButton>
       </div>
@@ -61,7 +63,6 @@ import type { Person } from '@/types/settlement';
 import { formatNumber, getNumericPrice } from '@/utils/formatter';
 import banks from '@/data/banks.json';
 import CustomSelect from '@/components/CustomSelect.vue';
-import CustomSwitch from '@/components/CustomSwitch.vue';
 import CustomButton from '@/components/CustomButton.vue';
 import CustomInput from '@/components/CustomInput.vue';
 

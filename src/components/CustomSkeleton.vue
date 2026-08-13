@@ -1,7 +1,7 @@
 <template>
   <div
     class="custom-skeleton"
-    :class="['type-' + type]"
+    :class="['type-' + type, getSizeClass('custom-skeleton', size)]"
   >
     <!-- 카드 타입 스켈레톤 디자인 -->
     <div v-if="type === 'card'" class="skeleton-card-layout">
@@ -32,8 +32,10 @@
 
 <script setup lang="ts">
 import type { SkeletonProps } from '@/types/components';
+import { getSizeClass } from '@/utils/size';
 
 withDefaults(defineProps<SkeletonProps>(), {
-  type: 'card'
+  type: 'card',
+  size: 'md'
 });
 </script>

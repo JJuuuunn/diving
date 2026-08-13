@@ -16,14 +16,38 @@
     background: rgba(15, 23, 42, 0.6);
     border: 1px solid rgba(255, 255, 255, 0.1);
     border-radius: 12px;
-    padding: 12px 16px;
     color: #f8fafc;
-    font-size: 0.95rem;
     cursor: pointer;
     transition: all 0.25s ease;
     box-sizing: border-box;
     font-family: inherit;
     text-align: left;
+
+    &--size-1 { height: 24px; min-height: 24px; padding: 2px 6px; font-size: .65rem; border-radius: 6px; }
+    &--size-2 { height: 28px; min-height: 28px; padding: 3px 8px; font-size: .70rem; border-radius: 7px; }
+    &--size-3, &--xs { height: 32px; min-height: 32px; padding: 4px 10px; font-size: .75rem; border-radius: 8px; }
+    &--size-4, &--sm { height: 36px; min-height: 36px; padding: 5px 12px; font-size: .80rem; border-radius: 9px; }
+    &--size-5 { height: 40px; min-height: 40px; padding: 6px 14px; font-size: .85rem; border-radius: 10px; }
+    &--size-6, &--md { height: 44px; min-height: 44px; padding: 7px 16px; font-size: .90rem; border-radius: 11px; }
+    &--size-7 { height: 48px; min-height: 48px; padding: 8px 18px; font-size: .95rem; border-radius: 12px; }
+    &--size-8, &--lg { height: 52px; min-height: 52px; padding: 9px 20px; font-size: 1.00rem; border-radius: 13px; }
+    &--size-9 { height: 56px; min-height: 56px; padding: 10px 22px; font-size: 1.05rem; border-radius: 14px; }
+    &--size-10, &--xl { height: 60px; min-height: 60px; padding: 11px 24px; font-size: 1.10rem; border-radius: 15px; }
+
+    &--error {
+      border-color: var(--red-500, #ef4444) !important;
+      box-shadow: 0 0 10px rgba(239, 68, 68, 0.25) !important;
+    }
+
+    &--warning {
+      border-color: var(--amber-500, #f59e0b) !important;
+      box-shadow: 0 0 10px rgba(245, 158, 11, 0.25) !important;
+    }
+
+    &--success {
+      border-color: var(--green-600, #10b981) !important;
+      box-shadow: 0 0 10px rgba(16, 185, 129, 0.25) !important;
+    }
 
     body:not(.dark) & {
       background: rgba(255, 255, 255, 0.8);

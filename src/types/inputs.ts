@@ -5,7 +5,21 @@ export interface SelectOption {
 }
 
 export type SelectItem = SelectOption | string | number;
-export type ComponentSize = 'xs' | 'sm' | 'md' | 'lg' | 'xl';
+
+export type ComponentSizeLevel = 1 | 2 | 3 | 4 | 5 | 6 | 7 | 8 | 9 | 10;
+export type ComponentSize = ComponentSizeLevel | `${ComponentSizeLevel}` | 'xs' | 'sm' | 'md' | 'lg' | 'xl' | number;
+
+export type ComponentVariant =
+  | 'default'
+  | 'primary'
+  | 'secondary'
+  | 'danger'
+  | 'success'
+  | 'warning'
+  | 'ghost'
+  | 'outline';
+
+export type ComponentState = 'default' | 'success' | 'warning' | 'error';
 
 export interface NumberInputProps {
   modelValue: number;
@@ -14,6 +28,9 @@ export interface NumberInputProps {
   step?: number;
   placeholder?: string;
   disabled?: boolean;
+  size?: ComponentSize;
+  state?: ComponentState;
+  clearable?: boolean;
 }
 
 export interface SelectProps {
@@ -23,6 +40,9 @@ export interface SelectProps {
   ariaLabel?: string;
   placeholder?: string;
   disabled?: boolean;
+  size?: ComponentSize;
+  state?: ComponentState;
+  clearable?: boolean;
 }
 
 export interface MultiSelectProps {
@@ -33,6 +53,7 @@ export interface MultiSelectProps {
   clearable?: boolean;
   maxSelections?: number;
   size?: ComponentSize;
+  state?: ComponentState;
 }
 
 export interface InputProps {
@@ -48,17 +69,21 @@ export interface InputProps {
   error?: string;
   errorId?: string;
   size?: ComponentSize;
+  state?: ComponentState;
+  clearable?: boolean;
   trim?: boolean;
   valueType?: 'string' | 'number';
 }
 
 export interface ButtonProps {
   type?: 'button' | 'submit' | 'reset';
-  variant?: 'default' | 'primary' | 'secondary' | 'danger' | 'ghost';
+  variant?: ComponentVariant;
   size?: ComponentSize;
   shape?: 'rounded' | 'pill' | 'square';
   disabled?: boolean;
   loading?: boolean;
   loadingLabel?: string;
   block?: boolean;
+  state?: ComponentState;
+  clearable?: boolean;
 }

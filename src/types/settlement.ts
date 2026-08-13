@@ -5,6 +5,24 @@ export interface PoolInfo {
     weekend: number;
 }
 
+// 확장 모듈 종류 타입
+export type SettlementExtensionType = 'base' | 'pool' | 'carpool' | 'meal' | 'tank' | 'custom';
+
+// 확장 모듈 항목 인터페이스
+export interface SettlementExtensionItem {
+    id: string;
+    type: SettlementExtensionType;
+    title: string;
+    amount: number;
+    active: boolean;
+    targetPersonIds?: number[];
+    driverId?: number;
+    excludeDriver?: boolean;
+    poolKey?: string;
+    dayType?: 'weekday' | 'weekend';
+    basePriceStr?: string;
+}
+
 // 부가 정산 항목 (카카오 1/N 정산 방식)
 export interface ExtraExpenseItem {
     id: string;
@@ -47,6 +65,23 @@ export interface SettlementSettings {
     currentDayType: 'weekday' | 'weekend';
     selectedPool: string;
     basePrice: string;
+    baseSimpleAmount?: number;
+    activeModules?: Record<string, boolean>;
+    carpoolDetails?: {
+        driverId?: number;
+        excludeDriver?: boolean;
+        amount?: number;
+    };
+    mealDetails?: {
+        amount?: number;
+        participantIds?: number[];
+    };
+    tankDetails?: {
+        count?: number;
+        pricePerTank?: number;
+        amount?: number;
+    };
+    activeExtensions?: SettlementExtensionItem[];
     extraCosts?: ExtraCosts;
     customExpenses?: ExtraExpenseItem[];
 }

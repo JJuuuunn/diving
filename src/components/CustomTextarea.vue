@@ -1,11 +1,21 @@
 <template>
-  <div class="custom-textarea">
+  <div
+    class="custom-textarea"
+    :class="[
+      getSizeClass('custom-textarea', size),
+      state && state !== 'default' ? `custom-textarea--${state}` : ''
+    ]"
+  >
     <!-- 입력 텍스트 영역 -->
     <textarea
       v-bind="$attrs"
       ref="textareaRef"
       v-model="value"
       class="grow-textarea"
+      :class="[
+        getSizeClass('grow-textarea', size),
+        state && state !== 'default' ? `grow-textarea--${state}` : ''
+      ]"
       :placeholder="placeholder"
       :disabled="disabled"
       :rows="rows"
@@ -45,6 +55,7 @@
 import { computed, onMounted, watch } from 'vue';
 import { useAutoGrow } from '@/composables/useAutoGrow';
 import type { TextareaProps } from '@/types/components';
+import { getSizeClass } from '@/utils/size';
 
 defineOptions({ inheritAttrs: false });
 
@@ -52,11 +63,15 @@ const props = withDefaults(defineProps<TextareaProps>(), {
   placeholder: '메모를 입력해주세요...',
   maxLength: 0,
   disabled: false,
-  rows: 3
+  rows: 3,
+  size: 'md',
+  state: 'default',
+  clearable: false
 });
 
 const emit = defineEmits<{
   (e: 'update:modelValue', val: string): void;
+  (e: 'clear'): void;
 }>();
 
 // 양방향 바인딩 writable computed
@@ -64,6 +79,12 @@ const value = computed({
   get: () => props.modelValue,
   set: (val: string) => emit('update:modelValue', val)
 });
+
+const handleClear = (): void => {
+  emit('update:modelValue', '');
+  emit('clear');
+  textareaRef.value?.focus();
+};
 
 const maxLengthRef = computed(() => props.maxLength);
 

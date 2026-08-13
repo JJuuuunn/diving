@@ -4,7 +4,11 @@
     <div
       :id="id"
       class="select-trigger"
-      :class="{ 'is-active': isOpen, 'is-disabled': disabled }"
+      :class="[
+        getSizeClass('select-trigger', size),
+        { 'is-active': isOpen, 'is-disabled': disabled },
+        state && state !== 'default' ? `is-${state}` : ''
+      ]"
       role="combobox"
       tabindex="0"
       :aria-expanded="isOpen"
@@ -57,12 +61,16 @@ import { ref, computed } from 'vue';
 import { onClickOutside } from '@vueuse/core';
 import { useSelect } from '@/composables/useSelect';
 import type { SelectOption, SelectProps } from '@/types/inputs';
+import { getSizeClass } from '@/utils/size';
 
 const props = withDefaults(defineProps<SelectProps>(), {
   id: '',
   ariaLabel: '',
   placeholder: '선택해주세요',
-  disabled: false
+  disabled: false,
+  size: 'md',
+  state: 'default',
+  clearable: false
 });
 
 const emit = defineEmits<{

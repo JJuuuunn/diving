@@ -40,9 +40,12 @@
         >
           <div class="review-title-row" @click="toggleReview(idx)">
             <h4>Q{{ idx + 1 }}. {{ getQuestion(ans.questionId)?.question }}</h4>
-            <span class="result-badge" :class="ans.isCorrect ? 'correct' : 'incorrect'">
-              {{ ans.isCorrect ? '정답' : '오답' }}
-            </span>
+            <div class="badge-container">
+              <span v-if="!ans.isCorrect" class="wrong-saved-badge">📝 오답 노트 저장됨</span>
+              <span class="result-badge" :class="ans.isCorrect ? 'correct' : 'incorrect'">
+                {{ ans.isCorrect ? '정답' : '오답' }}
+              </span>
+            </div>
           </div>
 
           <!-- 아코디언 콘텐츠 -->
@@ -74,6 +77,13 @@
     <!-- 하단 액션 버튼 -->
     <div class="action-row fade-in-up">
       <CustomButton class="action-btn secondary" @click="handleGoDashboard">문제 은행 홈</CustomButton>
+      <CustomButton
+        v-if="quizStore.wrongNotes.length > 0"
+        class="action-btn wrong-btn"
+        @click="handleWrongNotesReview"
+      >
+        📝 오답 복습하기
+      </CustomButton>
       <CustomButton class="action-btn primary" @click="handleRetry">다시 풀기</CustomButton>
     </div>
   </div>
@@ -83,12 +93,15 @@
 import { onMounted, ref, computed } from 'vue';
 import { useRouter } from 'vue-router';
 import type { QuizHistory, Question } from '@/types/quiz';
+import { useQuizStore } from '@/stores/quiz';
+import CustomButton from '@/components/CustomButton.vue';
 import { RouterName } from '@/mappings/enum';
 
 const LAST_RESULT_KEY = 'diving:quiz:last_result:v1';
 const LEGACY_LAST_RESULT_KEY = 'diving_last_quiz_result';
 
 const router = useRouter();
+const quizStore = useQuizStore();
 const resultData = ref<{ historyRecord: QuizHistory; questions: Question[] } | null>(null);
 
 // 열려 있는 아코디언 인덱스 관리 상태
@@ -140,6 +153,10 @@ const handleRetry = () => {
 
 const handleGoDashboard = () => {
   router.push({ name: RouterName.QuizDashboard });
+};
+
+const handleWrongNotesReview = () => {
+  router.push({ name: RouterName.QuizPlay, params: { setId: 'wrong-notes' } });
 };
 
 const getQuestion = (qId: number): Question | undefined => {

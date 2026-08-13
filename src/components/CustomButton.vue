@@ -3,8 +3,10 @@
     class="custom-ui-button"
     :class="[
       `custom-ui-button--${variant}`,
+      getSizeClass('custom-ui-button', size),
       `custom-ui-button--${size}`,
       `custom-ui-button--${shape}`,
+      state && state !== 'default' ? `custom-ui-button--${state} custom-ui-button--state-${state}` : '',
       {
         'custom-ui-button--block': block,
         'custom-ui-button--loading': loading
@@ -32,6 +34,7 @@
 
 <script setup lang="ts">
 import type { ButtonProps } from '@/types/inputs';
+import { getSizeClass } from '@/utils/size';
 
 withDefaults(defineProps<ButtonProps>(), {
   type: 'button',
@@ -41,6 +44,8 @@ withDefaults(defineProps<ButtonProps>(), {
   disabled: false,
   loading: false,
   loadingLabel: '처리 중',
-  block: false
+  block: false,
+  state: 'default',
+  clearable: false
 });
 </script>

@@ -1,0 +1,254 @@
+// ==========================================================================
+// 4개 비주얼 커스텀 테마 세그먼트 스위치 (ThemeSegmentToggle) SCSS 스타일
+// (탭 리스트 항목과 is-active 인디케이터 박스 크기/마진 100% 동일 정렬)
+// ==========================================================================
+
+@mixin expanded-theme-segment-toggle {
+  width: 100%;
+  max-width: 100%;
+  padding: var(--segment-padding, 4px);
+
+  .theme-segment-toggle__option {
+    flex: 1 1 0%;
+    width: calc((100% - (var(--segment-padding, 4px) * 2)) / 4);
+    height: 100%;
+    margin: 0;
+    padding: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 4px;
+    background: transparent;
+    border: none;
+    cursor: pointer;
+    z-index: 2; // 인디케이터 백그라운드 필(z-index: 1) 위에 배치
+    box-sizing: border-box;
+    color: var(--page-text-secondary, #64748b);
+    font-family: inherit;
+    transition: color 0.25s ease, opacity 0.2s ease;
+
+    &:hover {
+      color: var(--page-text-primary, #0f172a);
+    }
+
+    &.is-active {
+      color: var(--toggle-active-text, #0f172a);
+      font-weight: 800;
+    }
+
+    .theme-segment-toggle__icon {
+      flex-shrink: 0;
+    }
+
+    .theme-segment-toggle__label {
+      display: inline-block;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+      font-size: var(--segment-font-size, 0.68rem);
+      font-weight: 800;
+      letter-spacing: 0.02em;
+    }
+  }
+
+  .theme-segment-toggle__indicator {
+    position: absolute;
+    top: var(--segment-padding, 4px);
+    bottom: var(--segment-padding, 4px);
+    left: calc(var(--segment-padding, 4px) + var(--active-index, 0) * ((100% - (var(--segment-padding, 4px) * 2)) / 4));
+    width: calc((100% - (var(--segment-padding, 4px) * 2)) / 4);
+    height: calc(100% - (var(--segment-padding, 4px) * 2));
+    margin: 0;
+    padding: 0;
+    z-index: 1;
+    box-sizing: border-box;
+    border-radius: var(--indicator-radius, 7px);
+    transition: left 0.35s cubic-bezier(0.2, 0.85, 0.25, 1), background 0.3s ease, border-color 0.3s ease, box-shadow 0.3s ease;
+    pointer-events: none;
+  }
+
+  &.theme-segment-toggle--light {
+    --toggle-active-text: #d97706;
+    .theme-segment-toggle__indicator {
+      background: linear-gradient(145deg, #ffffff, #fffbeb);
+      border: 1px solid rgba(251, 191, 36, 0.5);
+      box-shadow: 0 4px 12px rgba(245, 158, 11, 0.22);
+    }
+  }
+
+  &.theme-segment-toggle--dark {
+    --toggle-active-text: #38bdf8;
+    .theme-segment-toggle__indicator {
+      background: linear-gradient(145deg, rgba(14, 116, 144, 0.75), rgba(15, 23, 42, 0.95));
+      border: 1px solid rgba(103, 232, 249, 0.4);
+      box-shadow: 0 4px 12px rgba(103, 232, 249, 0.22);
+    }
+  }
+
+  &.theme-segment-toggle--coral {
+    --toggle-active-text: #e11d48;
+    .theme-segment-toggle__indicator {
+      background: linear-gradient(145deg, #ffffff, #ffe4e6);
+      border: 1px solid rgba(244, 63, 94, 0.45);
+      box-shadow: 0 4px 12px rgba(244, 63, 94, 0.22);
+    }
+  }
+
+  &.theme-segment-toggle--abyss {
+    --toggle-active-text: #00f2fe;
+    .theme-segment-toggle__indicator {
+      background: linear-gradient(145deg, rgba(0, 242, 254, 0.22), rgba(15, 23, 42, 0.95));
+      border: 1px solid rgba(0, 242, 254, 0.6);
+      box-shadow: 0 4px 14px rgba(0, 242, 254, 0.3);
+    }
+  }
+}
+
+.theme-segment-toggle {
+  --toggle-accent: #38bdf8;
+  --segment-padding: 4px;
+  --indicator-radius: 7px;
+  --segment-font-size: 0.68rem;
+  position: relative;
+  isolation: isolate;
+  display: flex;
+  align-items: center;
+  width: 44px;
+  height: 44px;
+  padding: var(--segment-padding);
+  overflow: hidden;
+  border: 1px solid rgba(148, 163, 184, 0.22);
+  border-radius: 11px;
+  background: var(--page-surface-card, rgba(248, 250, 252, 0.85));
+  box-shadow: 0 4px 16px rgba(15, 23, 42, 0.08);
+  color: var(--page-text-secondary, #475569);
+  cursor: pointer;
+  font-family: var(--font-family);
+  box-sizing: border-box;
+  transition: border-color 0.25s ease, box-shadow 0.25s ease, background-color 0.25s ease;
+
+  // 10단계 크기 스케일: 탭 항목 버튼과 인디케이터 박스 크기 및 동심원 곡률 일치
+  &--size-1 {
+    --segment-padding: 2px;
+    --indicator-radius: 4px;
+    --segment-font-size: 0.48rem;
+    height: 24px; min-height: 24px; border-radius: 6px;
+    .theme-segment-toggle__icon { width: 10px; height: 10px; }
+  }
+  &--size-2 {
+    --segment-padding: 2px;
+    --indicator-radius: 5px;
+    --segment-font-size: 0.52rem;
+    height: 28px; min-height: 28px; border-radius: 7px;
+    .theme-segment-toggle__icon { width: 11px; height: 11px; }
+  }
+  &--size-3, &--xs {
+    --segment-padding: 3px;
+    --indicator-radius: 5px;
+    --segment-font-size: 0.56rem;
+    height: 32px; min-height: 32px; border-radius: 8px;
+    .theme-segment-toggle__icon { width: 12px; height: 12px; }
+  }
+  &--size-4, &--sm {
+    --segment-padding: 3px;
+    --indicator-radius: 6px;
+    --segment-font-size: 0.60rem;
+    height: 36px; min-height: 36px; border-radius: 9px;
+    .theme-segment-toggle__icon { width: 13px; height: 13px; }
+  }
+  &--size-5 {
+    --segment-padding: 4px;
+    --indicator-radius: 6px;
+    --segment-font-size: 0.64rem;
+    height: 40px; min-height: 40px; border-radius: 10px;
+    .theme-segment-toggle__icon { width: 14px; height: 14px; }
+  }
+  &--size-6, &--md {
+    --segment-padding: 4px;
+    --indicator-radius: 7px;
+    --segment-font-size: 0.68rem;
+    height: 44px; min-height: 44px; border-radius: 11px;
+    .theme-segment-toggle__icon { width: 15px; height: 15px; }
+  }
+  &--size-7 {
+    --segment-padding: 5px;
+    --indicator-radius: 7px;
+    --segment-font-size: 0.72rem;
+    height: 48px; min-height: 48px; border-radius: 12px;
+    .theme-segment-toggle__icon { width: 16px; height: 16px; }
+  }
+  &--size-8, &--lg {
+    --segment-padding: 5px;
+    --indicator-radius: 8px;
+    --segment-font-size: 0.76rem;
+    height: 52px; min-height: 52px; border-radius: 13px;
+    .theme-segment-toggle__icon { width: 17px; height: 17px; }
+  }
+  &--size-9 {
+    --segment-padding: 6px;
+    --indicator-radius: 8px;
+    --segment-font-size: 0.80rem;
+    height: 56px; min-height: 56px; border-radius: 14px;
+    .theme-segment-toggle__icon { width: 18px; height: 18px; }
+  }
+  &--size-10, &--xl {
+    --segment-padding: 6px;
+    --indicator-radius: 9px;
+    --segment-font-size: 0.84rem;
+    height: 60px; min-height: 60px; border-radius: 15px;
+    .theme-segment-toggle__icon { width: 19px; height: 19px; }
+  }
+
+  &.theme-segment-toggle--dark {
+    --toggle-accent: #67e8f9;
+    border-color: rgba(103, 232, 249, 0.22);
+    background: rgba(15, 23, 42, 0.85);
+    color: #94a3b8;
+  }
+
+  &.theme-segment-toggle--coral {
+    --toggle-accent: #f43f5e;
+    border-color: rgba(244, 63, 94, 0.25);
+    background: rgba(253, 242, 242, 0.85);
+    color: #881337;
+  }
+
+  &.theme-segment-toggle--abyss {
+    --toggle-accent: #00f2fe;
+    border-color: rgba(0, 242, 254, 0.25);
+    background: rgba(5, 12, 30, 0.9);
+    color: #bce3ff;
+  }
+
+  &:hover {
+    border-color: color-mix(in srgb, var(--toggle-accent) 55%, transparent);
+    box-shadow: 0 6px 20px color-mix(in srgb, var(--toggle-accent) 15%, transparent);
+  }
+
+  &:focus-visible {
+    outline: 3px solid color-mix(in srgb, var(--toggle-accent) 45%, transparent);
+    outline-offset: 3px;
+  }
+}
+
+.theme-segment-toggle__icon {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 16px;
+  height: 16px;
+
+  svg {
+    width: 100%;
+    height: 100%;
+  }
+}
+
+.theme-segment-toggle__label {
+  display: none;
+}
+
+// 4개 테마 세그먼티드 스위치 (확장 모드)
+.theme-segment-toggle.is-expanded {
+  @include expanded-theme-segment-toggle;
+}

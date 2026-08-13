@@ -22,6 +22,178 @@
       </CustomButton>
     </nav>
 
+    <!-- 🎛️ 10단계 숫자 크기(1~10) & 신규 폼 속성 라이브 제어 패널 -->
+    <div class="interactive-control-panel fade-in-up delay-more">
+      <div class="panel-header">
+        <h3>🎛️ 10단계 숫자 크기(1~10) 및 폼 속성(State, Variant, Clearable) 라이브 제어</h3>
+        <p>슬라이더를 조작하여 모든 공용 컴포넌트의 10단계 실시간 크기 변화와 신규 폼 속성을 검증하세요.</p>
+      </div>
+
+      <div class="control-grid">
+        <!-- 10단계 크기 슬라이더 -->
+        <div class="control-group">
+          <label for="demo-size-slider" class="control-label">
+            📏 크기 레벨 (Size 1 ~ 10): <strong>{{ demoSize }} 레벨</strong>
+          </label>
+          <input
+            id="demo-size-slider"
+            type="range"
+            min="1"
+            max="10"
+            step="1"
+            v-model.number="demoSize"
+            class="size-range-slider"
+          />
+          <div class="size-level-ticks">
+            <span
+              v-for="n in 10"
+              :key="n"
+              :class="{ active: demoSize === n }"
+              @click="demoSize = n"
+              style="cursor: pointer;"
+              :title="`${n}단계로 즉시 변경`"
+            >
+              {{ n }}
+            </span>
+          </div>
+        </div>
+
+        <!-- State 선택 버튼 -->
+        <div class="control-group">
+          <label class="control-label">🎨 상태 (State)</label>
+          <div class="radio-chip-group">
+            <CustomButton
+              v-for="st in ['default', 'success', 'warning', 'error'] as const"
+              :key="st"
+              size="xs"
+              :variant="demoState === st ? 'primary' : 'outline'"
+              @click="demoState = st"
+            >
+              {{ st }}
+            </CustomButton>
+          </div>
+        </div>
+
+        <!-- Variant 선택 버튼 (Button 전용) -->
+        <div class="control-group">
+          <label class="control-label">🔘 버튼 변형 (Variant)</label>
+          <div class="radio-chip-group">
+            <CustomButton
+              v-for="vt in ['default', 'primary', 'secondary', 'danger', 'success', 'warning', 'ghost', 'outline'] as const"
+              :key="vt"
+              size="xs"
+              :variant="demoVariant === vt ? 'primary' : 'outline'"
+              @click="demoVariant = vt"
+            >
+              {{ vt }}
+            </CustomButton>
+          </div>
+        </div>
+
+        <!-- Clearable 토글 -->
+        <div class="control-group">
+          <label class="control-label">❌ 지우기 기능 (Clearable)</label>
+          <CustomSwitch
+            v-model="demoClearable"
+            active-text="ON"
+            inactive-text="OFF"
+          />
+        </div>
+      </div>
+
+      <!-- 실시간 공용 컴포넌트 프리뷰 매트릭스 -->
+      <div class="live-preview-grid">
+        <div class="preview-item">
+          <span class="preview-title">CustomButton</span>
+          <CustomButton :size="demoSize" :variant="demoVariant" :state="demoState">
+            Size {{ demoSize }} Button
+          </CustomButton>
+        </div>
+        <div class="preview-item">
+          <span class="preview-title">CustomInput</span>
+          <CustomInput
+            v-model="demoClearableText"
+            :size="demoSize"
+            :state="demoState"
+            :clearable="demoClearable"
+            placeholder="텍스트 입력..."
+          />
+        </div>
+        <div class="preview-item">
+          <span class="preview-title">CustomNumberInput</span>
+          <CustomNumberInput
+            v-model="demoClearableNumber"
+            :size="demoSize"
+            :state="demoState"
+            :clearable="demoClearable"
+          />
+        </div>
+        <div class="preview-item">
+          <span class="preview-title">CustomSelect</span>
+          <CustomSelect
+            v-model="demoClearableSelect"
+            :options="selectOptions"
+            :size="demoSize"
+            :state="demoState"
+            :clearable="demoClearable"
+          />
+        </div>
+        <div class="preview-item">
+          <span class="preview-title">CustomMultiSelect</span>
+          <CustomMultiSelect
+            v-model="demoClearableMultiSelect"
+            :options="selectOptions"
+            :size="demoSize"
+            :state="demoState"
+            :clearable="demoClearable"
+          />
+        </div>
+        <div class="preview-item">
+          <span class="preview-title">CustomTextarea</span>
+          <CustomTextarea
+            v-model="demoClearableTextarea"
+            :size="demoSize"
+            :state="demoState"
+            :clearable="demoClearable"
+            :rows="2"
+          />
+        </div>
+        <div class="preview-item">
+          <span class="preview-title">CustomSwitch</span>
+          <CustomSwitch
+            v-model="switchBasic"
+            :size="demoSize"
+            active-text="ON"
+            inactive-text="OFF"
+          />
+        </div>
+        <div class="preview-item">
+          <span class="preview-title">CustomDatePicker</span>
+          <CustomDatePicker v-model="dateBasic" :size="demoSize" :state="demoState" />
+        </div>
+        <div class="preview-item">
+          <span class="preview-title">CustomDateRangePicker</span>
+          <CustomDateRangePicker v-model="dateRange" :size="demoSize" :state="demoState" />
+        </div>
+        <div class="preview-item">
+          <span class="preview-title">DarkModeToggle (기본형)</span>
+          <DarkModeToggle :size="demoSize" />
+        </div>
+        <div class="preview-item">
+          <span class="preview-title">DarkModeToggle (열림/확장형)</span>
+          <DarkModeToggle :size="demoSize" :expanded="true" />
+        </div>
+        <div class="preview-item" style="grid-column: 1 / -1;">
+          <span class="preview-title">ThemeSegmentToggle (신규 4개 테마 세그먼트 스위치)</span>
+          <ThemeSegmentToggle :size="demoSize" :expanded="true" />
+        </div>
+        <div class="preview-item">
+          <span class="preview-title">CustomSkeleton</span>
+          <CustomSkeleton type="card" :size="demoSize" />
+        </div>
+      </div>
+    </div>
+
     <section id="sec-button" class="test-section fade-in-up delay-more">
       <div class="section-header">
         <h2>🔘 CustomButton</h2>
@@ -30,12 +202,15 @@
       <div class="section-body">
         <div class="demo-row">
           <div class="demo-card">
-            <h4>Variant</h4>
-            <div class="inline-demo">
+            <h4>Variant (기존 & 신규 success, warning, outline)</h4>
+            <div class="inline-demo" style="flex-wrap: wrap;">
               <CustomButton variant="default">Default</CustomButton>
               <CustomButton variant="primary">Primary</CustomButton>
               <CustomButton variant="secondary">Secondary</CustomButton>
               <CustomButton variant="danger">Danger</CustomButton>
+              <CustomButton variant="success">Success</CustomButton>
+              <CustomButton variant="warning">Warning</CustomButton>
+              <CustomButton variant="outline">Outline</CustomButton>
               <CustomButton variant="ghost">Ghost</CustomButton>
             </div>
           </div>
@@ -62,6 +237,19 @@
               <CustomButton size="xl">X-Large</CustomButton>
             </div>
             <CustomButton disabled block>사용 불가</CustomButton>
+          </div>
+        </div>
+
+        <div class="demo-row">
+          <div class="demo-card wide">
+            <h4>10단계 크기(1~10) 시각적 카드 예시 데모</h4>
+            <div class="size-visual-grid">
+              <div v-for="s in 10" :key="s" class="inline-demo inline-demo--center">
+                <span class="state-readout" style="width: 70px;">Size {{ s }}:</span>
+                <CustomButton :size="s" variant="primary">Size {{ s }} Button</CustomButton>
+                <CustomButton :size="s" variant="outline">Outline {{ s }}</CustomButton>
+              </div>
+            </div>
           </div>
         </div>
       </div>
@@ -117,6 +305,41 @@
               size="xl"
               disabled
             />
+          </div>
+        </div>
+
+        <div class="demo-row">
+          <div class="demo-card">
+            <h4>신규 State (success, warning, error)</h4>
+            <CustomInput
+              v-model="inputStateSuccess"
+              state="success"
+              label="Success State"
+              placeholder="성공 상태 입력"
+            />
+            <CustomInput
+              v-model="inputStateWarning"
+              state="warning"
+              label="Warning State"
+              placeholder="경고 상태 입력"
+            />
+            <CustomInput
+              v-model="inputStateError"
+              state="error"
+              label="Error State"
+              placeholder="에러 상태 입력"
+            />
+          </div>
+
+          <div class="demo-card wide">
+            <h4>1초 X 지우기 버튼 (Clearable 기능)</h4>
+            <CustomInput
+              v-model="demoClearableText"
+              label="Clearable 활성화 필드"
+              hint="우측 X 버튼을 누르면 내용이 1초 피드백과 함께 즉시 초기화됩니다."
+              clearable
+            />
+            <span class="state-readout">현재 입력값: <strong>{{ demoClearableText || '(비어있음)' }}</strong></span>
           </div>
         </div>
       </div>
@@ -637,6 +860,7 @@ import CustomTextarea from '@/components/CustomTextarea.vue';
 import CustomSkeleton from '@/components/CustomSkeleton.vue';
 import ConfirmModal from '@/components/ConfirmModal.vue';
 import DarkModeToggle from '@/components/DarkModeToggle.vue';
+import ThemeSegmentToggle from '@/components/ThemeSegmentToggle.vue';
 import ThemeSelectorModal from '@/components/ThemeSelectorModal.vue';
 import MapTestPanel from '@/components/dev/MapTestPanel.vue';
 import Header from '@/components/Header.vue';
@@ -685,6 +909,21 @@ const simulateButtonLoading = (): void => {
 const inputBasic = ref('');
 const inputNumber = ref<string | number>('');
 const inputError = ref('');
+
+// ─── 10단계 숫자 크기(1~10), Variant, State, Clearable 라이브 상태 ───
+const demoSize = ref<number>(5);
+const demoState = ref<'default' | 'success' | 'warning' | 'error'>('default');
+const demoVariant = ref<'default' | 'primary' | 'secondary' | 'danger' | 'success' | 'warning' | 'ghost' | 'outline'>('primary');
+const demoClearable = ref<boolean>(true);
+const demoClearableText = ref('1초 X 지우기 버튼 테스트 문구');
+const demoClearableNumber = ref(42);
+const demoClearableSelect = ref('스쿠버다이빙');
+const demoClearableMultiSelect = ref<unknown[]>(['스쿠버다이빙', '프리다이빙']);
+const demoClearableTextarea = ref('수심 30m 지점에서 거북이와 유영함.');
+
+const inputStateSuccess = ref('유효성 통과 데이터');
+const inputStateWarning = ref('수심 40m 초과 경고');
+const inputStateError = ref('잘못된 이메일 형식');
 
 const scrollToSection = (id: string): void => {
   activeSection.value = id;
@@ -1247,5 +1486,143 @@ const isDark = computed(() => themeStore.isDark);
     opacity: 1;
     transform: translateY(0);
   }
+}
+
+/* ── 10단계 크기 & 신규 폼 속성 라이브 제어 패널 ── */
+.interactive-control-panel {
+  background: rgba(255, 255, 255, 0.4);
+  border: 1px solid rgba(255, 255, 255, 0.3);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  border-radius: 1.5rem;
+  padding: 1.5rem;
+  margin-bottom: 2rem;
+  box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.02);
+
+  body.dark & {
+    background: rgba(30, 41, 59, 0.4);
+    border-color: rgba(255, 255, 255, 0.05);
+    box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.15);
+  }
+
+  .panel-header {
+    margin-bottom: 1.25rem;
+    h3 {
+      font-size: 1.15rem;
+      font-weight: 800;
+      margin: 0 0 0.4rem;
+      color: var(--page-text-primary);
+    }
+    p {
+      font-size: 0.85rem;
+      color: var(--page-text-secondary);
+      margin: 0;
+    }
+  }
+}
+
+.control-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+  gap: 1.25rem;
+  margin-bottom: 1.5rem;
+  padding: 1rem;
+  background: rgba(0, 0, 0, 0.05);
+  border-radius: 1rem;
+
+  body.dark & {
+    background: rgba(255, 255, 255, 0.03);
+  }
+}
+
+.control-group {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+
+  .control-label {
+    font-size: 0.85rem;
+    font-weight: 700;
+    color: var(--page-text-primary);
+  }
+}
+
+.size-range-slider {
+  width: 100%;
+  accent-color: var(--ocean-500);
+  cursor: pointer;
+}
+
+.size-level-ticks {
+  display: flex;
+  justify-content: space-between;
+  font-size: 0.72rem;
+  font-weight: 700;
+  color: var(--page-text-secondary);
+
+  span.active {
+    color: var(--ocean-400);
+    font-weight: 900;
+    transform: scale(1.2);
+  }
+}
+
+.radio-chip-group {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.4rem;
+}
+
+.radio-chip {
+  padding: 0.35rem 0.75rem;
+  border-radius: 999px;
+  border: 1px solid rgba(100, 116, 139, 0.3);
+  background: transparent;
+  color: var(--page-text-secondary);
+  font-size: 0.78rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.2s ease;
+
+  &:hover {
+    border-color: var(--ocean-400);
+    color: var(--page-text-primary);
+  }
+
+  &.active {
+    background: var(--ocean-500);
+    border-color: var(--ocean-500);
+    color: #fff;
+  }
+}
+
+.live-preview-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+  gap: 1rem;
+
+  .preview-item {
+    display: flex;
+    flex-direction: column;
+    gap: 0.4rem;
+    padding: 0.85rem;
+    border-radius: 0.75rem;
+    background: rgba(255, 255, 255, 0.04);
+    border: 1px solid rgba(255, 255, 255, 0.05);
+
+    .preview-title {
+      font-size: 0.75rem;
+      font-weight: 700;
+      color: var(--ocean-400);
+      text-transform: uppercase;
+    }
+  }
+}
+
+.size-visual-grid {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+  width: 100%;
 }
 </style>

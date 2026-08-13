@@ -1,6 +1,14 @@
 import { ref, watch } from 'vue';
 import { useStorage } from '@vueuse/core';
-import type { Person, PoolInfo, Settlement, SettlementHistoryItem, SettlementSettings } from '@/types/settlement';
+import type {
+  Person,
+  PoolInfo,
+  Settlement,
+  SettlementExtensionItem,
+  SettlementExtensionType,
+  SettlementHistoryItem,
+  SettlementSettings
+} from '@/types/settlement';
 import { formatNumber, getNumericPrice } from '@/utils/formatter';
 import { useToast } from '@/composables/useToast';
 import poolPricesRaw from '@/data/poolPrices.json';
@@ -47,6 +55,24 @@ export function migrateSettlementStorageKeys() {
   }
 }
 
+function getExtensionDefaultTitle(type: SettlementExtensionType): string {
+  switch (type) {
+    case 'base':
+      return '기본 1/N 정산';
+    case 'pool':
+      return '다이빙 풀장 입장료';
+    case 'carpool':
+      return '카풀 / 유류비';
+    case 'meal':
+      return '뒤풀이 / 식대';
+    case 'tank':
+      return '추가 탱크 대여';
+    case 'custom':
+    default:
+      return '기타 부가 항목';
+  }
+}
+
 export function useSettlement() {
   const { triggerToast } = useToast();
   migrateSettlementStorageKeys();
@@ -58,6 +84,8 @@ export function useSettlement() {
     currentDayType: 'weekday' as 'weekday' | 'weekend',
     selectedPool: 'custom',
     basePrice: '0',
+    baseSimpleAmount: 0,
+    activeExtensions: [],
     extraCosts: {
       carpoolFee: 0,
       extraTankFee: 0,
@@ -66,6 +94,12 @@ export function useSettlement() {
     customExpenses: []
   });
 
+  if (settings.value.baseSimpleAmount === undefined) {
+    settings.value.baseSimpleAmount = 0;
+  }
+  if (!settings.value.activeExtensions) {
+    settings.value.activeExtensions = [];
+  }
   if (!settings.value.extraCosts) {
     settings.value.extraCosts = { carpoolFee: 0, extraTankFee: 0, mealFee: 0 };
   }
@@ -93,6 +127,79 @@ export function useSettlement() {
   const removeCustomExpense = (id: string) => {
     if (settings.value.customExpenses) {
       settings.value.customExpenses = settings.value.customExpenses.filter(e => e.id !== id);
+    }
+  };
+
+  /**
+   * 확장 모듈 활성화 / 비활성화 토글
+   */
+  const toggleExtension = (type: SettlementExtensionType) => {
+    if (!settings.value.activeExtensions) {
+      settings.value.activeExtensions = [];
+    }
+    const items = settings.value.activeExtensions.filter(e => e.type === type);
+    if (items.length > 0) {
+      const hasActive = items.some(e => e.active);
+      items.forEach(e => {
+        e.active = !hasActive;
+      });
+    } else {
+      addExtensionItem(type);
+      return;
+    }
+    calculate();
+  };
+
+  /**
+   * 동적 확장 모듈 항목 추가
+   */
+  const addExtensionItem = (
+    type: SettlementExtensionType,
+    defaults?: Partial<SettlementExtensionItem>
+  ): SettlementExtensionItem => {
+    if (!settings.value.activeExtensions) {
+      settings.value.activeExtensions = [];
+    }
+    const defaultTitle = getExtensionDefaultTitle(type);
+    const booker = people.value.find(p => p.isBooker) || people.value[0];
+
+    const newItem: SettlementExtensionItem = {
+      id: `ext_${Date.now()}_${Math.random().toString(36).substring(2, 7)}`,
+      type,
+      title: defaultTitle,
+      amount: type === 'base' ? (settings.value.baseSimpleAmount || 0) : 0,
+      active: true,
+      ...(type === 'carpool' ? { excludeDriver: true, driverId: booker?.id } : {}),
+      ...(type === 'pool' ? { poolKey: settings.value.selectedPool, dayType: settings.value.currentDayType, basePriceStr: settings.value.basePrice } : {}),
+      ...(type === 'meal' || type === 'tank' ? { targetPersonIds: people.value.map(p => p.id) } : {}),
+      ...defaults
+    };
+
+    settings.value.activeExtensions.push(newItem);
+    calculate();
+    return newItem;
+  };
+
+  /**
+   * 동적 확장 모듈 항목 삭제
+   */
+  const removeExtensionItem = (id: string) => {
+    if (settings.value.activeExtensions) {
+      settings.value.activeExtensions = settings.value.activeExtensions.filter(e => e.id !== id);
+      calculate();
+    }
+  };
+
+  /**
+   * 동적 확장 모듈 항목 업데이트
+   */
+  const updateExtensionItem = (id: string, updates: Partial<SettlementExtensionItem>) => {
+    if (settings.value.activeExtensions) {
+      const item = settings.value.activeExtensions.find(e => e.id === id);
+      if (item) {
+        Object.assign(item, updates);
+        calculate();
+      }
     }
   };
 
@@ -168,37 +275,135 @@ export function useSettlement() {
 
   /**
    * 정산 결과 계산 및 송금 플랜 생성
+   * 기본 1/N 정산 + 다이빙 특화 확장 모듈 (풀장, 카풀, 식대, 탱크, 커스텀) 합성
    */
   const calculate = () => {
     const price = getNumericPrice(settings.value.basePrice);
+    const activeExts = (settings.value.activeExtensions || []).filter(e => e.active);
+    const totalPeopleCount = people.value.length;
 
+    if (totalPeopleCount === 0) return;
+
+    const personCostMap = new Map<number, number>();
+    people.value.forEach(p => personCostMap.set(p.id, 0));
+
+    const addCostToTargets = (amount: number, targetPersonIds?: number[]) => {
+      if (amount <= 0) return;
+      const targetPeople = (targetPersonIds && targetPersonIds.length > 0)
+        ? people.value.filter(p => targetPersonIds.includes(p.id))
+        : people.value;
+
+      if (targetPeople.length === 0) return;
+      const share = amount / targetPeople.length;
+      targetPeople.forEach(p => {
+        personCostMap.set(p.id, (personCostMap.get(p.id) || 0) + share);
+      });
+    };
+
+    // A. 기본 단순 1/N 금액
+    const baseSimple = Number(settings.value.baseSimpleAmount || 0);
+    if (baseSimple > 0) {
+      addCostToTargets(baseSimple);
+    }
+
+    // Pool 확장 모듈 존재 확인
+    const poolExtensions = activeExts.filter(e => e.type === 'pool');
+    const hasActivePoolExtension = poolExtensions.length > 0;
+
+    // B. 활성화된 확장 모듈 계산
+    activeExts.forEach(ext => {
+      switch (ext.type) {
+        case 'base': {
+          addCostToTargets(ext.amount, ext.targetPersonIds);
+          break;
+        }
+        case 'pool': {
+          const poolPrice = getNumericPrice(ext.basePriceStr || settings.value.basePrice);
+          if (poolPrice <= 0) break;
+          const targets = (ext.targetPersonIds && ext.targetPersonIds.length > 0)
+            ? people.value.filter(p => ext.targetPersonIds!.includes(p.id))
+            : people.value;
+
+          const members = targets.filter(p => p.isMember);
+          const memberAttendees = targets.filter(p => p.isMember && !p.isBooker);
+
+          const memberCostBase = members.length > 0
+            ? (memberAttendees.length * poolPrice) / members.length
+            : 0;
+          const nonMemberCostBase = poolPrice;
+
+          targets.forEach(p => {
+            const cost = p.isMember ? memberCostBase : nonMemberCostBase;
+            personCostMap.set(p.id, (personCostMap.get(p.id) || 0) + cost);
+          });
+          break;
+        }
+        case 'carpool': {
+          if (ext.amount <= 0) break;
+          const targets = (ext.targetPersonIds && ext.targetPersonIds.length > 0)
+            ? people.value.filter(p => ext.targetPersonIds!.includes(p.id))
+            : people.value;
+
+          const shouldExcludeDriver = ext.excludeDriver !== false && ext.driverId !== undefined;
+          let eligiblePeople = targets;
+          if (shouldExcludeDriver) {
+            const passengers = targets.filter(p => p.id !== ext.driverId);
+            if (passengers.length > 0) {
+              eligiblePeople = passengers;
+            }
+          }
+          if (eligiblePeople.length > 0) {
+            const share = ext.amount / eligiblePeople.length;
+            eligiblePeople.forEach(p => {
+              personCostMap.set(p.id, (personCostMap.get(p.id) || 0) + share);
+            });
+          }
+          break;
+        }
+        case 'meal':
+        case 'tank':
+        case 'custom': {
+          addCostToTargets(ext.amount, ext.targetPersonIds);
+          break;
+        }
+      }
+    });
+
+    // C. 레거시/기본 풀장 입장료 계산 (Pool 모듈이 직접 활성화되지 않은 경우)
+    if (!hasActivePoolExtension && price > 0) {
+      const allMembers = people.value.filter(p => p.isMember);
+      const memberAttendees = people.value.filter(p => p.isMember && !p.isBooker);
+
+      const baseNonMemberCost = price;
+      const baseMemberCost = allMembers.length > 0
+        ? (memberAttendees.length * price) / allMembers.length
+        : 0;
+
+      people.value.forEach(p => {
+        const cost = p.isMember ? baseMemberCost : baseNonMemberCost;
+        personCostMap.set(p.id, (personCostMap.get(p.id) || 0) + cost);
+      });
+    }
+
+    // D. 레거시 부가비용 (extraCosts, customExpenses)
     const legacyCarpool = Number(settings.value.extraCosts?.carpoolFee || 0);
     const legacyExtraTank = Number(settings.value.extraCosts?.extraTankFee || 0);
     const legacyMeal = Number(settings.value.extraCosts?.mealFee || 0);
     const legacyTotal = legacyCarpool + legacyExtraTank + legacyMeal;
 
-    const customTotal = (settings.value.customExpenses || []).reduce(
+    const customExpensesTotal = (settings.value.customExpenses || []).reduce(
       (sum, item) => sum + (Number(item.amount) || 0),
       0
     );
-    const totalExtra = legacyTotal + customTotal;
+    const totalLegacyExtra = legacyTotal + customExpensesTotal;
 
-    const totalPeople = people.value.length;
-    const extraPerPerson = totalPeople > 0 ? totalExtra / totalPeople : 0;
+    if (totalLegacyExtra > 0) {
+      addCostToTargets(totalLegacyExtra);
+    }
 
-    const allMembers = people.value.filter(p => p.isMember);
-    const memberAttendees = people.value.filter(p => p.isMember && !p.isBooker);
-
-    const baseNonMemberCost = price;
-    const baseMemberCost = allMembers.length > 0
-      ? (memberAttendees.length * price) / allMembers.length
-      : 0;
-
-    const nonMemberCost = baseNonMemberCost + extraPerPerson;
-    const memberCost = baseMemberCost + extraPerPerson;
-
-    const detailedResults = people.value.map(p => {
-      const cost = p.isMember ? memberCost : nonMemberCost;
+    // 2. 상세 결과 (myCost, balance) 계산
+    const detailedResults: Person[] = people.value.map(p => {
+      const cost = personCostMap.get(p.id) || 0;
       const balance = p.prepaid - cost;
       return {
         ...p,
@@ -208,40 +413,78 @@ export function useSettlement() {
       };
     });
 
-    const primaryBooker = detailedResults.find(p => p.isBooker) || detailedResults[0];
+    // 3. 회원 / 비회원 표시 금액
+    const memberPeople = detailedResults.filter(p => p.isMember);
+    const nonMemberPeople = detailedResults.filter(p => !p.isMember);
+
+    const avgMemberCost = memberPeople.length > 0
+      ? memberPeople.reduce((sum, p) => sum + (p.myCost || 0), 0) / memberPeople.length
+      : 0;
+
+    const avgNonMemberCost = nonMemberPeople.length > 0
+      ? nonMemberPeople.reduce((sum, p) => sum + (p.myCost || 0), 0) / nonMemberPeople.length
+      : 0;
+
+    results.value.memberCostDisplay = formatNumber(Math.round(avgMemberCost)) + '원';
+    results.value.nonMemberCostDisplay = formatNumber(Math.round(avgNonMemberCost)) + '원';
+
+    // 4. 최적 송금 플랜 생성
+    const debtors = detailedResults
+      .filter(p => (p.balance || 0) < -10)
+      .map(p => ({ person: p, debt: Math.abs(p.balance!) }));
+
+    const creditors = detailedResults
+      .filter(p => (p.balance || 0) > 10)
+      .map(p => ({ person: p, credit: p.balance! }));
+
     const transactions: Settlement[] = [];
 
-    detailedResults.forEach(p => {
-      if (p.id === primaryBooker.id) return;
+    let dIdx = 0;
+    let cIdx = 0;
 
-      if (p.balance < -10) {
+    while (dIdx < debtors.length && cIdx < creditors.length) {
+      const debtor = debtors[dIdx];
+      const creditor = creditors[cIdx];
+
+      const amountToTransfer = Math.min(debtor.debt, creditor.credit);
+      const roundedAmount = Math.floor(amountToTransfer / 10) * 10;
+
+      if (roundedAmount >= 10) {
         transactions.push({
-          from: p.name,
-          to: primaryBooker.name,
-          amount: Math.floor(Math.abs(p.balance) / 10) * 10,
-          bank: primaryBooker.bank,
-          account: primaryBooker.account
-        });
-      } 
-      else if (p.isBooker && p.balance > 10) {
-        transactions.push({
-          from: primaryBooker.name,
-          to: p.name,
-          amount: Math.floor(p.balance / 10) * 10,
-          bank: p.bank,
-          account: p.account
+          from: debtor.person.name,
+          to: creditor.person.name,
+          amount: roundedAmount,
+          bank: creditor.person.bank,
+          account: creditor.person.account
         });
       }
-    });
+
+      debtor.debt -= amountToTransfer;
+      creditor.credit -= amountToTransfer;
+
+      if (debtor.debt < 10) dIdx++;
+      if (creditor.credit < 10) cIdx++;
+    }
 
     results.value.settlementList = transactions;
     results.value.detailTableBody = detailedResults;
-    results.value.memberCostDisplay = formatNumber(Math.round(memberCost)) + '원';
-    results.value.nonMemberCostDisplay = formatNumber(Math.round(nonMemberCost)) + '원';
 
-    const poolName = settings.value.selectedPool === 'custom' ? '직접 입력' : (poolPrices[settings.value.selectedPool]?.name || settings.value.selectedPool);
+    // 5. 정산 텍스트 생성
+    const poolName = settings.value.selectedPool === 'custom'
+      ? '직접 입력'
+      : (poolPrices[settings.value.selectedPool]?.name || settings.value.selectedPool);
     const dayLabel = settings.value.currentDayType === 'weekday' ? '평일' : '주말';
-    globalResultText.value = generateResultText(poolName, dayLabel, memberCost, nonMemberCost, transactions, totalExtra);
+
+    const totalExtraSum = totalLegacyExtra + activeExts.reduce((sum, e) => sum + (e.amount || 0), 0);
+
+    globalResultText.value = generateResultText(
+      poolName,
+      dayLabel,
+      avgMemberCost,
+      avgNonMemberCost,
+      transactions,
+      totalExtraSum
+    );
   };
 
   const generateResultText = (poolName: string, day: string, mCost: number, nmCost: number, txs: Settlement[], totalExtra: number = 0) => {
@@ -259,7 +502,7 @@ export function useSettlement() {
     return text;
   };
 
-  if (getNumericPrice(settings.value.basePrice) > 0) {
+  if (getNumericPrice(settings.value.basePrice) > 0 || (settings.value.baseSimpleAmount && settings.value.baseSimpleAmount > 0)) {
     calculate();
   }
 
@@ -293,6 +536,12 @@ export function useSettlement() {
 
   const loadHistoryItem = (item: SettlementHistoryItem) => {
     settings.value = JSON.parse(JSON.stringify(item.settings));
+    if (settings.value.baseSimpleAmount === undefined) {
+      settings.value.baseSimpleAmount = 0;
+    }
+    if (!settings.value.activeExtensions) {
+      settings.value.activeExtensions = [];
+    }
     if (!settings.value.extraCosts) {
       settings.value.extraCosts = { carpoolFee: 0, extraTankFee: 0, mealFee: 0 };
     }
@@ -325,6 +574,10 @@ export function useSettlement() {
     removePerson,
     addCustomExpense,
     removeCustomExpense,
+    toggleExtension,
+    addExtensionItem,
+    removeExtensionItem,
+    updateExtensionItem,
     calculate,
     togglePaidStatus,
     saveHistory,

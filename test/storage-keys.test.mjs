@@ -48,6 +48,19 @@ test('competition store uses diving:competition:bookmarks:v1 and migration', asy
   assert.match(compSource, /localStorage\.removeItem\(LEGACY_BOOKMARKS_V4_FLAG_KEY\)/);
 });
 
+test('quiz store uses standardized storage keys and legacy migration', async () => {
+  const quizSource = await read('src/stores/quiz.ts');
+
+  assert.match(quizSource, /export const QUIZ_WRONG_NOTES_KEY = ['"]diving:quiz:wrong_notes:v1['"]/);
+  assert.match(quizSource, /export const LEGACY_QUIZ_WRONG_NOTES_KEY = ['"]diving_quiz_wrong_notes['"]/);
+
+  assert.match(quizSource, /export const QUIZ_BOOKMARKS_KEY = ['"]diving:quiz:bookmarks:v1['"]/);
+  assert.match(quizSource, /export const LEGACY_QUIZ_BOOKMARKS_KEY = ['"]diving_quiz_bookmarks['"]/);
+
+  assert.match(quizSource, /localStorage\.removeItem\(LEGACY_QUIZ_WRONG_NOTES_KEY\)/);
+  assert.match(quizSource, /localStorage\.removeItem\(LEGACY_QUIZ_BOOKMARKS_KEY\)/);
+});
+
 test('all project diving:* storage keys in src and index.html conform to data-persistence.md standard format', async () => {
   const srcFiles = await getFilesRecursively(path.join(rootDir, 'src'));
   const htmlFile = path.join(rootDir, 'index.html');

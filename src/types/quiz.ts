@@ -60,6 +60,17 @@ export interface UserAnswer {
   isCorrect: boolean; // 정답 여부
 }
 
+// 오답 노트 기록
+export interface WrongNoteItem {
+  questionId: number;
+  question: Question;
+  userAnswer: any;
+  addedAt: string;
+}
+
+export type WrongNote = WrongNoteItem;
+
+
 // 풀이 히스토리 기록
 export interface QuizHistory {
   id: string; // 고유 기록 ID

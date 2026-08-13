@@ -5,7 +5,11 @@
       :id="id"
       type="button"
       class="datepicker-trigger"
-      :class="{ 'is-active': isOpen }"
+      :class="[
+        getSizeClass('datepicker-trigger', size),
+        state && state !== 'default' ? `datepicker-trigger--${state}` : '',
+        { 'is-active': isOpen }
+      ]"
       role="combobox"
       :aria-expanded="isOpen"
       aria-haspopup="dialog"
@@ -112,6 +116,7 @@ import { onClickOutside } from '@vueuse/core';
 import { useCalendar } from '@/composables/useCalendar';
 import { useLogbookStore } from '@/stores/logbook';
 import type { DatePickerProps } from '@/types/calendar';
+import { getSizeClass } from '@/utils/size';
 
 // Day.js의 요일 표기용 한국어 설정
 dayjs.locale('ko');
@@ -122,7 +127,9 @@ const props = withDefaults(
   {
     id: '',
     placeholder: '다이빙 일자 선택',
-    mode: 'date'
+    mode: 'date',
+    size: 'md',
+    state: 'default'
   }
 );
 

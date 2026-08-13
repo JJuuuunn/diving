@@ -2,7 +2,11 @@
   <div ref="containerRef" class="custom-datepicker custom-date-range-picker">
     <div
       class="datepicker-trigger"
-      :class="{ 'is-active': isOpen, 'is-disabled': disabled }"
+      :class="[
+        getSizeClass('datepicker-trigger', size),
+        state && state !== 'default' ? `datepicker-trigger--${state}` : '',
+        { 'is-active': isOpen, 'is-disabled': disabled }
+      ]"
       role="button"
       tabindex="0"
       :aria-expanded="isOpen"
@@ -108,12 +112,20 @@ import { onClickOutside } from '@vueuse/core';
 import { useCalendar } from '@/composables/useCalendar';
 import type { DateRange, DateRangePickerProps } from '@/types/calendar';
 import { isDateInRange, selectRangeDate, selectRangeMonth } from '@/utils/dateRange';
+import { getSizeClass } from '@/utils/size';
 
-const props = withDefaults(defineProps<DateRangePickerProps>(), {
-  placeholder: '기간 선택',
-  disabled: false,
-  mode: 'date'
-});
+dayjs.locale('ko');
+
+const props = withDefaults(
+  defineProps<DateRangePickerProps>(),
+  {
+    placeholder: '기간 선택',
+    disabled: false,
+    mode: 'date',
+    size: 'md',
+    state: 'default'
+  }
+);
 
 const emit = defineEmits<{
   (event: 'update:modelValue', value: DateRange): void;

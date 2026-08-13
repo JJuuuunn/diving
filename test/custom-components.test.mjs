@@ -176,3 +176,28 @@ test('competition screen exposes the redesigned filters, summary and mobile book
   assert.match(card, /class="bookmark-icon"/);
   assert.match(card, /class="bookmark-label"/);
 });
+
+test('normalizeComponentSize maps level 1..10 and legacy xs..xl sizes accurately', async () => {
+  const source = await read('src/utils/size.ts');
+  assert.match(source, /normalizeComponentSize/);
+  assert.match(source, /getSizeClass/);
+  assert.match(source, /case 'xs':\s*return 3;/);
+  assert.match(source, /case 'sm':\s*return 4;/);
+  assert.match(source, /case 'md':\s*return 6;/);
+  assert.match(source, /case 'lg':\s*return 8;/);
+  assert.match(source, /case 'xl':\s*return 10;/);
+});
+
+test('ComponentPlayground includes 10-level interactive size slider, variant, state, and clearable live controls', async () => {
+  const playground = await read('src/views/dev/ComponentPlayground.vue');
+  assert.match(playground, /demo-size-slider/);
+  assert.match(playground, /v-model\.number="demoSize"/);
+  assert.match(playground, /min="1"/);
+  assert.match(playground, /max="10"/);
+  assert.match(playground, /demoState/);
+  assert.match(playground, /demoVariant/);
+  assert.match(playground, /demoClearable/);
+  assert.match(playground, /:size="demoSize"/);
+  assert.match(playground, /:state="demoState"/);
+  assert.match(playground, /:clearable="demoClearable"/);
+});
