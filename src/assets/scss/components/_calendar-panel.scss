@@ -1,5 +1,5 @@
 .custom-calendar-panel {
-  padding: 20px;
+  padding: var(--spacing-xl);
   border: 1px solid var(--page-card-border);
   border-radius: 18px;
   background: var(--page-card-bg);
@@ -27,7 +27,7 @@
   &__weekdays span {
     padding: 10px;
     color: var(--page-text-secondary);
-    font-size: .75rem;
+    font-size: var(--text-xs);
     text-align: center;
   }
 
@@ -90,7 +90,7 @@
     display: block;
     width: 100%;
     color: var(--page-text-primary);
-    font-size: .85rem;
+    font-size: var(--text-sm);
     line-height: 1;
     text-align: left;
   }
@@ -106,20 +106,20 @@
   &__selection {
     display: flex;
     flex-direction: column;
-    gap: 12px;
-    margin-top: 24px;
+    gap: var(--spacing-md);
+    margin-top: var(--spacing-2xl);
     color: var(--page-text-primary);
   }
 }
 
 @media (max-width: 520px) {
   .custom-calendar-panel {
-    padding: 8px;
+    padding: var(--spacing-sm);
 
     &__day.custom-ui-button {
       height: 76px;
       min-height: 76px;
-      padding: 6px;
+      padding: var(--spacing-xs);
     }
   }
 }

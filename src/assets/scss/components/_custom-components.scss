@@ -67,7 +67,7 @@
     flex-direction: column;
     align-items: center;
     justify-content: center;
-    gap: 2px;
+    gap: var(--spacing-3xs);
     z-index: 2;
 
     .gauge-icon {
@@ -95,8 +95,8 @@
       position: absolute;
       bottom: 10px;
       left: 50%;
-      width: 6px;
-      height: 6px;
+      width: var(--spacing-xs);
+      height: var(--spacing-xs);
       background: rgba(56, 189, 248, 0.6);
       border-radius: 50%;
       opacity: 0;
@@ -107,9 +107,9 @@
         transition-delay: 0s;
       }
       &:nth-child(2) {
-        margin-left: 8px;
-        width: 4px;
-        height: 4px;
+        margin-left: var(--spacing-sm);
+        width: var(--spacing-2xs);
+        height: var(--spacing-2xs);
         transition-delay: 0.15s;
         transition-duration: 0.9s;
       }
@@ -161,72 +161,56 @@
   // 글이 들어남에 따라 세로로 크기가 자동 팽창하는 텍스트 상자
   .grow-textarea {
     width: 100%;
-    background: rgba(15, 23, 42, 0.6);
-    border: 1px solid rgba(255, 255, 255, 0.1);
+    background: var(--ui-input-bg);
+    border: 1px solid var(--ui-input-border);
     border-radius: 12px;
-    padding: 12px 16px 42px 16px; // 도넛 배지가 덮지 않도록 하단 패딩 충분히 확보
-    color: #f8fafc;
-    font-size: 0.95rem;
+    padding: var(--spacing-md) var(--spacing-lg) 42px var(--spacing-lg); // 도넛 배지가 덮지 않도록 하단 패딩 충분히 확보
+    color: var(--ui-input-text);
+    font-size: var(--text-md);
     line-height: 1.55;
     resize: none;
     overflow: hidden; // 기본 스크롤바가 생기지 않도록 차단
     transition: all 0.25s ease;
     box-sizing: border-box;
 
-    body:not(.dark) & {
-      background: rgba(255, 255, 255, 0.8);
-      border-color: rgba(0, 0, 0, 0.1);
-      color: var(--slate-800);
-    }
-
     &:focus {
       outline: none;
-      border-color: var(--ocean-400);
-      box-shadow: 0 0 10px rgba(56, 189, 248, 0.25);
-      background: rgba(15, 23, 42, 0.8);
-
-      body:not(.dark) & {
-        background: rgba(255, 255, 255, 1);
-        border-color: var(--ocean-500);
-        box-shadow: 0 0 10px rgba(14, 165, 233, 0.2);
-      }
+      border-color: var(--ui-input-border-focus);
+      box-shadow: var(--ui-input-focus-ring);
+      background: var(--ui-input-bg-focus);
     }
 
     &::placeholder {
-      color: #475569;
-
-      body:not(.dark) & {
-        color: var(--slate-400);
-      }
+      color: var(--ui-input-placeholder);
     }
   }
 
   // 10단계 크기 스케일 오버라이드 (기본 스타일 하단 선언)
-  &.custom-ui-textarea--size-1 .grow-textarea { min-height: 40px; padding: 4px 8px 24px 8px; font-size: .65rem; border-radius: 6px; }
+  &.custom-ui-textarea--size-1 .grow-textarea { min-height: 40px; padding: var(--spacing-2xs) var(--spacing-sm) 24px var(--spacing-sm); font-size: .65rem; border-radius: var(--radius-sm); }
   &.custom-ui-textarea--size-2 .grow-textarea { min-height: 48px; padding: 5px 9px 26px 9px; font-size: .70rem; border-radius: 7px; }
-  &.custom-ui-textarea--size-3, &.custom-ui-textarea--xs .grow-textarea { min-height: 56px; padding: 6px 10px 28px 10px; font-size: .75rem; border-radius: 8px; }
+  &.custom-ui-textarea--size-3, &.custom-ui-textarea--xs .grow-textarea { min-height: 56px; padding: var(--spacing-xs) 10px 28px 10px; font-size: var(--text-xs); border-radius: 8px; }
   &.custom-ui-textarea--size-4, &.custom-ui-textarea--sm .grow-textarea { min-height: 64px; padding: 7px 11px 30px 11px; font-size: .80rem; border-radius: 9px; }
-  &.custom-ui-textarea--size-5 .grow-textarea { min-height: 72px; padding: 8px 12px 32px 12px; font-size: .85rem; border-radius: 10px; }
+  &.custom-ui-textarea--size-5 .grow-textarea { min-height: 72px; padding: var(--spacing-sm) var(--spacing-md) 32px var(--spacing-md); font-size: var(--text-sm); border-radius: var(--radius-md); }
   &.custom-ui-textarea--size-6, &.custom-ui-textarea--md .grow-textarea { min-height: 80px; padding: 9px 13px 34px 13px; font-size: .90rem; border-radius: 11px; }
-  &.custom-ui-textarea--size-7 .grow-textarea { min-height: 88px; padding: 10px 14px 36px 14px; font-size: .95rem; border-radius: 12px; }
+  &.custom-ui-textarea--size-7 .grow-textarea { min-height: 88px; padding: 10px 14px 36px 14px; font-size: var(--text-md); border-radius: 12px; }
   &.custom-ui-textarea--size-8, &.custom-ui-textarea--lg .grow-textarea { min-height: 96px; padding: 11px 15px 38px 15px; font-size: 1.00rem; border-radius: 13px; }
-  &.custom-ui-textarea--size-9 .grow-textarea { min-height: 104px; padding: 12px 16px 40px 16px; font-size: 1.05rem; border-radius: 14px; }
+  &.custom-ui-textarea--size-9 .grow-textarea { min-height: 104px; padding: var(--spacing-md) var(--spacing-lg) 40px var(--spacing-lg); font-size: var(--text-lg); border-radius: var(--radius-lg); }
   &.custom-ui-textarea--size-10, &.custom-ui-textarea--xl .grow-textarea { min-height: 112px; padding: 13px 17px 42px 17px; font-size: 1.10rem; border-radius: 15px; }
 
   // 우측 하단 미니 도넛 글자 한계 배지 패널
   .textarea-limit-panel {
     position: absolute;
-    bottom: 12px;
+    bottom: var(--spacing-md);
     right: 14px;
     display: flex;
     align-items: center;
-    gap: 6px;
+    gap: var(--spacing-xs);
     pointer-events: none;
     user-select: none;
 
     .limit-donut-svg {
-      width: 16px;
-      height: 16px;
+      width: var(--spacing-lg);
+      height: var(--spacing-lg);
       transform: rotate(-90deg);
 
       .donut-track {
@@ -246,8 +230,7 @@
         transition: stroke-dashoffset 0.2s ease, stroke 0.2s ease;
 
         &.is-normal {
-          stroke: var(--ocean-400);
-          body:not(.dark) & { stroke: var(--ocean-500); }
+          stroke: var(--ui-input-border-focus);
         }
         &.is-warning {
           stroke: #f59e0b; // 오렌지색
@@ -262,12 +245,8 @@
     .limit-text {
       font-size: 0.72rem;
       font-weight: 700;
-      color: #64748b;
+      color: var(--page-text-secondary);
       font-family: monospace;
-
-      body:not(.dark) & {
-        color: var(--slate-400);
-      }
 
       &.is-warning {
         color: #d97706;
@@ -295,8 +274,8 @@
   background: rgba(15, 23, 42, 0.5);
   border: 1px solid rgba(255, 255, 255, 0.08);
   border-radius: 12px;
-  padding: 4px;
-  gap: 2px;
+  padding: var(--spacing-2xs);
+  gap: var(--spacing-3xs);
   width: 100%;
   box-sizing: border-box;
 
@@ -317,8 +296,8 @@
   // 탄성 물리 법칙이 주입된 슬라이딩 필 배경
   .switch-sliding-pill {
     position: absolute;
-    top: 4px;
-    left: 4px;
+    top: var(--spacing-2xs);
+    left: var(--spacing-2xs);
     width: calc(50% - 4px);
     height: calc(100% - 8px);
     background: linear-gradient(135deg, var(--ocean-500) 0%, var(--ocean-700) 100%);
@@ -345,7 +324,7 @@
     display: inline-flex;
     align-items: center;
     justify-content: center;
-    gap: 8px;
+    gap: var(--spacing-sm);
     background: transparent;
     border: none;
     border-radius: 8px;
@@ -382,39 +361,39 @@
 
   // 10단계 사이즈 오버라이드 (기본 스타일 하단 배치로 확실하게 적용)
   &--size-1 {
-    min-height: 24px; padding: 2px; border-radius: 6px;
-    .switch-sliding-pill { top: 2px; left: 2px; width: calc(50% - 2px); height: calc(100% - 4px); border-radius: 4px; }
-    .switch-option-btn { padding: 2px 4px; font-size: .62rem; .switch-icon { font-size: .62rem; } }
+    min-height: 24px; padding: var(--spacing-3xs); border-radius: var(--radius-sm);
+    .switch-sliding-pill { top: var(--spacing-3xs); left: var(--spacing-3xs); width: calc(50% - 2px); height: calc(100% - 4px); border-radius: var(--radius-xs); }
+    .switch-option-btn { padding: var(--spacing-3xs) var(--spacing-2xs); font-size: .62rem; .switch-icon { font-size: .62rem; } }
   }
   &--size-2 {
-    min-height: 28px; padding: 2px; border-radius: 8px;
-    .switch-sliding-pill { top: 2px; left: 2px; width: calc(50% - 2px); height: calc(100% - 4px); border-radius: 6px; }
+    min-height: 28px; padding: var(--spacing-3xs); border-radius: 8px;
+    .switch-sliding-pill { top: var(--spacing-3xs); left: var(--spacing-3xs); width: calc(50% - 2px); height: calc(100% - 4px); border-radius: var(--radius-sm); }
     .switch-option-btn { padding: 3px 6px; font-size: .68rem; .switch-icon { font-size: .68rem; } }
   }
   &--size-3, &--xs {
     min-height: 32px; padding: 3px; border-radius: 9px;
-    .switch-sliding-pill { top: 3px; left: 3px; width: calc(50% - 3px); height: calc(100% - 6px); border-radius: 6px; }
-    .switch-option-btn { padding: 4px 8px; font-size: .74rem; .switch-icon { font-size: .74rem; } }
+    .switch-sliding-pill { top: 3px; left: 3px; width: calc(50% - 3px); height: calc(100% - 6px); border-radius: var(--radius-sm); }
+    .switch-option-btn { padding: var(--spacing-2xs) var(--spacing-sm); font-size: .74rem; .switch-icon { font-size: .74rem; } }
   }
   &--size-4, &--sm {
-    min-height: 36px; padding: 3px; border-radius: 10px;
+    min-height: 36px; padding: 3px; border-radius: var(--radius-md);
     .switch-sliding-pill { top: 3px; left: 3px; width: calc(50% - 3px); height: calc(100% - 6px); border-radius: 7px; }
     .switch-option-btn { padding: 6px 10px; font-size: .80rem; .switch-icon { font-size: .80rem; } }
   }
   &--size-5 {
-    min-height: 40px; padding: 4px; border-radius: 11px;
-    .switch-sliding-pill { top: 4px; left: 4px; width: calc(50% - 4px); height: calc(100% - 8px); border-radius: 8px; }
-    .switch-option-btn { padding: 8px 12px; font-size: .84rem; .switch-icon { font-size: .84rem; } }
+    min-height: 40px; padding: var(--spacing-2xs); border-radius: 11px;
+    .switch-sliding-pill { top: var(--spacing-2xs); left: var(--spacing-2xs); width: calc(50% - 4px); height: calc(100% - 8px); border-radius: 8px; }
+    .switch-option-btn { padding: var(--spacing-sm) var(--spacing-md); font-size: .84rem; .switch-icon { font-size: .84rem; } }
   }
   &--size-6, &--md {
-    min-height: 44px; padding: 4px; border-radius: 12px;
-    .switch-sliding-pill { top: 4px; left: 4px; width: calc(50% - 4px); height: calc(100% - 8px); border-radius: 8px; }
+    min-height: 44px; padding: var(--spacing-2xs); border-radius: 12px;
+    .switch-sliding-pill { top: var(--spacing-2xs); left: var(--spacing-2xs); width: calc(50% - 4px); height: calc(100% - 8px); border-radius: 8px; }
     .switch-option-btn { padding: 10px 14px; font-size: .88rem; .switch-icon { font-size: .88rem; } }
   }
   &--size-7 {
-    min-height: 48px; padding: 4px; border-radius: 12px;
-    .switch-sliding-pill { top: 4px; left: 4px; width: calc(50% - 4px); height: calc(100% - 8px); border-radius: 9px; }
-    .switch-option-btn { padding: 12px 16px; font-size: .94rem; .switch-icon { font-size: .94rem; } }
+    min-height: 48px; padding: var(--spacing-2xs); border-radius: 12px;
+    .switch-sliding-pill { top: var(--spacing-2xs); left: var(--spacing-2xs); width: calc(50% - 4px); height: calc(100% - 8px); border-radius: 9px; }
+    .switch-option-btn { padding: var(--spacing-md) var(--spacing-lg); font-size: .94rem; .switch-icon { font-size: .94rem; } }
   }
   &--size-8, &--lg {
     min-height: 52px; padding: 5px; border-radius: 13px;
@@ -424,12 +403,12 @@
   &--size-9 {
     min-height: 56px; padding: 5px; border-radius: 13px;
     .switch-sliding-pill { top: 5px; left: 5px; width: calc(50% - 5px); height: calc(100% - 10px); border-radius: 10px; }
-    .switch-option-btn { padding: 15px 20px; font-size: 1.03rem; .switch-icon { font-size: 1.03rem; } }
+    .switch-option-btn { padding: 15px var(--spacing-xl); font-size: 1.03rem; .switch-icon { font-size: 1.03rem; } }
   }
   &--size-10, &--xl {
-    min-height: 60px; padding: 6px; border-radius: 14px;
-    .switch-sliding-pill { top: 6px; left: 6px; width: calc(50% - 6px); height: calc(100% - 12px); border-radius: 10px; }
-    .switch-option-btn { padding: 16px 22px; font-size: 1.08rem; .switch-icon { font-size: 1.08rem; } }
+    min-height: 60px; padding: var(--spacing-xs); border-radius: 14px;
+    .switch-sliding-pill { top: var(--spacing-xs); left: var(--spacing-xs); width: calc(50% - 6px); height: calc(100% - 12px); border-radius: 10px; }
+    .switch-option-btn { padding: var(--spacing-lg) 22px; font-size: 1.08rem; .switch-icon { font-size: 1.08rem; } }
   }
 }
 
@@ -450,7 +429,7 @@
     );
     background-size: 200% 100%;
     animation: wave-shimmer 1.6s infinite ease-in-out;
-    border-radius: 6px;
+    border-radius: var(--radius-sm);
 
     body:not(.dark) & {
       background: linear-gradient(90deg, 
@@ -467,11 +446,11 @@
     .skeleton-card-layout {
       background: rgba(15, 23, 42, 0.35);
       border: 1px solid rgba(255, 255, 255, 0.04);
-      border-radius: 20px;
-      padding: 24px;
+      border-radius: var(--radius-xl);
+      padding: var(--spacing-2xl);
       display: flex;
       flex-direction: column;
-      gap: 16px;
+      gap: var(--spacing-lg);
       box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
 
       body:not(.dark) & {
@@ -482,7 +461,7 @@
     }
 
     .header-bar {
-      height: 24px;
+      height: var(--spacing-2xl);
       width: 50%;
       border-radius: 8px;
     }
@@ -490,7 +469,7 @@
     .skeleton-card-body {
       display: flex;
       flex-direction: column;
-      gap: 10px;
+      gap: var(--radius-md);
     }
 
     .detail-bar {
@@ -503,8 +482,8 @@
 
     .skeleton-card-footer {
       border-top: 1px dashed rgba(255, 255, 255, 0.05);
-      padding-top: 14px;
-      margin-top: 4px;
+      padding-top: var(--radius-lg);
+      margin-top: var(--spacing-2xs);
 
       body:not(.dark) & {
         border-color: rgba(0, 0, 0, 0.05);
@@ -512,7 +491,7 @@
     }
 
     .tip-bar {
-      height: 16px;
+      height: var(--spacing-lg);
       width: 80%;
     }
   }
@@ -522,8 +501,8 @@
     .skeleton-list-layout {
       display: flex;
       align-items: center;
-      gap: 16px;
-      padding: 12px 4px;
+      gap: var(--spacing-lg);
+      padding: var(--spacing-md) var(--spacing-2xs);
     }
 
     .list-item-avatar {
@@ -537,14 +516,14 @@
       flex: 1;
       display: flex;
       flex-direction: column;
-      gap: 8px;
+      gap: var(--spacing-sm);
     }
   }
 
   // C. 일반 텍스트 바형 디자인
   &.type-text {
     .text-bar {
-      height: 16px;
+      height: var(--spacing-lg);
       width: 100%;
     }
   }
@@ -556,7 +535,7 @@
   box-sizing: border-box;
 
   &--size-1 {
-    .skeleton-card-layout { padding: 10px; gap: 8px; border-radius: 10px; }
+    .skeleton-card-layout { padding: 10px; gap: var(--spacing-sm); border-radius: var(--radius-md); }
     .header-bar { height: 14px; }
     .detail-bar { height: 8px; }
     .tip-bar { height: 10px; }
@@ -564,7 +543,7 @@
     .text-bar { height: 10px; }
   }
   &--size-2 {
-    .skeleton-card-layout { padding: 12px; gap: 10px; border-radius: 12px; }
+    .skeleton-card-layout { padding: var(--spacing-md); gap: var(--radius-md); border-radius: 12px; }
     .header-bar { height: 16px; }
     .detail-bar { height: 9px; }
     .tip-bar { height: 11px; }
@@ -572,7 +551,7 @@
     .text-bar { height: 11px; }
   }
   &--size-3, &--xs {
-    .skeleton-card-layout { padding: 14px; gap: 11px; border-radius: 14px; }
+    .skeleton-card-layout { padding: var(--radius-lg); gap: 11px; border-radius: var(--radius-lg); }
     .header-bar { height: 18px; }
     .detail-bar { height: 10px; }
     .tip-bar { height: 12px; }
@@ -580,7 +559,7 @@
     .text-bar { height: 12px; }
   }
   &--size-4, &--sm {
-    .skeleton-card-layout { padding: 16px; gap: 12px; border-radius: 15px; }
+    .skeleton-card-layout { padding: var(--spacing-lg); gap: var(--spacing-md); border-radius: 15px; }
     .header-bar { height: 20px; }
     .detail-bar { height: 11px; }
     .tip-bar { height: 13px; }
@@ -596,7 +575,7 @@
     .text-bar { height: 14px; }
   }
   &--size-6, &--md {
-    .skeleton-card-layout { padding: 20px; gap: 15px; border-radius: 18px; }
+    .skeleton-card-layout { padding: var(--spacing-xl); gap: 15px; border-radius: 18px; }
     .header-bar { height: 24px; }
     .detail-bar { height: 13px; }
     .tip-bar { height: 15px; }
@@ -604,7 +583,7 @@
     .text-bar { height: 15px; }
   }
   &--size-7 {
-    .skeleton-card-layout { padding: 22px; gap: 16px; border-radius: 20px; }
+    .skeleton-card-layout { padding: 22px; gap: var(--spacing-lg); border-radius: var(--radius-xl); }
     .header-bar { height: 26px; }
     .detail-bar { height: 14px; }
     .tip-bar { height: 16px; }
@@ -612,7 +591,7 @@
     .text-bar { height: 16px; }
   }
   &--size-8, &--lg {
-    .skeleton-card-layout { padding: 24px; gap: 18px; border-radius: 22px; }
+    .skeleton-card-layout { padding: var(--spacing-2xl); gap: 18px; border-radius: 22px; }
     .header-bar { height: 28px; }
     .detail-bar { height: 15px; }
     .tip-bar { height: 18px; }
@@ -628,7 +607,7 @@
     .text-bar { height: 19px; }
   }
   &--size-10, &--xl {
-    .skeleton-card-layout { padding: 28px; gap: 20px; border-radius: 26px; }
+    .skeleton-card-layout { padding: 28px; gap: var(--spacing-xl); border-radius: 26px; }
     .header-bar { height: 32px; }
     .detail-bar { height: 18px; }
     .tip-bar { height: 20px; }

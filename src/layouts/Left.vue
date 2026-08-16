@@ -27,7 +27,7 @@
       </nav>
 
       <footer class="sidebar-footer">
-        <DarkModeToggle v-model="isDay" />
+        <DarkModeToggle />
         <p>Designed for Divers 🤿</p>
         <div class="links">
           <a href="https://github.com/JJuuuunn" target="_blank" rel="noopener noreferrer">GitHub</a> |

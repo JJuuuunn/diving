@@ -1,0 +1,126 @@
+// ==========================================================================
+// CustomTooltip SCSS Style (Glassmorphic)
+// ==========================================================================
+
+.custom-tooltip-wrapper {
+  position: relative;
+  display: inline-flex;
+
+  // 10-level sizing classes
+  &--size-1 .custom-tooltip-popover { padding: 3px var(--spacing-xs); font-size: var(--text-3xs); border-radius: var(--radius-xs); }
+  &--size-2 .custom-tooltip-popover { padding: 4px 7px; font-size: 0.65rem; border-radius: 5px; }
+  &--size-3, &--xs .custom-tooltip-popover { padding: 5px var(--spacing-sm); font-size: 0.70rem; border-radius: var(--radius-sm); }
+  &--size-4, &--sm .custom-tooltip-popover { padding: var(--spacing-xs) 10px; font-size: var(--text-xs); border-radius: 7px; }
+  &--size-5 .custom-tooltip-popover { padding: 7px 11px; font-size: 0.78rem; border-radius: 7px; }
+  &--size-6, &--md .custom-tooltip-popover { padding: var(--spacing-sm) var(--spacing-md); font-size: 0.82rem; border-radius: 8px; }
+  &--size-7 .custom-tooltip-popover { padding: 9px 14px; font-size: 0.86rem; border-radius: 9px; }
+  &--size-8, &--lg .custom-tooltip-popover { padding: 10px var(--spacing-lg); font-size: 0.90rem; border-radius: var(--radius-md); }
+  &--size-9 .custom-tooltip-popover { padding: 11px 18px; font-size: var(--text-md); border-radius: 11px; }
+  &--size-10, &--xl .custom-tooltip-popover { padding: var(--spacing-md) var(--spacing-xl); font-size: 1.00rem; border-radius: 12px; }
+}
+
+.custom-tooltip-trigger {
+  display: inline-flex;
+  cursor: pointer;
+}
+
+.custom-tooltip-popover {
+  position: absolute;
+  z-index: var(--z-dropdown, 1200);
+  padding: var(--spacing-sm) var(--spacing-md);
+  border-radius: 8px;
+  font-family: var(--font-family);
+  font-size: 0.82rem;
+  font-weight: 500;
+  line-height: 1.4;
+  white-space: nowrap;
+  pointer-events: none;
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  box-shadow: var(--ui-popover-shadow);
+  transition: opacity 0.2s cubic-bezier(0.4, 0, 0.2, 1), transform 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+
+  // Centralized Glassmorphic Styles
+  background: var(--ui-popover-bg);
+  color: var(--ui-popover-text);
+  border: 1px solid var(--ui-popover-border);
+
+  // ── Placements ──
+  &.placement-top {
+    bottom: 100%;
+    left: 50%;
+    transform: translateX(-50%) translateY(-8px);
+    margin-bottom: var(--spacing-xs);
+
+    .custom-tooltip-arrow {
+      bottom: -4px;
+      left: 50%;
+      transform: translateX(-50%) rotate(45deg);
+    }
+  }
+
+  &.placement-bottom {
+    top: 100%;
+    left: 50%;
+    transform: translateX(-50%) translateY(8px);
+    margin-top: var(--spacing-xs);
+
+    .custom-tooltip-arrow {
+      top: -4px;
+      left: 50%;
+      transform: translateX(-50%) rotate(45deg);
+    }
+  }
+
+  &.placement-left {
+    right: 100%;
+    top: 50%;
+    transform: translateY(-50%) translateX(-8px);
+    margin-right: var(--spacing-xs);
+
+    .custom-tooltip-arrow {
+      right: -4px;
+      top: 50%;
+      transform: translateY(-50%) rotate(45deg);
+    }
+  }
+
+  &.placement-right {
+    left: 100%;
+    top: 50%;
+    transform: translateY(-50%) translateX(8px);
+    margin-left: var(--spacing-xs);
+
+    .custom-tooltip-arrow {
+      left: -4px;
+      top: 50%;
+      transform: translateY(-50%) rotate(45deg);
+    }
+  }
+}
+
+.custom-tooltip-arrow {
+  position: absolute;
+  width: var(--spacing-sm);
+  height: var(--spacing-sm);
+  background: inherit;
+  border: inherit;
+  border-top: none;
+  border-left: none;
+  pointer-events: none;
+}
+
+// Vue Transition
+.tooltip-fade-enter-from,
+.tooltip-fade-leave-to {
+  opacity: 0;
+  &.placement-top { transform: translateX(-50%) translateY(-2px); }
+  &.placement-bottom { transform: translateX(-50%) translateY(2px); }
+  &.placement-left { transform: translateY(-50%) translateX(-2px); }
+  &.placement-right { transform: translateY(-50%) translateX(2px); }
+}
+
+.tooltip-fade-enter-active,
+.tooltip-fade-leave-active {
+  transition: opacity 0.18s ease, transform 0.18s ease;
+}

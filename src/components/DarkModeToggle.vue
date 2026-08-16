@@ -110,7 +110,6 @@ const handleToggleClick = (event: MouseEvent): void => {
 };
 
 const handleModalSelect = (mode: ThemeMode): void => {
-  emit('update:modelValue', isDay.value);
   emit('update:mode', mode);
   emit('change', mode);
 };

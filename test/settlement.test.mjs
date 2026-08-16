@@ -30,9 +30,7 @@ test('useSettlement uses reactive ref for globalResultText', async () => {
 test('useSettlement integrates legacy storage key migration', async () => {
   const source = await read('src/composables/useSettlement.ts');
   assert.match(source, /function migrateSettlementStorageKeys\(\)/);
-  assert.match(source, /localStorage\.getItem\(legacyKey\)/);
-  assert.match(source, /localStorage\.setItem\(newKey,\s*legacyValue\)/);
-  assert.match(source, /localStorage\.removeItem\(legacyKey\)/);
+  assert.match(source, /migrateLegacyKey\(legacyKey,\s*newKey\)/);
   assert.match(source, /migrateSettlementStorageKeys\(\);/);
 });
 

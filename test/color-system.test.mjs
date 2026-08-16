@@ -69,7 +69,7 @@ test('shared calendar keeps predictable two-event desktop and compact mobile cel
   assert.match(source, /&__day\.custom-ui-button \{[\s\S]*?height: 112px;[\s\S]*?min-height: 112px;/);
   assert.match(source, /&__day\.custom-ui-button \{[\s\S]*?align-items: flex-start;[\s\S]*?justify-content: flex-start;/);
   assert.match(source, /\.custom-ui-button__content \{[\s\S]*?flex-direction: column;[\s\S]*?height: 100%;[\s\S]*?text-align: left;/);
-  assert.match(source, /&__day-number \{[\s\S]*?width: 100%;[\s\S]*?font-size: \.85rem;[\s\S]*?text-align: left;/);
+  assert.match(source, /&__day-number \{[\s\S]*?width: 100%;[\s\S]*?font-size: (?:var\(--text-sm\)|\.85rem);[\s\S]*?text-align: left;/);
   assert.match(source, /&__cell-content \{[\s\S]*?margin-top: auto;[\s\S]*?overflow: hidden;/);
   assert.match(source, /@media \(max-width: 520px\)[\s\S]*?&__day\.custom-ui-button \{[\s\S]*?height: 76px;/);
 });

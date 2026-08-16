@@ -1,5 +1,6 @@
 import { ref, computed, watch } from 'vue';
 import { defineStore } from 'pinia';
+import { getStoredItem, setStoredItem, migrateLegacyKey } from '@/utils/storage';
 
 export type ThemeMode = 'light' | 'dark' | 'coral' | 'abyss';
 
@@ -18,33 +19,26 @@ export function applyThemeToBody(mode: ThemeMode): void {
   }
 }
 
-function getInitialThemeMode(): ThemeMode {
-  if (typeof window === 'undefined' || typeof localStorage === 'undefined') {
-    return 'light';
-  }
-
-  const current = localStorage.getItem(THEME_STORAGE_KEY);
-  const legacyTheme = localStorage.getItem('theme-mode');
-  const legacyIsDay = localStorage.getItem('isDay');
-
-  let mode: ThemeMode = 'light';
-
-  if (current && ['light', 'dark', 'coral', 'abyss'].includes(current)) {
-    mode = current as ThemeMode;
-  } else if (legacyTheme) {
-    if (['light', 'dark', 'coral', 'abyss'].includes(legacyTheme)) {
-      mode = legacyTheme as ThemeMode;
-    } else if (legacyTheme === 'true' || legacyTheme === 'false') {
-      mode = legacyTheme === 'true' ? 'light' : 'dark';
+function parseThemeMode(parsed: unknown): ThemeMode | null {
+  if (typeof parsed === 'string') {
+    if (['light', 'dark', 'coral', 'abyss'].includes(parsed)) {
+      return parsed as ThemeMode;
     }
-  } else if (legacyIsDay !== null) {
-    mode = legacyIsDay === 'true' ? 'light' : 'dark';
+    if (parsed === 'true') return 'light';
+    if (parsed === 'false') return 'dark';
   }
+  if (typeof parsed === 'boolean') {
+    return parsed ? 'light' : 'dark';
+  }
+  return null;
+}
 
-  if (legacyTheme !== null) localStorage.removeItem('theme-mode');
-  if (legacyIsDay !== null) localStorage.removeItem('isDay');
+function getInitialThemeMode(): ThemeMode {
+  migrateLegacyKey('theme-mode', THEME_STORAGE_KEY);
+  migrateLegacyKey('isDay', THEME_STORAGE_KEY);
 
-  localStorage.setItem(THEME_STORAGE_KEY, mode);
+  const mode = getStoredItem<ThemeMode>(THEME_STORAGE_KEY, 'light', parseThemeMode);
+  setStoredItem(THEME_STORAGE_KEY, mode);
   return mode;
 }
 
@@ -60,9 +54,7 @@ export const useThemeStore = defineStore('theme', () => {
 
   const setThemeMode = (mode: ThemeMode): void => {
     themeMode.value = mode;
-    if (typeof window !== 'undefined' && typeof localStorage !== 'undefined') {
-      localStorage.setItem(THEME_STORAGE_KEY, mode);
-    }
+    setStoredItem(THEME_STORAGE_KEY, mode);
     applyThemeToBody(mode);
   };
 

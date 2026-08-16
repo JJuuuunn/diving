@@ -14,14 +14,21 @@
     "typecheck": "vue-tsc --noEmit"
   },
   "dependencies": {
+    "@lucide/vue": "^1.31.0",
     "@vueuse/core": "^14.2.1",
+    "canvas-confetti": "^1.9.4",
+    "chart.js": "^4.5.1",
     "dayjs": "^1.11.20",
-    "html2canvas": "^1.4.1",
+    "html-to-image": "^1.11.13",
     "pinia": "^3.0.4",
     "vue": "^3.5.24",
-    "vue-router": "^4.6.4"
+    "vue-chartjs": "^5.3.4",
+    "vue-router": "^4.6.4",
+    "vuedraggable": "^4.1.0",
+    "zod": "^4.4.3"
   },
   "devDependencies": {
+    "@types/canvas-confetti": "^1.9.0",
     "@vitejs/plugin-vue": "^6.0.1",
     "sass": "^1.97.2",
     "typescript": "^5.9.3",

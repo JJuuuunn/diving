@@ -30,10 +30,8 @@ test('theme store and index.html use diving:theme:mode:v1 and migration', async 
   const htmlSource = await read('index.html');
 
   assert.match(themeSource, /export const THEME_STORAGE_KEY = ['"]diving:theme:mode:v1['"]/);
-  assert.match(themeSource, /localStorage\.getItem\(['"]theme-mode['"]\)/);
-  assert.match(themeSource, /localStorage\.getItem\(['"]isDay['"]\)/);
-  assert.match(themeSource, /localStorage\.removeItem\(['"]theme-mode['"]\)/);
-  assert.match(themeSource, /localStorage\.removeItem\(['"]isDay['"]\)/);
+  assert.match(themeSource, /migrateLegacyKey\(['"]theme-mode['"], THEME_STORAGE_KEY\)/);
+  assert.match(themeSource, /migrateLegacyKey\(['"]isDay['"], THEME_STORAGE_KEY\)/);
 
   assert.match(htmlSource, /localStorage\.getItem\(['"]diving:theme:mode:v1['"]\)/);
 });
@@ -44,8 +42,8 @@ test('competition store uses diving:competition:bookmarks:v1 and migration', asy
   assert.match(compSource, /export const COMPETITION_BOOKMARKS_STORAGE_KEY = ['"]diving:competition:bookmarks:v1['"]/);
   assert.match(compSource, /export const LEGACY_BOOKMARKS_STORAGE_KEY = ['"]bookmarked-competitions-ids['"]/);
   assert.match(compSource, /export const LEGACY_BOOKMARKS_V4_FLAG_KEY = ['"]competition-bookmarks-v4['"]/);
-  assert.match(compSource, /localStorage\.removeItem\(LEGACY_BOOKMARKS_STORAGE_KEY\)/);
-  assert.match(compSource, /localStorage\.removeItem\(LEGACY_BOOKMARKS_V4_FLAG_KEY\)/);
+  assert.match(compSource, /removeStoredItem\(LEGACY_BOOKMARKS_STORAGE_KEY\)/);
+  assert.match(compSource, /removeStoredItem\(LEGACY_BOOKMARKS_V4_FLAG_KEY\)/);
 });
 
 test('quiz store uses standardized storage keys and legacy migration', async () => {
@@ -57,8 +55,8 @@ test('quiz store uses standardized storage keys and legacy migration', async () 
   assert.match(quizSource, /export const QUIZ_BOOKMARKS_KEY = ['"]diving:quiz:bookmarks:v1['"]/);
   assert.match(quizSource, /export const LEGACY_QUIZ_BOOKMARKS_KEY = ['"]diving_quiz_bookmarks['"]/);
 
-  assert.match(quizSource, /localStorage\.removeItem\(LEGACY_QUIZ_WRONG_NOTES_KEY\)/);
-  assert.match(quizSource, /localStorage\.removeItem\(LEGACY_QUIZ_BOOKMARKS_KEY\)/);
+  assert.match(quizSource, /migrateLegacyKey\(LEGACY_QUIZ_WRONG_NOTES_KEY/);
+  assert.match(quizSource, /migrateLegacyKey\(LEGACY_QUIZ_BOOKMARKS_KEY/);
 });
 
 test('all project diving:* storage keys in src and index.html conform to data-persistence.md standard format', async () => {

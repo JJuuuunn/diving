@@ -201,3 +201,43 @@ test('ComponentPlayground includes 10-level interactive size slider, variant, st
   assert.match(playground, /:state="demoState"/);
   assert.match(playground, /:clearable="demoClearable"/);
 });
+
+test('CustomTabs provides ARIA tablist/tab semantics, roving tabindex, and keyboard navigation', async () => {
+  const source = await read('src/components/CustomTabs.vue');
+  const navSource = await read('src/composables/useKeyboardNav.ts');
+  assert.match(source, /role="tablist"/);
+  assert.match(source, /role="tab"/);
+  assert.match(source, /:tabindex="activeId === tab\.id \? 0 : -1"/);
+  assert.match(source, /@keydown="handleKeyDown\(\$event, index\)"/);
+  assert.match(source, /handleListArrowNav/);
+  assert.match(navSource, /ArrowRight/);
+});
+
+test('CustomAccordion exposes ARIA expanded semantics, single/multiple mode, and arrow key navigation', async () => {
+  const source = await read('src/components/CustomAccordionItem.vue');
+  const navSource = await read('src/composables/useKeyboardNav.ts');
+  assert.match(source, /aria-expanded/);
+  assert.match(source, /role="region"/);
+  assert.match(source, /@keydown="onHeaderKeyDown"/);
+  assert.match(source, /handleRovingFocus/);
+  assert.match(navSource, /ArrowDown/);
+});
+
+test('CustomTooltip exposes Glassmorphic popover, ESC key close, and size scaling', async () => {
+  const source = await read('src/components/CustomTooltip.vue');
+  const scss = await read('src/assets/scss/components/_tooltip.scss');
+  assert.match(source, /role="tooltip"/);
+  assert.match(source, /@keydown\.esc="hide"/);
+  assert.match(source, /getSizeClass\('custom-tooltip', size\)/);
+  assert.match(scss, /&--size-1/);
+  assert.match(scss, /&--size-10/);
+});
+
+test('CustomSlider supports single/dual range track, keyboard nav, and 10-level sizing', async () => {
+  const source = await read('src/components/CustomSlider.vue');
+  assert.match(source, /role="slider"/);
+  assert.match(source, /aria-valuenow/);
+  assert.match(source, /isRange/);
+  assert.match(source, /@keydown="onKeyDown\(\$event/);
+  assert.match(source, /getSizeClass\('custom-slider', size\)/);
+});

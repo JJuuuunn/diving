@@ -11,11 +11,18 @@
 @use 'components/menu-toggle';
 @use 'components/dark-mode-toggle';
 @use 'components/theme-segment-toggle';
+@use 'components/segmented-control';
+@use 'components/badge';
 @use 'components/theme-selector-modal';
 @use 'components/datepicker';
 @use 'components/inputs';
 @use 'components/calendar-panel';
 @use 'components/custom-components';
+@use 'components/tabs';
+@use 'components/accordion';
+@use 'components/tooltip';
+@use 'components/slider';
+@use 'components/alert';
 
 // 4. Layout (Sidebar, header, etc.)
 @use 'layout/sidebar';

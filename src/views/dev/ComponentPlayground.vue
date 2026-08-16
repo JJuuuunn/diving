@@ -187,9 +187,104 @@
           <span class="preview-title">ThemeSegmentToggle (신규 4개 테마 세그먼트 스위치)</span>
           <ThemeSegmentToggle :size="demoSize" :expanded="true" />
         </div>
+        <div class="preview-item" style="grid-column: 1 / -1;">
+          <span class="preview-title">CustomSegmentedControl (범용 3개/1개 세그먼트 스위치)</span>
+          <div style="display: flex; gap: 12px; align-items: center; flex-wrap: wrap;">
+            <CustomSegmentedControl
+              v-model="demoSegmentVal"
+              :options="[
+                { label: '평일', value: 'weekday' },
+                { label: '주말', value: 'weekend' },
+                { label: '야간', value: 'night' }
+              ]"
+              :size="demoSize"
+            />
+            <CustomSegmentedControl
+              v-model="demoSingleSegmentVal"
+              :options="[{ label: '1개 순환 모드 (클릭)', value: 'cycle' }]"
+              :size="demoSize"
+              :compact-cycle="true"
+            />
+          </div>
+        </div>
+        <div class="preview-item" style="grid-column: 1 / -1;">
+          <span class="preview-title">CustomBadge (태그 및 펄싱 상태 배지)</span>
+          <div style="display: flex; gap: 8px; align-items: center; flex-wrap: wrap;">
+            <CustomBadge variant="success" :size="demoSize" :dot="true" :pulsing="true">송금 완료</CustomBadge>
+            <CustomBadge variant="warning" :size="demoSize" :dot="true">미송금</CustomBadge>
+            <CustomBadge variant="ocean" :size="demoSize" :removable="true">다이빙 풀장</CustomBadge>
+            <CustomBadge variant="coral" :size="demoSize">산호초</CustomBadge>
+            <CustomBadge variant="abyss" :size="demoSize">어비스</CustomBadge>
+          </div>
+        </div>
         <div class="preview-item">
           <span class="preview-title">CustomSkeleton</span>
           <CustomSkeleton type="card" :size="demoSize" />
+        </div>
+        <div class="preview-item" style="grid-column: 1 / -1;">
+          <span class="preview-title">CustomTabs (ARIA 탭 / 슬라이딩 인디케이터 / 뱃지)</span>
+          <CustomTabs
+            v-model="demoTabValPreview"
+            :size="demoSize"
+            :tabs="[
+              { id: 'info', label: '정보', badge: 'NEW' },
+              { id: 'logs', label: '로그북', badge: 12 },
+              { id: 'disabled', label: '비활성', disabled: true }
+            ]"
+          >
+            <CustomTabPanel value="info">
+              <p style="padding: 8px 0; margin: 0;">ℹ️ 정보 탭 콘텐츠입니다.</p>
+            </CustomTabPanel>
+            <CustomTabPanel value="logs">
+              <p style="padding: 8px 0; margin: 0;">📖 로그북 탭 콘텐츠입니다.</p>
+            </CustomTabPanel>
+          </CustomTabs>
+        </div>
+        <div class="preview-item" style="grid-column: 1 / -1;">
+          <span class="preview-title">CustomAccordion (CSS Grid 0fr->1fr 매끄러운 높이 애니메이션)</span>
+          <CustomAccordion v-model="demoAccordionVal" :size="demoSize">
+            <CustomAccordionItem id="a1" title="자유 수심 다이빙" subtitle="K26 / 딥스테이션" icon="fa-water">
+              <p style="margin: 0;">수심 26m ~ 36m 실내 다이빙 풀장 관련 안내 및 예약 정보입니다.</p>
+            </CustomAccordionItem>
+            <CustomAccordionItem id="a2" title="해양 다이빙 일정" subtitle="제주도 / 울릉도" icon="fa-umbrella-beach">
+              <p style="margin: 0;">국내 해양 다이빙 시즌 및 보트 투어 정보입니다.</p>
+            </CustomAccordionItem>
+          </CustomAccordion>
+        </div>
+        <div class="preview-item">
+          <span class="preview-title">CustomTooltip (Glassmorphic 팝오버)</span>
+          <div style="display: flex; gap: 12px; align-items: center;">
+            <CustomTooltip content="상단 Glassmorphic 툴팁" placement="top">
+              <CustomButton :size="demoSize" variant="primary">Hover Me (Top)</CustomButton>
+            </CustomTooltip>
+            <CustomTooltip content="클릭으로 열고 닫는 툴팁" placement="bottom" trigger="click">
+              <CustomButton :size="demoSize" variant="outline">Click Me (Bottom)</CustomButton>
+            </CustomTooltip>
+          </div>
+        </div>
+        <div class="preview-item">
+          <span class="preview-title">CustomSlider (단일 / 듀얼 레인지 트랙)</span>
+          <div style="display: flex; flex-direction: column; gap: 12px; width: 100%;">
+            <div>
+              <span class="state-readout" style="display: block; margin-bottom: 4px;">단일: <strong>{{ demoSliderSingle }}m</strong></span>
+              <CustomSlider v-model="demoSliderSingle" :size="demoSize" :min="0" :max="100" show-ticks show-tooltip />
+            </div>
+            <div>
+              <span class="state-readout" style="display: block; margin-bottom: 4px;">듀얼: <strong>{{ demoSliderRange[0] }}m ~ {{ demoSliderRange[1] }}m</strong></span>
+              <CustomSlider v-model="demoSliderRange" :size="demoSize" :min="0" :max="100" show-tooltip />
+            </div>
+          </div>
+        </div>
+        <div class="preview-item" style="grid-column: 1 / -1;">
+          <span class="preview-title">CustomAlert (커스텀 알림/가이드 카드)</span>
+          <CustomAlert
+            :size="demoSize"
+            variant="info"
+            title="실시간 라이브 가이드 카드"
+            dismissible
+          >
+            슬라이더로 조작 중인 10단계 크기(Size {{ demoSize }}) 반응형 가이드 카드입니다.
+          </CustomAlert>
         </div>
       </div>
     </div>
@@ -681,6 +776,395 @@
     </section>
 
     <!-- ═══════════════════════════════ -->
+    <!--  CustomTabs                     -->
+    <!-- ═══════════════════════════════ -->
+    <section id="sec-tabs" class="test-section fade-in-up delay-more">
+      <div class="section-header">
+        <h2>🗂️ CustomTabs</h2>
+        <span class="component-tag">CustomTabs.vue</span>
+        <span class="component-tag">CustomTabPanel.vue</span>
+      </div>
+      <div class="section-body">
+        <div class="demo-row">
+          <div class="demo-card wide">
+            <h4>변형 (underline, pill, segment) & 키보드 이동</h4>
+            <div style="display: flex; gap: 8px; margin-bottom: 16px;">
+              <CustomButton
+                v-for="v in (['underline', 'pill', 'segment'] as const)"
+                :key="v"
+                size="xs"
+                :variant="tabsVariant === v ? 'primary' : 'outline'"
+                @click="tabsVariant = v"
+              >
+                {{ v }}
+              </CustomButton>
+            </div>
+            <CustomTabs
+              v-model="demoTabVal"
+              :variant="tabsVariant"
+              :tabs="[
+                { id: 'info', label: '다이빙 정보', badge: 'NEW' },
+                { id: 'logs', label: '로그북 기록', badge: 12 },
+                { id: 'pools', label: '풀장 예약' },
+                { id: 'disabled', label: '점검 중', disabled: true }
+              ]"
+            >
+              <CustomTabPanel value="info">
+                <p style="padding: 12px; margin: 0; background: rgba(148, 163, 184, 0.1); border-radius: 8px;">
+                  ℹ️ 다이빙 풀장 수심 및 예약 관리 정보를 확인하는 탭 패널입니다.
+                </p>
+              </CustomTabPanel>
+              <CustomTabPanel value="logs">
+                <p style="padding: 12px; margin: 0; background: rgba(148, 163, 184, 0.1); border-radius: 8px;">
+                  📖 12개의 최근 다이빙 로그가 저장되어 있습니다.
+                </p>
+              </CustomTabPanel>
+              <CustomTabPanel value="pools">
+                <p style="padding: 12px; margin: 0; background: rgba(148, 163, 184, 0.1); border-radius: 8px;">
+                  🏊 K26, 딥스테이션, 아쿠아라인 예약 연동 탭 패널입니다.
+                </p>
+              </CustomTabPanel>
+            </CustomTabs>
+            <span class="state-readout" style="margin-top: 12px; display: block;">
+              선택된 탭 ID: <strong>{{ demoTabVal }}</strong>
+            </span>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ═══════════════════════════════ -->
+    <!--  CustomAccordion                -->
+    <!-- ═══════════════════════════════ -->
+    <section id="sec-accordion" class="test-section fade-in-up delay-more">
+      <div class="section-header">
+        <h2>🪗 CustomAccordion</h2>
+        <span class="component-tag">CustomAccordion.vue</span>
+        <span class="component-tag">CustomAccordionItem.vue</span>
+      </div>
+      <div class="section-body">
+        <div class="demo-row">
+          <div class="demo-card">
+            <h4>단일 열림 모드</h4>
+            <CustomAccordion v-model="demoAccordionVal">
+              <CustomAccordionItem id="a1" title="K26 실내 다이빙 풀장" subtitle="수심 26m" icon="fa-water">
+                <p style="margin: 0;">경기도 가평군에 위치한 아시아 최고 깊이 수준의 실내 풀장입니다.</p>
+              </CustomAccordionItem>
+              <CustomAccordionItem id="a2" title="딥스테이션" subtitle="수심 36m" icon="fa-person-swimming">
+                <p style="margin: 0;">경기도 용인시에 위치한 최신 다이빙 전용 시설입니다.</p>
+              </CustomAccordionItem>
+            </CustomAccordion>
+            <span class="state-readout" style="margin-top: 8px; display: block;">
+              선택된 아이템: <strong>{{ demoAccordionVal || '(없음)' }}</strong>
+            </span>
+          </div>
+          <div class="demo-card">
+            <h4>다중 열림 모드 (multiple)</h4>
+            <CustomAccordion v-model="demoAccordionMultiVal" :multiple="true">
+              <CustomAccordionItem id="a1" title="프리다이빙 안전 수칙" subtitle="버디 시스템 필수" icon="fa-shield-halved">
+                <p style="margin: 0;">단독 다이빙 금지, LMC/블랙아웃 대비 조치 절차를 준수하세요.</p>
+              </CustomAccordionItem>
+              <CustomAccordionItem id="a2" title="이퀄라이제이션 기법" subtitle="발살바 / 프렌젤" icon="fa-ear-listen">
+                <p style="margin: 0;">수심 증가에 따라 귀와 마스크 내부 압력 평형을 맞춥니다.</p>
+              </CustomAccordionItem>
+            </CustomAccordion>
+            <span class="state-readout" style="margin-top: 8px; display: block;">
+              선택된 아이템: <strong>{{ (demoAccordionMultiVal as unknown[]).join(', ') || '(없음)' }}</strong>
+            </span>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ═══════════════════════════════ -->
+    <!--  CustomTooltip                  -->
+    <!-- ═══════════════════════════════ -->
+    <section id="sec-tooltip" class="test-section fade-in-up delay-more">
+      <div class="section-header">
+        <h2>💬 CustomTooltip</h2>
+        <span class="component-tag">CustomTooltip.vue</span>
+      </div>
+      <div class="section-body">
+        <div class="demo-row">
+          <div class="demo-card wide">
+            <h4>Glassmorphic 스타일 & 위치별 팝오버 (Hover / Click)</h4>
+            <div style="display: flex; gap: 16px; flex-wrap: wrap; justify-content: center; padding: 20px 0;">
+              <CustomTooltip content="상단 팝오버 툴팁" placement="top">
+                <CustomButton variant="outline">Top Placement</CustomButton>
+              </CustomTooltip>
+              <CustomTooltip content="하단 팝오버 툴팁" placement="bottom">
+                <CustomButton variant="outline">Bottom Placement</CustomButton>
+              </CustomTooltip>
+              <CustomTooltip content="좌측 팝오버 툴팁" placement="left">
+                <CustomButton variant="outline">Left Placement</CustomButton>
+              </CustomTooltip>
+              <CustomTooltip content="우측 팝오버 툴팁" placement="right">
+                <CustomButton variant="outline">Right Placement</CustomButton>
+              </CustomTooltip>
+              <CustomTooltip content="클릭으로 토글되는 툴팁" placement="top" trigger="click">
+                <CustomButton variant="primary">Click Trigger</CustomButton>
+              </CustomTooltip>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ═══════════════════════════════ -->
+    <!--  CustomSlider                   -->
+    <!-- ═══════════════════════════════ -->
+    <section id="sec-slider" class="test-section fade-in-up delay-more">
+      <div class="section-header">
+        <h2>🎚️ CustomSlider</h2>
+        <span class="component-tag">CustomSlider.vue</span>
+      </div>
+      <div class="section-body">
+        <div class="demo-row">
+          <div class="demo-card">
+            <h4>단일 슬라이더 (0m ~ 100m, step=5)</h4>
+            <CustomSlider
+              v-model="demoSliderSingle"
+              :min="0"
+              :max="100"
+              :step="5"
+              show-ticks
+              show-tooltip
+            />
+            <span class="state-readout" style="margin-top: 12px; display: block;">
+              설정 수심: <strong>{{ demoSliderSingle }}m</strong>
+            </span>
+          </div>
+          <div class="demo-card">
+            <h4>듀얼 레인지 슬라이더 (범위 지정)</h4>
+            <CustomSlider
+              v-model="demoSliderRange"
+              :min="0"
+              :max="100"
+              :step="1"
+              show-tooltip
+            />
+            <span class="state-readout" style="margin-top: 12px; display: block;">
+              수심 범위: <strong>{{ demoSliderRange[0] }}m ~ {{ demoSliderRange[1] }}m</strong>
+            </span>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ═══════════════════════════════ -->
+    <!--  CustomAlert                    -->
+    <!-- ═══════════════════════════════ -->
+    <section id="sec-alert" class="test-section fade-in-up delay-more">
+      <div class="section-header">
+        <h2>🚨 CustomAlert</h2>
+        <span class="component-tag">CustomAlert.vue</span>
+      </div>
+      <div class="section-body">
+        <div class="demo-row">
+          <div class="demo-card wide">
+            <h4>Variant 매트릭스 (info, success, warning, danger, ocean, coral, abyss, neutral)</h4>
+            <div style="display: flex; flex-direction: column; gap: 12px;">
+              <CustomAlert variant="info" title="안내 (Info)" dismissible>
+                다이빙 풀장 예약 시 라이선스 실물 또는 모바일 카드를 지참하세요.
+              </CustomAlert>
+              <CustomAlert variant="success" title="성공 (Success)" dismissible>
+                로그북 기록이 정상적으로 서버에 동기화되었습니다.
+              </CustomAlert>
+              <CustomAlert variant="warning" title="경고 (Warning)" dismissible>
+                수심 30m 이상 다이빙 시 딥 다이빙 전용 장비 패키지가 필요합니다.
+              </CustomAlert>
+              <CustomAlert variant="danger" title="위험 (Danger)" dismissible>
+                해수 온도 저하로 인해 입수가 금지되었습니다.
+              </CustomAlert>
+              <CustomAlert variant="ocean" title="오션 (Ocean)" dismissible>
+                시원한 에메랄드 오션 테마 컬러의 커스텀 알림 카드입니다.
+              </CustomAlert>
+              <CustomAlert variant="coral" title="코랄 (Coral)" dismissible>
+                따뜻한 산호초 테마의 커스텀 가이드 카드입니다.
+              </CustomAlert>
+              <CustomAlert variant="abyss" title="어비스 (Abyss)" dismissible>
+                네온 심해 어비스 테마의 가이드 알림 카드입니다.
+              </CustomAlert>
+              <CustomAlert variant="neutral" title="중립 (Neutral)" dismissible>
+                차분한 슬레이트 톤의 기본 알림 카드입니다.
+              </CustomAlert>
+            </div>
+          </div>
+        </div>
+
+        <div class="demo-row" style="margin-top: 1.25rem;">
+          <div class="demo-card">
+            <h4>슬롯 커스텀 (#icon, #title, #default, #actions)</h4>
+            <CustomAlert variant="ocean" size="7">
+              <template #icon>
+                <span style="font-size: 1.5rem;">🤿</span>
+              </template>
+              <template #title>
+                <strong style="color: #0284c7;">커스텀 다이버 팁</strong>
+              </template>
+              <template #default>
+                슬롯을 활용해 아이콘, 타이틀, 액션 버튼을 완벽하게 재정의할 수 있습니다.
+              </template>
+              <template #actions>
+                <CustomButton size="xs" variant="primary">자세히 보기</CustomButton>
+              </template>
+            </CustomAlert>
+          </div>
+
+          <div class="demo-card">
+            <h4>닫기 인터랙션 (dismissible)</h4>
+            <div style="display: flex; flex-direction: column; gap: 8px;">
+              <CustomAlert
+                v-if="alertDismissDemoVisible"
+                variant="warning"
+                title="닫기 인터랙션 테스트"
+                dismissible
+                @dismiss="alertDismissedCount++"
+                @close="fireAlertToast"
+              >
+                우측 X 버튼을 누르면 이 카드가 은폐되고 토스트가 출력됩니다.
+              </CustomAlert>
+              <div style="display: flex; align-items: center; justify-content: space-between; gap: 8px;">
+                <span class="state-readout">닫은 횟수: <strong>{{ alertDismissedCount }}</strong></span>
+                <CustomButton
+                  v-if="!alertDismissDemoVisible"
+                  size="xs"
+                  variant="outline"
+                  @click="alertDismissDemoVisible = true"
+                >
+                  🔄 알림 카드 다시 열기
+                </CustomButton>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="demo-row" style="margin-top: 1.25rem;">
+          <div class="demo-card wide">
+            <h4>10단계 크기(1~10) 스케일 프리뷰</h4>
+            <div style="display: flex; flex-direction: column; gap: 8px;">
+              <div v-for="s in 10" :key="s">
+                <CustomAlert :size="s" variant="info" :title="`Size ${s} Alert`" dismissible>
+                  규격 레벨 {{ s }} 단계의 알림 카드 크기입니다.
+                </CustomAlert>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ═══════════════════════════════ -->
+    <!--  📸 html-to-image 캡처 테스트   -->
+    <!-- ═══════════════════════════════ -->
+    <section id="sec-capture" class="test-section fade-in-up delay-more">
+      <div class="section-header">
+        <h2>📸 html-to-image 캡처 엔진 테스트</h2>
+        <span class="component-tag">useCapture.ts</span>
+      </div>
+      <div class="section-body">
+        <div class="demo-row">
+          <!-- 캡처 타겟 샘플 카드 -->
+          <div class="demo-card">
+            <h4>1. 캡처 대상 라이브 DOM 카드리스트</h4>
+            <p class="demo-desc">아래 카드는 고해상도 SVG/CSS foreignObject 캡처 타겟입니다.</p>
+
+            <div ref="captureSampleCardRef" class="capture-target-sample-card">
+              <div class="card-badge-row" style="display: flex; gap: 8px; margin-bottom: 8px;">
+                <CustomBadge variant="ocean" pill pulsing>🌊 FREEDIVING LOG</CustomBadge>
+                <CustomBadge variant="coral">⭐ PASS 100%</CustomBadge>
+              </div>
+              <h3 class="sample-title" style="margin: 0 0 4px; font-size: 1.2rem; color: var(--ui-input-text);">🤿 K26 딥다이빙 세션 리포트</h3>
+              <p class="sample-subtitle" style="margin: 0 0 12px; font-size: 0.8rem; color: var(--page-text-secondary);">2026-08-14 | 가평 K26 실내 다이빙풀</p>
+
+              <div class="sample-metrics-grid" style="display: grid; grid-template-columns: repeat(3, 1fr); gap: 8px; margin-bottom: 12px;">
+                <div class="metric-box" style="background: rgba(148, 163, 184, 0.1); padding: 8px; border-radius: 8px; text-align: center;">
+                  <span class="m-label" style="display: block; font-size: 0.7rem; color: var(--page-text-secondary);">최대 수심</span>
+                  <strong class="m-val" style="font-size: 0.95rem; color: var(--ocean-400);">26.0m</strong>
+                </div>
+                <div class="metric-box" style="background: rgba(148, 163, 184, 0.1); padding: 8px; border-radius: 8px; text-align: center;">
+                  <span class="m-label" style="display: block; font-size: 0.7rem; color: var(--page-text-secondary);">숨참기 (STA)</span>
+                  <strong class="m-val" style="font-size: 0.95rem; color: var(--ocean-400);">03:45</strong>
+                </div>
+                <div class="metric-box" style="background: rgba(148, 163, 184, 0.1); padding: 8px; border-radius: 8px; text-align: center;">
+                  <span class="m-label" style="display: block; font-size: 0.7rem; color: var(--page-text-secondary);">수온</span>
+                  <strong class="m-val" style="font-size: 0.95rem; color: var(--ocean-400);">28°C</strong>
+                </div>
+              </div>
+
+              <CustomAlert variant="ocean" size="3" title="캡처 엔진 연동 완료">
+                html-to-image 엔진으로 선명한 고해상도 PNG를 생성합니다.
+              </CustomAlert>
+
+              <div class="sample-card-footer" style="display: flex; justify-content: space-between; margin-top: 12px; font-size: 0.75rem; color: var(--page-text-secondary); border-top: 1px dashed rgba(148, 163, 184, 0.2); padding-top: 8px;">
+                <span>Diving Pool Vue App</span>
+                <span class="author">Diver @jjuuuunn</span>
+              </div>
+            </div>
+
+            <!-- 캡처 제어 버튼 바 -->
+            <div style="display: flex; flex-wrap: wrap; align-items: center; gap: 8px; margin-top: 1rem;">
+              <div style="display: flex; align-items: center; gap: 4px;">
+                <label for="capture-dpi-select" style="font-size: 0.8rem; font-weight: 600;">DPI 스케일:</label>
+                <CustomSelect
+                  id="capture-dpi-select"
+                  v-model="capturePixelRatio"
+                  :options="[
+                    { label: '1x (기본 해상도)', value: 1 },
+                    { label: '2x (고해상도 HD)', value: 2 },
+                    { label: '3x (초고해상도 Retina)', value: 3 }
+                  ]"
+                  size="3"
+                  style="width: 160px;"
+                />
+              </div>
+              <CustomButton
+                variant="primary"
+                size="4"
+                :loading="isCapturing"
+                loading-label="캡처 중..."
+                @click="runCaptureTest"
+              >
+                📸 캡처 실행 (html-to-image)
+              </CustomButton>
+              <CustomButton
+                v-if="capturedImageUrl"
+                variant="success"
+                size="4"
+                @click="downloadCapturedImage"
+              >
+                💾 PNG 다운로드
+              </CustomButton>
+            </div>
+          </div>
+
+          <!-- 캡처 렌더링 결과 프리뷰 카드 -->
+          <div class="demo-card">
+            <h4>2. 캡처 생성 결과 렌더링 프리뷰</h4>
+            <p class="demo-desc">생성된 DataURL PNG 이미지가 고해상도로 렌더링됩니다.</p>
+
+            <div v-if="isCapturing" style="padding: 2rem 0;">
+              <CustomSkeleton type="card" size="5" />
+            </div>
+            <div v-else-if="capturedImageUrl" class="capture-result-container" style="display: flex; flex-direction: column; gap: 8px;">
+              <div class="result-img-wrapper" style="border: 1px solid var(--ui-input-border); border-radius: 12px; overflow: hidden; background: rgba(0, 0, 0, 0.2); padding: 8px; text-align: center;">
+                <img :src="capturedImageUrl" alt="캡처 생성 결과" style="max-width: 100%; height: auto; border-radius: 8px; box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);" />
+              </div>
+              <div class="result-specs-readout" style="display: flex; justify-content: space-between; font-size: 0.8rem; color: var(--page-text-secondary); background: rgba(148, 163, 184, 0.1); padding: 6px 12px; border-radius: 6px;">
+                <span>✅ 캡처 완료 (PNG DataURL)</span>
+                <span>스케일: <strong>{{ capturePixelRatio }}x Retina</strong></span>
+              </div>
+            </div>
+            <div v-else class="capture-empty-placeholder" style="display: flex; flex-direction: column; align-items: center; justify-content: center; padding: 3rem 1rem; border: 2px dashed rgba(148, 163, 184, 0.2); border-radius: 12px; text-align: center; color: var(--page-text-secondary);">
+              <span style="font-size: 2.5rem; margin-bottom: 8px;">📸</span>
+              <p style="margin: 0; font-size: 0.85rem;">좌측에서 [📸 캡처 실행] 버튼을 누르면 캡처된 결과 이미지가 여기에 즉시 표시됩니다.</p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ═══════════════════════════════ -->
     <!--  8. ConfirmModal                -->
     <!-- ═══════════════════════════════ -->
     <section id="sec-modal" class="test-section fade-in-up delay-more">
@@ -757,7 +1241,7 @@
               ☀️ 라이트 해변, 🌙 다크 심해, 🪸 산호초 코랄, 🌌 초심해 어비스 모드를 지원하는 비주얼 테마 컨트롤입니다.
             </p>
             <div class="darkmode-demo-wrapper" style="display: flex; gap: 12px; align-items: center; flex-wrap: wrap;">
-              <DarkModeToggle v-model="isDay" expanded />
+              <DarkModeToggle expanded />
               <CustomButton size="sm" variant="secondary" @click="isThemeModalOpen = true">
                 🎨 테마 선택 모달 열기
               </CustomButton>
@@ -858,14 +1342,24 @@ import CustomDateRangePicker from '@/components/CustomDateRangePicker.vue';
 import CustomCalendarPanel from '@/components/CustomCalendarPanel.vue';
 import CustomTextarea from '@/components/CustomTextarea.vue';
 import CustomSkeleton from '@/components/CustomSkeleton.vue';
+import CustomTabs from '@/components/CustomTabs.vue';
+import CustomTabPanel from '@/components/CustomTabPanel.vue';
+import CustomAccordion from '@/components/CustomAccordion.vue';
+import CustomAccordionItem from '@/components/CustomAccordionItem.vue';
+import CustomTooltip from '@/components/CustomTooltip.vue';
+import CustomSlider from '@/components/CustomSlider.vue';
+import CustomAlert from '@/components/CustomAlert.vue';
 import ConfirmModal from '@/components/ConfirmModal.vue';
 import DarkModeToggle from '@/components/DarkModeToggle.vue';
 import ThemeSegmentToggle from '@/components/ThemeSegmentToggle.vue';
+import CustomSegmentedControl from '@/components/CustomSegmentedControl.vue';
+import CustomBadge from '@/components/CustomBadge.vue';
 import ThemeSelectorModal from '@/components/ThemeSelectorModal.vue';
 import MapTestPanel from '@/components/dev/MapTestPanel.vue';
 import Header from '@/components/Header.vue';
 import Footer from '@/components/Footer.vue';
 import { useThemeStore } from '@/stores/theme';
+import { useCapture } from '@/composables/useCapture';
 import type { PlaygroundNavSection } from '@/types/components';
 import type { CalendarPanelCell, DateRange } from '@/types/calendar';
 
@@ -881,6 +1375,12 @@ const sections: PlaygroundNavSection[] = [
   { id: 'sec-calendar', icon: '🗓️', label: 'Calendar' },
   { id: 'sec-textarea', icon: '📝', label: 'Textarea' },
   { id: 'sec-skeleton', icon: '💀', label: 'Skeleton' },
+  { id: 'sec-tabs', icon: '🗂️', label: 'Tabs' },
+  { id: 'sec-accordion', icon: '🪗', label: 'Accordion' },
+  { id: 'sec-tooltip', icon: '💬', label: 'Tooltip' },
+  { id: 'sec-slider', icon: '🎚️', label: 'Slider' },
+  { id: 'sec-alert', icon: '🚨', label: 'Alert' },
+  { id: 'sec-capture', icon: '📸', label: 'Capture' },
   { id: 'sec-modal', icon: '💬', label: 'Modal' },
   { id: 'sec-toast', icon: '🔔', label: 'Toast' },
   { id: 'sec-darkmode', icon: '🌗', label: 'DarkMode' },
@@ -891,6 +1391,15 @@ const sections: PlaygroundNavSection[] = [
 
 const route = useRoute();
 const activeSection = ref('sec-button');
+
+// ─── 신규 커스텀 UI 컴포넌트 상태 ───
+const demoTabValPreview = ref<string | number>('info');
+const demoTabVal = ref<string | number>('info');
+const demoAccordionVal = ref<unknown>('a1');
+const demoAccordionMultiVal = ref<unknown[]>(['a1', 'a2']);
+const demoSliderSingle = ref<number>(42);
+const demoSliderRange = ref<[number, number]>([20, 70]);
+const tabsVariant = ref<'underline' | 'pill' | 'segment'>('underline');
 
 // ─── CustomButton 상태 ───
 const buttonLoading = ref(false);
@@ -903,6 +1412,35 @@ const simulateButtonLoading = (): void => {
   window.setTimeout(() => {
     buttonLoading.value = false;
   }, 900);
+};
+
+// ─── CustomAlert 상태 ───
+const alertDismissDemoVisible = ref(true);
+const alertDismissedCount = ref(0);
+const fireAlertToast = (): void => {
+  triggerToast('🔔 CustomAlert 카드가 닫혔습니다.');
+};
+
+// ─── html-to-image 캡처 테스트 패널 상태 ───
+const captureSampleCardRef = ref<HTMLElement | null>(null);
+const capturePixelRatio = ref<number>(2);
+const { isCapturing, capturedImageUrl, captureElement } = useCapture();
+
+const runCaptureTest = async (): Promise<void> => {
+  if (!captureSampleCardRef.value) return;
+  const url = await captureElement(captureSampleCardRef.value, 480, capturePixelRatio.value);
+  if (url) {
+    triggerToast('📸 html-to-image 고화질 캡처 성공!');
+  }
+};
+
+const downloadCapturedImage = (): void => {
+  if (!capturedImageUrl.value) return;
+  const link = document.createElement('a');
+  link.href = capturedImageUrl.value;
+  link.download = `playground-capture-${Date.now()}.png`;
+  link.click();
+  triggerToast('💾 캡처 이미지가 다운로드되었습니다.');
 };
 
 // ─── CustomInput 상태 ───
@@ -920,6 +1458,8 @@ const demoClearableNumber = ref(42);
 const demoClearableSelect = ref('스쿠버다이빙');
 const demoClearableMultiSelect = ref<unknown[]>(['스쿠버다이빙', '프리다이빙']);
 const demoClearableTextarea = ref('수심 30m 지점에서 거북이와 유영함.');
+const demoSegmentVal = ref('weekday');
+const demoSingleSegmentVal = ref('cycle');
 
 const inputStateSuccess = ref('유효성 통과 데이터');
 const inputStateWarning = ref('수심 40m 초과 경고');
@@ -1624,5 +2164,14 @@ const isDark = computed(() => themeStore.isDark);
   flex-direction: column;
   gap: 0.5rem;
   width: 100%;
+}
+
+.capture-target-sample-card {
+  padding: 1.25rem;
+  border-radius: 1rem;
+  background: var(--ui-input-bg);
+  border: 1px solid var(--ui-input-border);
+  box-shadow: var(--ui-input-shadow);
+  transition: all 0.2s ease;
 }
 </style>

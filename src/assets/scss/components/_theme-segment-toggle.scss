@@ -6,18 +6,18 @@
 @mixin expanded-theme-segment-toggle {
   width: 100%;
   max-width: 100%;
-  padding: var(--segment-padding, 4px);
+  padding: var(--segment-padding, var(--spacing-2xs));
 
   .theme-segment-toggle__option {
     flex: 1 1 0%;
-    width: calc((100% - (var(--segment-padding, 4px) * 2)) / 4);
+    width: calc((100% - (var(--segment-padding, var(--spacing-2xs)) * 2)) / 4);
     height: 100%;
     margin: 0;
     padding: 0;
     display: flex;
     align-items: center;
     justify-content: center;
-    gap: 4px;
+    gap: var(--spacing-2xs);
     background: transparent;
     border: none;
     cursor: pointer;
@@ -53,11 +53,11 @@
 
   .theme-segment-toggle__indicator {
     position: absolute;
-    top: var(--segment-padding, 4px);
-    bottom: var(--segment-padding, 4px);
-    left: calc(var(--segment-padding, 4px) + var(--active-index, 0) * ((100% - (var(--segment-padding, 4px) * 2)) / 4));
-    width: calc((100% - (var(--segment-padding, 4px) * 2)) / 4);
-    height: calc(100% - (var(--segment-padding, 4px) * 2));
+    top: var(--segment-padding, var(--spacing-2xs));
+    bottom: var(--segment-padding, var(--spacing-2xs));
+    left: calc(var(--segment-padding, var(--spacing-2xs)) + var(--active-index, 0) * ((100% - (var(--segment-padding, var(--spacing-2xs)) * 2)) / 4));
+    width: calc((100% - (var(--segment-padding, var(--spacing-2xs)) * 2)) / 4);
+    height: calc(100% - (var(--segment-padding, var(--spacing-2xs)) * 2));
     margin: 0;
     padding: 0;
     z-index: 1;
@@ -106,7 +106,7 @@
 
 .theme-segment-toggle {
   --toggle-accent: #38bdf8;
-  --segment-padding: 4px;
+  --segment-padding: var(--spacing-2xs);
   --indicator-radius: 7px;
   --segment-font-size: 0.68rem;
   position: relative;
@@ -129,14 +129,14 @@
 
   // 10단계 크기 스케일: 탭 항목 버튼과 인디케이터 박스 크기 및 동심원 곡률 일치
   &--size-1 {
-    --segment-padding: 2px;
-    --indicator-radius: 4px;
+    --segment-padding: var(--spacing-3xs);
+    --indicator-radius: var(--radius-xs);
     --segment-font-size: 0.48rem;
-    height: 24px; min-height: 24px; border-radius: 6px;
-    .theme-segment-toggle__icon { width: 10px; height: 10px; }
+    height: 24px; min-height: 24px; border-radius: var(--radius-sm);
+    .theme-segment-toggle__icon { width: var(--radius-md); height: var(--radius-md); }
   }
   &--size-2 {
-    --segment-padding: 2px;
+    --segment-padding: var(--spacing-3xs);
     --indicator-radius: 5px;
     --segment-font-size: 0.52rem;
     height: 28px; min-height: 28px; border-radius: 7px;
@@ -147,24 +147,24 @@
     --indicator-radius: 5px;
     --segment-font-size: 0.56rem;
     height: 32px; min-height: 32px; border-radius: 8px;
-    .theme-segment-toggle__icon { width: 12px; height: 12px; }
+    .theme-segment-toggle__icon { width: var(--spacing-md); height: var(--spacing-md); }
   }
   &--size-4, &--sm {
     --segment-padding: 3px;
-    --indicator-radius: 6px;
+    --indicator-radius: var(--radius-sm);
     --segment-font-size: 0.60rem;
     height: 36px; min-height: 36px; border-radius: 9px;
     .theme-segment-toggle__icon { width: 13px; height: 13px; }
   }
   &--size-5 {
-    --segment-padding: 4px;
-    --indicator-radius: 6px;
+    --segment-padding: var(--spacing-2xs);
+    --indicator-radius: var(--radius-sm);
     --segment-font-size: 0.64rem;
-    height: 40px; min-height: 40px; border-radius: 10px;
-    .theme-segment-toggle__icon { width: 14px; height: 14px; }
+    height: 40px; min-height: 40px; border-radius: var(--radius-md);
+    .theme-segment-toggle__icon { width: var(--radius-lg); height: var(--radius-lg); }
   }
   &--size-6, &--md {
-    --segment-padding: 4px;
+    --segment-padding: var(--spacing-2xs);
     --indicator-radius: 7px;
     --segment-font-size: 0.68rem;
     height: 44px; min-height: 44px; border-radius: 11px;
@@ -175,7 +175,7 @@
     --indicator-radius: 7px;
     --segment-font-size: 0.72rem;
     height: 48px; min-height: 48px; border-radius: 12px;
-    .theme-segment-toggle__icon { width: 16px; height: 16px; }
+    .theme-segment-toggle__icon { width: var(--spacing-lg); height: var(--spacing-lg); }
   }
   &--size-8, &--lg {
     --segment-padding: 5px;
@@ -185,14 +185,14 @@
     .theme-segment-toggle__icon { width: 17px; height: 17px; }
   }
   &--size-9 {
-    --segment-padding: 6px;
+    --segment-padding: var(--spacing-xs);
     --indicator-radius: 8px;
     --segment-font-size: 0.80rem;
-    height: 56px; min-height: 56px; border-radius: 14px;
+    height: 56px; min-height: 56px; border-radius: var(--radius-lg);
     .theme-segment-toggle__icon { width: 18px; height: 18px; }
   }
   &--size-10, &--xl {
-    --segment-padding: 6px;
+    --segment-padding: var(--spacing-xs);
     --indicator-radius: 9px;
     --segment-font-size: 0.84rem;
     height: 60px; min-height: 60px; border-radius: 15px;

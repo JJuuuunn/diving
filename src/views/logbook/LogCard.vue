@@ -159,8 +159,8 @@ const downloadCardImage = async () => {
   if (!captureRef.value) return;
 
   try {
-    // html2canvas 캡처 수행
-    const imageUrl = await captureElement(captureRef.value, 480, 3);
+    // html-to-image 캡처 수행
+    const imageUrl = await captureElement(captureRef.value, 480, 2);
 
     if (imageUrl) {
       // 가상 링크를 이용해 이미지 파일 즉시 브라우저 다운로드 실행

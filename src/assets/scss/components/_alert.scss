@@ -1,0 +1,242 @@
+// ==========================================================================
+// 공용 커스텀 알림/가이드 카드 (CustomAlert) SCSS 스타일
+// ==========================================================================
+
+.custom-alert {
+  position: relative;
+  display: flex;
+  align-items: flex-start;
+  width: 100%;
+  box-sizing: border-box;
+  border-radius: var(--radius-md);
+  border: 1px solid transparent;
+  backdrop-filter: blur(8px);
+  -webkit-backdrop-filter: blur(8px);
+  transition: all 0.2s ease;
+  overflow: hidden;
+
+  &.is-bordered {
+    border-style: solid;
+  }
+
+  // ── 10단계 크기 스케일 (Size 1~10) ──
+  &--size-1 {
+    padding: 6px 10px;
+    gap: 6px;
+    font-size: 0.70rem;
+    .custom-alert__icon { font-size: 0.85rem; }
+    .custom-alert__title { font-size: 0.75rem; margin-bottom: 2px; }
+    .custom-alert__close { font-size: 0.85rem; width: 18px; height: 18px; }
+  }
+
+  &--size-2 {
+    padding: 8px 12px;
+    gap: 8px;
+    font-size: 0.75rem;
+    .custom-alert__icon { font-size: 0.95rem; }
+    .custom-alert__title { font-size: 0.80rem; margin-bottom: 3px; }
+    .custom-alert__close { font-size: 0.90rem; width: 20px; height: 20px; }
+  }
+
+  &--size-3, &--xs {
+    padding: 10px 14px;
+    gap: 8px;
+    font-size: 0.80rem;
+    .custom-alert__icon { font-size: 1.05rem; }
+    .custom-alert__title { font-size: 0.85rem; margin-bottom: 3px; }
+    .custom-alert__close { font-size: 1.00rem; width: 22px; height: 22px; }
+  }
+
+  &--size-4, &--sm {
+    padding: 12px 16px;
+    gap: 10px;
+    font-size: 0.85rem;
+    .custom-alert__icon { font-size: 1.15rem; }
+    .custom-alert__title { font-size: 0.90rem; margin-bottom: 4px; }
+    .custom-alert__close { font-size: 1.05rem; width: 24px; height: 24px; }
+  }
+
+  &--size-5 {
+    padding: 13px 17px;
+    gap: 10px;
+    font-size: 0.90rem;
+    .custom-alert__icon { font-size: 1.25rem; }
+    .custom-alert__title { font-size: 0.95rem; margin-bottom: 4px; }
+    .custom-alert__close { font-size: 1.10rem; width: 26px; height: 26px; }
+  }
+
+  &--size-6, &--md {
+    padding: 14px 18px;
+    gap: 12px;
+    font-size: 0.95rem;
+    .custom-alert__icon { font-size: 1.35rem; }
+    .custom-alert__title { font-size: 1.00rem; margin-bottom: 5px; }
+    .custom-alert__close { font-size: 1.15rem; width: 28px; height: 28px; }
+  }
+
+  &--size-7 {
+    padding: 16px 20px;
+    gap: 12px;
+    font-size: 1.00rem;
+    .custom-alert__icon { font-size: 1.45rem; }
+    .custom-alert__title { font-size: 1.05rem; margin-bottom: 5px; }
+    .custom-alert__close { font-size: 1.20rem; width: 30px; height: 30px; }
+  }
+
+  &--size-8, &--lg {
+    padding: 18px 22px;
+    gap: 14px;
+    font-size: 1.05rem;
+    .custom-alert__icon { font-size: 1.55rem; }
+    .custom-alert__title { font-size: 1.10rem; margin-bottom: 6px; }
+    .custom-alert__close { font-size: 1.25rem; width: 32px; height: 32px; }
+  }
+
+  &--size-9 {
+    padding: 20px 24px;
+    gap: 14px;
+    font-size: 1.10rem;
+    .custom-alert__icon { font-size: 1.65rem; }
+    .custom-alert__title { font-size: 1.15rem; margin-bottom: 6px; }
+    .custom-alert__close { font-size: 1.30rem; width: 34px; height: 34px; }
+  }
+
+  &--size-10, &--xl {
+    padding: 22px 26px;
+    gap: 16px;
+    font-size: 1.15rem;
+    .custom-alert__icon { font-size: 1.75rem; }
+    .custom-alert__title { font-size: 1.20rem; margin-bottom: 7px; }
+    .custom-alert__close { font-size: 1.35rem; width: 36px; height: 36px; }
+  }
+
+  // ── 하위 요소를 위한 블록/엘리먼트 ──
+  &__icon {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+    line-height: 1;
+    user-select: none;
+    padding-top: 1px;
+  }
+
+  &__main {
+    flex: 1 1 auto;
+    min-width: 0;
+  }
+
+  &__title {
+    font-weight: 700;
+    line-height: 1.35;
+    word-break: break-word;
+  }
+
+  &__content {
+    line-height: 1.5;
+    word-break: break-word;
+
+    p {
+      margin: 0 0 0.4rem;
+      &:last-child {
+        margin-bottom: 0;
+      }
+    }
+
+    ul, ol {
+      margin: 0;
+      padding-left: 1.2rem;
+    }
+  }
+
+  &__actions {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    flex-shrink: 0;
+    margin-left: auto;
+  }
+
+  &__close {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    flex-shrink: 0;
+    padding: 0;
+    margin-left: 4px;
+    border: none;
+    border-radius: 50%;
+    background: transparent;
+    color: var(--ui-alert-close-color);
+    line-height: 1;
+    cursor: pointer;
+    transition: all 0.15s ease;
+
+    &:hover {
+      background-color: var(--ui-alert-close-hover-bg);
+      color: var(--ui-alert-close-hover-color);
+    }
+
+    &:focus-visible {
+      outline: 2px solid currentColor;
+      outline-offset: 2px;
+    }
+  }
+
+  // ── 변형 (Variants) ──
+  &--info {
+    background-color: var(--ui-alert-info-bg);
+    border-color: var(--ui-alert-info-border);
+    color: var(--ui-alert-info-text);
+    .custom-alert__title { color: var(--ui-alert-info-title); }
+  }
+
+  &--success {
+    background-color: var(--ui-alert-success-bg);
+    border-color: var(--ui-alert-success-border);
+    color: var(--ui-alert-success-text);
+    .custom-alert__title { color: var(--ui-alert-success-title); }
+  }
+
+  &--warning {
+    background-color: var(--ui-alert-warning-bg);
+    border-color: var(--ui-alert-warning-border);
+    color: var(--ui-alert-warning-text);
+    .custom-alert__title { color: var(--ui-alert-warning-title); }
+  }
+
+  &--danger {
+    background-color: var(--ui-alert-danger-bg);
+    border-color: var(--ui-alert-danger-border);
+    color: var(--ui-alert-danger-text);
+    .custom-alert__title { color: var(--ui-alert-danger-title); }
+  }
+
+  &--ocean {
+    background-color: var(--ui-alert-ocean-bg);
+    border-color: var(--ui-alert-ocean-border);
+    color: var(--ui-alert-ocean-text);
+    .custom-alert__title { color: var(--ui-alert-ocean-title); }
+  }
+
+  &--coral {
+    background-color: var(--ui-alert-coral-bg);
+    border-color: var(--ui-alert-coral-border);
+    color: var(--ui-alert-coral-text);
+    .custom-alert__title { color: var(--ui-alert-coral-title); }
+  }
+
+  &--abyss {
+    background-color: var(--ui-alert-abyss-bg);
+    border-color: var(--ui-alert-abyss-border);
+    color: var(--ui-alert-abyss-text);
+    .custom-alert__title { color: var(--ui-alert-abyss-title); }
+  }
+
+  &--neutral {
+    background-color: var(--ui-alert-neutral-bg);
+    border-color: var(--ui-alert-neutral-border);
+    color: var(--ui-alert-neutral-text);
+    .custom-alert__title { color: var(--ui-alert-neutral-title); }
+  }
+}

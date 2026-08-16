@@ -1,5 +1,6 @@
 import { defineStore } from 'pinia';
 import { ref } from 'vue';
+import { getStoredItem, setStoredItem, removeStoredItem } from '../utils/storage.ts';
 
 export const AUTH_STORAGE_KEY = 'diving:auth:admin:v1';
 
@@ -9,47 +10,36 @@ export const useAuthStore = defineStore('auth', () => {
 
   const getExpectedPasscodes = (): string[] => {
     const envPasscode = import.meta.env.VITE_ADMIN_PASSCODE as string | undefined;
-    const candidates = [envPasscode, 'diving2026', 'admin1234', '1234', 'admin'];
-    return candidates.filter(
-      (code): code is string => typeof code === 'string' && code.trim().length > 0
-    );
+    const passcode = envPasscode && envPasscode.trim().length > 0 ? envPasscode.trim() : 'diving2026';
+    return [passcode];
   };
 
   const persistAuthState = (authenticated: boolean): boolean => {
-    if (typeof window === 'undefined') return false;
     try {
       if (authenticated) {
-        window.localStorage.setItem(
-          AUTH_STORAGE_KEY,
-          JSON.stringify({ isAuthenticated: true, timestamp: Date.now() })
-        );
+        setStoredItem(AUTH_STORAGE_KEY, { isAuthenticated: true, timestamp: Date.now() });
       } else {
-        window.localStorage.removeItem(AUTH_STORAGE_KEY);
+        removeStoredItem(AUTH_STORAGE_KEY);
       }
       storageError.value = null;
       return true;
-    } catch (error) {
+    } catch {
       storageError.value = '인증 상태를 저장소에 기록하지 못했습니다.';
       return false;
     }
   };
 
   const hydrate = (): void => {
-    if (typeof window === 'undefined') return;
-    try {
-      const raw = window.localStorage.getItem(AUTH_STORAGE_KEY);
-      if (!raw) return;
-      
-      const parsed = JSON.parse(raw);
-      if (parsed && typeof parsed === 'object' && parsed.isAuthenticated === true) {
-        isAuthenticated.value = true;
-      } else if (raw === 'true') {
-        isAuthenticated.value = true;
+    const isAuthValid = (parsed: unknown): boolean => {
+      if (parsed && typeof parsed === 'object' && (parsed as Record<string, unknown>).isAuthenticated === true) {
+        return true;
       }
-    } catch {
-      storageError.value = '저장된 인증 상태를 파싱하지 못했습니다.';
-      isAuthenticated.value = false;
-    }
+      if (parsed === 'true' || parsed === true) {
+        return true;
+      }
+      return false;
+    };
+    isAuthenticated.value = getStoredItem<boolean>(AUTH_STORAGE_KEY, false, isAuthValid);
   };
 
   const verifyPasscode = (passcode: string): boolean => {

@@ -1,0 +1,152 @@
+// ==========================================================================
+// 공용 배지 & 칩 (CustomBadge) SCSS 스타일
+// ==========================================================================
+
+.custom-badge {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 5px;
+  max-width: 100%;
+  font-family: var(--font-family);
+  font-weight: 700;
+  line-height: 1;
+  white-space: nowrap;
+  vertical-align: middle;
+  border-radius: var(--radius-sm);
+  border: 1px solid transparent;
+  box-sizing: border-box;
+  transition: all 0.2s ease;
+
+  &.is-pill {
+    border-radius: var(--radius-full);
+  }
+
+  &.is-dot-only {
+    padding: 0 !important;
+    width: var(--radius-md);
+    height: var(--radius-md);
+    border-radius: 50%;
+  }
+
+  // 10단계 크기 스케일
+  &--size-1 { height: 18px; padding: var(--spacing-3xs) var(--spacing-xs); font-size: 0.55rem; }
+  &--size-2 { height: 20px; padding: 2px 7px; font-size: var(--text-3xs); }
+  &--size-3, &--xs { height: 22px; padding: 3px var(--spacing-sm); font-size: 0.65rem; }
+  &--size-4, &--sm { height: 24px; padding: 3px 9px; font-size: 0.70rem; }
+  &--size-5 { height: 26px; padding: var(--spacing-2xs) 10px; font-size: var(--text-xs); }
+  &--size-6, &--md { height: 28px; padding: 4px 11px; font-size: 0.78rem; }
+  &--size-7 { height: 32px; padding: 5px 13px; font-size: 0.82rem; }
+  &--size-8, &--lg { height: 36px; padding: var(--spacing-xs) 15px; font-size: 0.88rem; }
+  &--size-9 { height: 40px; padding: 7px 17px; font-size: 0.94rem; }
+  &--size-10, &--xl { height: 44px; padding: var(--spacing-sm) 19px; font-size: 1.00rem; }
+
+  // 펄싱 상태 도트
+  &__dot {
+    position: relative;
+    display: inline-block;
+    width: var(--spacing-xs);
+    height: var(--spacing-xs);
+    border-radius: 50%;
+    background-color: currentColor;
+    flex-shrink: 0;
+
+    &.is-pulsing::after {
+      content: '';
+      position: absolute;
+      inset: -2px;
+      border-radius: 50%;
+      background-color: currentColor;
+      opacity: 0.75;
+      animation: custom-badge-pulse 1.8s cubic-bezier(0, 0, 0.2, 1) infinite;
+    }
+  }
+
+  &__content {
+    display: inline-block;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+  }
+
+  &__remove {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 14px;
+    height: 14px;
+    margin-left: var(--spacing-3xs);
+    border: none;
+    border-radius: 50%;
+    background: var(--ui-badge-remove-bg);
+    color: inherit;
+    font-size: var(--text-xs);
+    line-height: 1;
+    cursor: pointer;
+    transition: background 0.15s ease;
+
+    &:hover {
+      background: var(--ui-badge-remove-hover-bg);
+    }
+  }
+
+  // Variants
+  &--default, &--neutral {
+    background: var(--ui-badge-neutral-bg);
+    border-color: var(--ui-badge-neutral-border);
+    color: var(--ui-badge-neutral-text);
+  }
+
+  &--primary, &--ocean {
+    background: var(--ui-badge-primary-bg);
+    border-color: var(--ui-badge-primary-border);
+    color: var(--ui-badge-primary-text);
+  }
+
+  &--secondary {
+    background: var(--ui-badge-secondary-bg);
+    border-color: var(--ui-badge-secondary-border);
+    color: var(--ui-badge-secondary-text);
+  }
+
+  &--success {
+    background: var(--ui-badge-success-bg);
+    border-color: var(--ui-badge-success-border);
+    color: var(--ui-badge-success-text);
+  }
+
+  &--warning {
+    background: var(--ui-badge-warning-bg);
+    border-color: var(--ui-badge-warning-border);
+    color: var(--ui-badge-warning-text);
+  }
+
+  &--danger {
+    background: var(--ui-badge-danger-bg);
+    border-color: var(--ui-badge-danger-border);
+    color: var(--ui-badge-danger-text);
+  }
+
+  &--coral {
+    background: var(--ui-badge-coral-bg);
+    border-color: var(--ui-badge-coral-border);
+    color: var(--ui-badge-coral-text);
+  }
+
+  &--abyss {
+    background: var(--ui-badge-abyss-bg);
+    border-color: var(--ui-badge-abyss-border);
+    color: var(--ui-badge-abyss-text);
+  }
+}
+
+@keyframes custom-badge-pulse {
+  0% {
+    transform: scale(1);
+    opacity: 0.8;
+  }
+  100% {
+    transform: scale(2.8);
+    opacity: 0;
+  }
+}

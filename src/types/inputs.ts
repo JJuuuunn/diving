@@ -21,69 +21,148 @@ export type ComponentVariant =
 
 export type ComponentState = 'default' | 'success' | 'warning' | 'error';
 
-export interface NumberInputProps {
+/**
+ * 공용 UI 컴포넌트 Props 기본 인터페이스
+ * size, variant, state, disabled, clearable, block 공통 속성을 규격화합니다.
+ */
+export interface BaseUIComponentProps<V = ComponentVariant> {
+  size?: ComponentSize;
+  variant?: V;
+  state?: ComponentState;
+  disabled?: boolean;
+  clearable?: boolean;
+  block?: boolean;
+}
+
+/**
+ * 폼 필드 UI 컴포넌트 Props 기본 인터페이스
+ */
+export interface BaseFormFieldProps<V = ComponentVariant> extends BaseUIComponentProps<V> {
+  id?: string;
+  placeholder?: string;
+  readonly?: boolean;
+  required?: boolean;
+}
+
+export interface NumberInputProps extends BaseFormFieldProps {
   modelValue: number;
   min?: number;
   max?: number;
   step?: number;
-  placeholder?: string;
-  disabled?: boolean;
-  size?: ComponentSize;
-  state?: ComponentState;
-  clearable?: boolean;
 }
 
-export interface SelectProps {
+export interface SelectProps extends BaseFormFieldProps {
   modelValue: unknown;
   options: SelectItem[];
-  id?: string;
   ariaLabel?: string;
-  placeholder?: string;
-  disabled?: boolean;
-  size?: ComponentSize;
-  state?: ComponentState;
-  clearable?: boolean;
 }
 
-export interface MultiSelectProps {
+export interface MultiSelectProps extends BaseFormFieldProps {
   modelValue: unknown[];
   options: SelectItem[];
-  placeholder?: string;
-  disabled?: boolean;
-  clearable?: boolean;
   maxSelections?: number;
-  size?: ComponentSize;
-  state?: ComponentState;
 }
 
-export interface InputProps {
+export interface InputProps extends BaseFormFieldProps {
   modelValue?: string | number;
-  id?: string;
   label?: string;
   hint?: string;
   type?: 'text' | 'search' | 'email' | 'tel' | 'url' | 'password' | 'number';
-  placeholder?: string;
-  disabled?: boolean;
-  readonly?: boolean;
-  required?: boolean;
   error?: string;
   errorId?: string;
-  size?: ComponentSize;
-  state?: ComponentState;
-  clearable?: boolean;
   trim?: boolean;
   valueType?: 'string' | 'number';
 }
 
-export interface ButtonProps {
+export interface ButtonProps extends BaseUIComponentProps {
   type?: 'button' | 'submit' | 'reset';
-  variant?: ComponentVariant;
-  size?: ComponentSize;
   shape?: 'rounded' | 'pill' | 'square';
-  disabled?: boolean;
   loading?: boolean;
   loadingLabel?: string;
-  block?: boolean;
-  state?: ComponentState;
-  clearable?: boolean;
+}
+
+export interface SegmentedOption {
+  value: unknown;
+  label: string;
+  icon?: string;
+  disabled?: boolean;
+}
+
+export type SegmentedItem = SegmentedOption | string | number;
+
+export interface SegmentedControlProps extends BaseFormFieldProps {
+  modelValue?: unknown;
+  options: SegmentedItem[];
+  compactCycle?: boolean;
+}
+
+export type BadgeVariant = ComponentVariant | 'ocean' | 'coral' | 'abyss' | 'info' | 'neutral';
+
+export interface BadgeProps extends BaseUIComponentProps<BadgeVariant> {
+  pill?: boolean;
+  dot?: boolean;
+  pulsing?: boolean;
+  removable?: boolean;
+}
+
+export type AlertVariant =
+  | 'info'
+  | 'success'
+  | 'warning'
+  | 'danger'
+  | 'ocean'
+  | 'coral'
+  | 'abyss'
+  | 'neutral';
+
+export interface AlertProps extends BaseUIComponentProps<AlertVariant> {
+  title?: string;
+  icon?: string;
+  dismissible?: boolean;
+  bordered?: boolean;
+}
+
+
+export interface TabItem {
+  id: string | number;
+  label: string;
+  icon?: string;
+  badge?: string | number;
+  disabled?: boolean;
+}
+
+export type TabVariant = 'pill' | 'underline' | 'segment';
+
+export interface TabsProps extends BaseUIComponentProps<TabVariant> {
+  modelValue?: string | number;
+  tabs: TabItem[];
+}
+
+export interface AccordionItem {
+  id: string | number;
+  title: string;
+  subtitle?: string;
+  icon?: string;
+  disabled?: boolean;
+}
+
+export interface AccordionProps extends BaseUIComponentProps {
+  modelValue?: unknown | unknown[];
+  multiple?: boolean;
+  items?: AccordionItem[];
+}
+
+export interface TooltipProps extends BaseUIComponentProps {
+  content?: string;
+  placement?: 'top' | 'bottom' | 'left' | 'right';
+  trigger?: 'hover' | 'click';
+}
+
+export interface SliderProps extends BaseFormFieldProps {
+  modelValue: number | [number, number];
+  min?: number;
+  max?: number;
+  step?: number;
+  showTicks?: boolean;
+  showTooltip?: boolean;
 }

@@ -1,5 +1,6 @@
 import { ref, watch } from 'vue';
 import { useStorage } from '@vueuse/core';
+import { migrateLegacyKey } from '@/utils/storage';
 import type {
   Person,
   PoolInfo,
@@ -32,7 +33,6 @@ export const SETTLEMENT_LEGACY_STORAGE_KEYS = {
 } as const;
 
 export function migrateSettlementStorageKeys() {
-  if (typeof window === 'undefined' || !window.localStorage) return;
   const keyPairs: Array<[string, string]> = [
     [SETTLEMENT_LEGACY_STORAGE_KEYS.STEP, SETTLEMENT_STORAGE_KEYS.STEP],
     [SETTLEMENT_LEGACY_STORAGE_KEYS.SETTINGS, SETTLEMENT_STORAGE_KEYS.SETTINGS],
@@ -41,17 +41,7 @@ export function migrateSettlementStorageKeys() {
   ];
 
   for (const [legacyKey, newKey] of keyPairs) {
-    try {
-      const legacyValue = localStorage.getItem(legacyKey);
-      if (legacyValue !== null) {
-        if (localStorage.getItem(newKey) === null) {
-          localStorage.setItem(newKey, legacyValue);
-        }
-        localStorage.removeItem(legacyKey);
-      }
-    } catch {
-      // Ignore storage errors in restricted environments
-    }
+    migrateLegacyKey(legacyKey, newKey);
   }
 }
 

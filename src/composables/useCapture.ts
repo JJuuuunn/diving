@@ -1,7 +1,12 @@
 import { ref } from 'vue';
-import html2canvas from 'html2canvas';
+import { toPng } from 'html-to-image';
 import { useToast } from '@/composables/useToast';
 import { useThemeStore } from '@/stores/theme';
+
+export interface CaptureCustomOptions {
+  filter?: (node: Node) => boolean;
+  skipFonts?: boolean;
+}
 
 export function useCapture() {
   const { triggerToast } = useToast();
@@ -9,79 +14,91 @@ export function useCapture() {
   const capturedImageUrl = ref<string | null>(null);
   const isCapturing = ref(false);
 
-  const captureElement = async (element: HTMLElement, width = 480, scale = 3): Promise<string | null> => {
-    const isDark = themeStore.isDark;
+  const captureElement = async (
+    element: HTMLElement,
+    width = 480,
+    pixelRatio = 2,
+    customOptions: CaptureCustomOptions = {}
+  ): Promise<string | null> => {
     capturedImageUrl.value = null;
     isCapturing.value = true;
     try {
-      const canvas = await html2canvas(element, {
-        scale,
-        useCORS: true,
-        backgroundColor: null,
-        logging: false,
-        onclone: (clonedDoc) => {
-          // 1. 테마 상태(isDark)를 복제 문서의 body에 정직하게 선언하여 CSS 변수 적용 유도
-          if (clonedDoc.body) {
-            clonedDoc.body.className = document.body.className;
-          }
+      // 1. 엘리먼트의 계산된 스타일(Computed Style)에서 border-radius, overflow, background 추출
+      const computedStyle = window.getComputedStyle(element);
+      const bodyComputed = window.getComputedStyle(document.body);
 
-          const selector = element.classList.contains('result-card')
-            ? '.result-card'
-            : element.classList.contains('log-card-visual')
-              ? '.log-card-visual'
-              : null;
-          const el = selector ? clonedDoc.querySelector(selector) as HTMLElement | null : null;
-          if (el) {
-            el.style.width = `${width}px`;
-            el.style.maxWidth = `${width}px`;
-            el.style.margin = '0'; // 캡처 시 잘림 방지
+      const borderRadius = computedStyle.borderRadius || '16px';
+      let elementBg = computedStyle.backgroundColor;
 
-            // 2. 완전 불투명한 솔리드(Solid) 색상을 강제로 주입하여 캡처 이미지 가시성 확보
-            if (isDark) {
-              el.style.backgroundColor = '#0f172a'; // 다크모드: 짙은 남색
-              el.style.borderColor = '#1e293b';     // 경계선 색상 보정
-            } else {
-              el.style.backgroundColor = '#ffffff'; // 라이트모드: 불투명 흰색
-              el.style.borderColor = '#e2e8f0';     // 경계선 색상 보정
-            }
+      // 대상 엘리먼트 자체 배경색이 투명할 경우 4가지 테마 모드별 고유 불투명 색상 적용
+      if (!elementBg || elementBg === 'rgba(0, 0, 0, 0)' || elementBg === 'transparent') {
+        elementBg = bodyComputed.backgroundColor;
+      }
+      if (!elementBg || elementBg === 'rgba(0, 0, 0, 0)' || elementBg === 'transparent') {
+        elementBg =
+          themeStore.themeMode === 'dark'
+            ? '#0f172a'
+            : themeStore.themeMode === 'coral'
+              ? '#fff8f6'
+              : themeStore.themeMode === 'abyss'
+                ? '#030712'
+                : '#ffffff';
+      }
 
-            // 3. 전역 document.querySelector 대신 컴포저블로 인계받은 실제 오리지널 엘리먼트 노드 직접 참조 (Vue의 캡슐화 원칙 준수)
-            const originalEl = element;
-            const computedStyle = window.getComputedStyle(originalEl);
-            el.style.color = computedStyle.color;
+      // 2. 기본 html-to-image toPng 설정
+      const baseConfig = {
+        pixelRatio,
+        cacheBust: false,
+        backgroundColor: undefined,
+        canvasWidth: Math.round((element.scrollWidth || width) * pixelRatio),
+        canvasHeight: Math.round(element.scrollHeight * pixelRatio),
+        style: {
+          transform: 'none',
+          margin: '0 auto',
+          borderRadius: borderRadius !== '0px' ? borderRadius : '16px',
+          overflow: 'hidden',
+          backgroundColor: elementBg,
+        },
+        ...customOptions,
+      };
 
-            // 4. 내부 분석 차트 영역 및 텍스트 렌더링 보정
-            const traitAnalysis = el.querySelector('.traits-analysis') as HTMLElement;
-            const originalTraitAnalysis = originalEl.querySelector('.traits-analysis') as HTMLElement;
-            if (traitAnalysis && originalTraitAnalysis) {
-              if (isDark) {
-                traitAnalysis.style.backgroundColor = '#1e293b'; 
-                traitAnalysis.style.borderColor = '#334155';
-              } else {
-                traitAnalysis.style.backgroundColor = '#f1f5f9'; 
-                traitAnalysis.style.borderColor = '#cbd5e1';
+      let dataUrl: string;
+      try {
+        dataUrl = await toPng(element, baseConfig);
+      } catch (firstError) {
+        try {
+          dataUrl = await toPng(element, {
+            ...baseConfig,
+            skipFonts: true,
+            fontEmbedCSS: '',
+          });
+        } catch (secondError) {
+          console.warn('2차 CORS 캡처 시도 실패, 외부 CORS 타일 우회 3차 시도:', secondError);
+          dataUrl = await toPng(element, {
+            ...baseConfig,
+            skipFonts: true,
+            fontEmbedCSS: '',
+            filter: (node: Node) => {
+              if (node instanceof HTMLImageElement) {
+                const src = node.src || '';
+                if (src.includes('daumcdn') || src.includes('kakaocdn') || src.includes('kakao')) {
+                  return false;
+                }
               }
-            }
-
-            const title = el.querySelector('.title') as HTMLElement;
-            const originalTitle = originalEl.querySelector('.title') as HTMLElement;
-            if (title && originalTitle) {
-              title.style.color = window.getComputedStyle(originalTitle).color;
-            }
-
-            const desc = el.querySelector('.description') as HTMLElement;
-            const originalDesc = originalEl.querySelector('.description') as HTMLElement;
-            if (desc && originalDesc) {
-              desc.style.color = window.getComputedStyle(originalDesc).color;
-            }
-          }
+              if (node instanceof HTMLScriptElement) {
+                return false;
+              }
+              return customOptions.filter ? customOptions.filter(node) : true;
+            },
+          });
         }
-      });
-      capturedImageUrl.value = canvas.toDataURL('image/png');
-      return capturedImageUrl.value;
+      }
+
+      capturedImageUrl.value = dataUrl;
+      return dataUrl;
     } catch (error) {
-      console.error("Capture failed:", error);
-      triggerToast("결과 이미지를 생성하는 데 실패했습니다.", true);
+      console.error('Capture failed:', error);
+      triggerToast('결과 이미지를 생성하는 데 실패했습니다.', true);
       return null;
     } finally {
       isCapturing.value = false;
@@ -91,6 +108,6 @@ export function useCapture() {
   return {
     capturedImageUrl,
     isCapturing,
-    captureElement
+    captureElement,
   };
 }

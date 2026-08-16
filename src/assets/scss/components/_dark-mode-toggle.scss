@@ -40,7 +40,7 @@
   align-items: center;
   width: 44px;
   height: 44px;
-  padding: 4px;
+  padding: var(--spacing-2xs);
   overflow: hidden;
   border: 1px solid rgba(148, 163, 184, 0.18);
   border-radius: 12px;
@@ -55,15 +55,15 @@
 
   // 10단계 크기 스케일 오버라이드
   &--size-1 {
-    width: 24px; height: 24px; padding: 2px; border-radius: 6px;
-    .theme-toggle__indicator { inset: 2px auto 2px 2px; width: 20px; border-radius: 5px; }
+    width: 24px; height: 24px; padding: var(--spacing-3xs); border-radius: var(--radius-sm);
+    .theme-toggle__indicator { inset: var(--spacing-3xs) auto var(--spacing-3xs) var(--spacing-3xs); width: 20px; border-radius: 5px; }
     .theme-toggle__indicator-icon { width: 12px; height: 12px; }
     .theme-toggle__option { width: 20px; height: 20px; }
     .theme-toggle__icon { width: 12px; height: 12px; }
   }
   &--size-2 {
-    width: 28px; height: 28px; padding: 2px; border-radius: 8px;
-    .theme-toggle__indicator { inset: 2px auto 2px 2px; width: 24px; border-radius: 6px; }
+    width: 28px; height: 28px; padding: var(--spacing-3xs); border-radius: 8px;
+    .theme-toggle__indicator { inset: var(--spacing-3xs) auto var(--spacing-3xs) var(--spacing-3xs); width: 24px; border-radius: 6px; }
     .theme-toggle__indicator-icon { width: 14px; height: 14px; }
     .theme-toggle__option { width: 24px; height: 24px; }
     .theme-toggle__icon { width: 14px; height: 14px; }
@@ -76,22 +76,22 @@
     .theme-toggle__icon { width: 15px; height: 15px; }
   }
   &--size-4, &--sm {
-    width: 36px; height: 36px; padding: 3px; border-radius: 10px;
+    width: 36px; height: 36px; padding: 3px; border-radius: var(--radius-md);
     .theme-toggle__indicator { inset: 3px auto 3px 3px; width: 30px; border-radius: 8px; }
     .theme-toggle__indicator-icon { width: 16px; height: 16px; }
     .theme-toggle__option { width: 30px; height: 30px; }
     .theme-toggle__icon { width: 16px; height: 16px; }
   }
   &--size-5 {
-    width: 40px; height: 40px; padding: 4px; border-radius: 11px;
-    .theme-toggle__indicator { inset: 4px auto 4px 4px; width: 32px; border-radius: 9px; }
+    width: 40px; height: 40px; padding: var(--spacing-2xs); border-radius: 11px;
+    .theme-toggle__indicator { inset: var(--spacing-2xs) auto var(--spacing-2xs) var(--spacing-2xs); width: 32px; border-radius: 9px; }
     .theme-toggle__indicator-icon { width: 18px; height: 18px; }
     .theme-toggle__option { width: 32px; height: 32px; }
     .theme-toggle__icon { width: 18px; height: 18px; }
   }
   &--size-6, &--md {
-    width: 44px; height: 44px; padding: 4px; border-radius: 12px;
-    .theme-toggle__indicator { inset: 4px auto 4px 4px; width: 36px; border-radius: 10px; }
+    width: 44px; height: 44px; padding: var(--spacing-2xs); border-radius: 12px;
+    .theme-toggle__indicator { inset: var(--spacing-2xs) auto var(--spacing-2xs) var(--spacing-2xs); width: 36px; border-radius: var(--radius-md); }
     .theme-toggle__indicator-icon { width: 20px; height: 20px; }
     .theme-toggle__option { width: 36px; height: 36px; }
     .theme-toggle__icon { width: 20px; height: 20px; }
@@ -104,22 +104,22 @@
     .theme-toggle__icon { width: 22px; height: 22px; }
   }
   &--size-8, &--lg {
-    width: 52px; height: 52px; padding: 5px; border-radius: 14px;
+    width: 52px; height: 52px; padding: 5px; border-radius: var(--radius-lg);
     .theme-toggle__indicator { inset: 5px auto 5px 5px; width: 42px; border-radius: 12px; }
     .theme-toggle__indicator-icon { width: 24px; height: 24px; }
     .theme-toggle__option { width: 42px; height: 42px; }
     .theme-toggle__icon { width: 24px; height: 24px; }
   }
   &--size-9 {
-    width: 56px; height: 56px; padding: 6px; border-radius: 15px;
-    .theme-toggle__indicator { inset: 6px auto 6px 6px; width: 44px; border-radius: 13px; }
+    width: 56px; height: 56px; padding: var(--spacing-xs); border-radius: 15px;
+    .theme-toggle__indicator { inset: var(--spacing-xs) auto var(--spacing-xs) var(--spacing-xs); width: 44px; border-radius: 13px; }
     .theme-toggle__indicator-icon { width: 26px; height: 26px; }
     .theme-toggle__option { width: 44px; height: 44px; }
     .theme-toggle__icon { width: 26px; height: 26px; }
   }
   &--size-10, &--xl {
-    width: 60px; height: 60px; padding: 6px; border-radius: 16px;
-    .theme-toggle__indicator { inset: 6px auto 6px 6px; width: 48px; border-radius: 14px; }
+    width: 60px; height: 60px; padding: var(--spacing-xs); border-radius: 16px;
+    .theme-toggle__indicator { inset: var(--spacing-xs) auto var(--spacing-xs) var(--spacing-xs); width: 48px; border-radius: var(--radius-lg); }
     .theme-toggle__indicator-icon { width: 28px; height: 28px; }
     .theme-toggle__option { width: 48px; height: 48px; }
     .theme-toggle__icon { width: 28px; height: 28px; }
@@ -174,7 +174,7 @@
   display: flex;
   align-items: center;
   justify-content: center;
-  gap: 6px;
+  gap: var(--spacing-xs);
   width: 36px;
   height: 36px;
   color: inherit;
@@ -203,17 +203,17 @@
 
 .theme-toggle__indicator {
   position: absolute;
-  top: 4px;
-  left: 4px;
+  top: var(--spacing-2xs);
+  left: var(--spacing-2xs);
   z-index: 2;
   display: flex;
   align-items: center;
   justify-content: center;
-  gap: 6px;
+  gap: var(--spacing-xs);
   width: 36px;
   height: calc(100% - 8px);
   border: 1px solid rgba(255, 255, 255, 0.7);
-  border-radius: 10px;
+  border-radius: var(--radius-md);
   background: rgba(255, 255, 255, 0.85);
   box-shadow:
     0 5px 14px rgba(15, 23, 42, 0.13),

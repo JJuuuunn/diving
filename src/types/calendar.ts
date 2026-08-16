@@ -1,5 +1,5 @@
 import type { Dayjs } from 'dayjs';
-import type { ComponentSize, ComponentState } from '@/types/inputs';
+import type { BaseFormFieldProps } from '@/types/inputs';
 
 export interface CalendarDay {
   date: Dayjs;
@@ -22,13 +22,9 @@ export interface CalendarPanelCell {
 export type CalendarViewMode = 'days' | 'months' | 'years';
 export type DatePickerMode = 'date' | 'month';
 
-export interface DatePickerProps {
+export interface DatePickerProps extends BaseFormFieldProps {
   modelValue: string;
-  id?: string;
-  placeholder?: string;
   mode?: DatePickerMode;
-  size?: ComponentSize;
-  state?: ComponentState;
 }
 
 export interface DateRange {
@@ -36,11 +32,7 @@ export interface DateRange {
   end: string;
 }
 
-export interface DateRangePickerProps {
+export interface DateRangePickerProps extends BaseFormFieldProps {
   modelValue: DateRange;
-  placeholder?: string;
-  disabled?: boolean;
   mode?: DatePickerMode;
-  size?: ComponentSize;
-  state?: ComponentState;
 }

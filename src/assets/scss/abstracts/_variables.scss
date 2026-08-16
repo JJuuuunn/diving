@@ -2,6 +2,34 @@
   // Fonts
   --font-family: 'Poppins', 'Noto Sans KR', sans-serif;
 
+  // Spacing Tokens
+  --spacing-3xs: 2px;
+  --spacing-2xs: 4px;
+  --spacing-xs: 6px;
+  --spacing-sm: 8px;
+  --spacing-md: 12px;
+  --spacing-lg: 16px;
+  --spacing-xl: 20px;
+  --spacing-2xl: 24px;
+
+  // Radius Tokens
+  --radius-xs: 4px;
+  --radius-sm: 6px;
+  --radius-md: 10px;
+  --radius-lg: 14px;
+  --radius-xl: 20px;
+  --radius-full: 999px;
+
+  // Font Size Tokens
+  --text-3xs: 0.60rem;
+  --text-2xs: 0.68rem;
+  --text-xs: 0.75rem;
+  --text-sm: 0.85rem;
+  --text-md: 0.95rem;
+  --text-lg: 1.05rem;
+  --text-xl: 1.20rem;
+
+
   // Sidebar
   --sidebar-width: 280px;
   --sidebar-collapsed-width: 76px;
@@ -64,6 +92,223 @@ body.dark {
   --color-neutral-bg: var(--slate-700);
   --color-disabled-text: var(--slate-500);
   --color-disabled-bg: rgba(100, 116, 139, 0.14);
+
+  // Form / Input Semantic UI Colors (Group 1)
+  --ui-input-bg: rgba(15, 23, 42, 0.72);
+  --ui-input-bg-hover: rgba(15, 23, 42, 0.9);
+  --ui-input-bg-focus: rgba(15, 23, 42, 0.96);
+  --ui-input-bg-disabled: rgba(30, 41, 59, 0.72);
+  --ui-input-bg-readonly: rgba(30, 41, 59, 0.72);
+  --ui-input-border: rgba(148, 163, 184, 0.24);
+  --ui-input-border-hover: rgba(125, 211, 252, 0.42);
+  --ui-input-border-focus: var(--ocean-400);
+  --ui-input-text: var(--slate-100);
+  --ui-input-text-disabled: var(--slate-400);
+  --ui-input-placeholder: var(--slate-500);
+  --ui-input-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.025);
+  --ui-input-focus-ring: 0 0 0 4px rgba(56, 189, 248, 0.15);
+
+  --ui-input-clear-bg: rgba(255, 255, 255, 0.12);
+  --ui-input-clear-bg-hover: rgba(255, 255, 255, 0.24);
+  --ui-input-clear-text: var(--slate-300);
+  --ui-input-clear-text-hover: #ffffff;
+
+  --ui-stepper-btn-text: var(--ocean-400);
+  --ui-stepper-btn-text-hover: var(--ocean-300);
+  --ui-stepper-btn-bg-hover: rgba(255, 255, 255, 0.06);
+  --ui-stepper-btn-disabled: #475569;
+
+  --ui-dropdown-bg: rgba(15, 23, 42, 0.96);
+  --ui-dropdown-border: rgba(255, 255, 255, 0.12);
+  --ui-dropdown-shadow: 0 12px 36px rgba(0, 0, 0, 0.5);
+  --ui-dropdown-text: var(--slate-100);
+
+  --ui-select-arrow: var(--slate-400);
+  --ui-select-arrow-open: var(--ocean-400);
+
+  --ui-chip-bg: rgba(56, 189, 248, 0.22);
+  --ui-chip-text: var(--ocean-300);
+
+  --ui-option-text: var(--slate-200);
+  --ui-option-hover-bg: rgba(255, 255, 255, 0.08);
+  --ui-option-hover-text: #ffffff;
+  --ui-option-selected-bg: linear-gradient(135deg, #0284c7 0%, #0369a1 100%);
+  --ui-option-selected-text: #ffffff;
+
+  --ui-segmented-bg: rgba(15, 23, 42, 0.85);
+  --ui-segmented-border: rgba(103, 232, 249, 0.22);
+  --ui-segmented-shadow: 0 4px 16px rgba(0, 0, 0, 0.3);
+  --ui-segmented-text: #94a3b8;
+  --ui-segmented-text-hover: #f8fafc;
+  --ui-segmented-indicator-bg: linear-gradient(145deg, rgba(14, 116, 144, 0.75), rgba(15, 23, 42, 0.95));
+  --ui-segmented-indicator-border: rgba(103, 232, 249, 0.4);
+  --ui-segmented-indicator-shadow: 0 4px 12px rgba(103, 232, 249, 0.22);
+  --ui-segmented-active-text: #38bdf8;
+
+  --ui-btn-default-border: rgba(148, 163, 184, 0.24);
+  --ui-btn-default-text: var(--slate-100);
+  --ui-btn-default-bg: rgba(30, 41, 59, 0.78);
+  --ui-btn-default-hover-border: rgba(56, 189, 248, 0.4);
+  --ui-btn-default-hover-text: var(--ocean-300);
+  --ui-btn-default-hover-bg: rgba(14, 165, 233, 0.1);
+
+  --ui-btn-secondary-border: rgba(56, 189, 248, 0.28);
+  --ui-btn-secondary-text: var(--ocean-300);
+  --ui-btn-secondary-bg: rgba(14, 165, 233, 0.1);
+
+  --ui-btn-outline-border: var(--ocean-400);
+  --ui-btn-outline-text: var(--ocean-300);
+  --ui-btn-outline-hover-border: var(--ocean-300);
+  --ui-btn-outline-hover-text: var(--ocean-200);
+  --ui-btn-outline-hover-bg: rgba(14, 165, 233, 0.14);
+
+  --ui-btn-ghost-text: var(--slate-300);
+
+  --ui-datepicker-icon: var(--ocean-400);
+  --ui-datepicker-title-text: #f8fafc;
+  --ui-datepicker-title-hover-text: var(--ocean-400);
+  --ui-datepicker-title-hover-bg: rgba(255, 255, 255, 0.06);
+  --ui-datepicker-nav-text: #94a3b8;
+  --ui-datepicker-nav-hover-text: #f8fafc;
+  --ui-datepicker-nav-hover-bg: rgba(255, 255, 255, 0.06);
+  --ui-datepicker-weekday-text: #64748b;
+  --ui-datepicker-sunday-text: rgba(248, 113, 113, 0.8);
+  --ui-datepicker-saturday-text: rgba(56, 189, 248, 0.8);
+  --ui-datepicker-day-text: #cbd5e1;
+  --ui-datepicker-day-muted-text: #475569;
+  --ui-datepicker-day-hover-bg: rgba(255, 255, 255, 0.06);
+  --ui-datepicker-day-hover-text: #f8fafc;
+  --ui-datepicker-today-text: var(--ocean-400);
+  --ui-datepicker-selected-bg: linear-gradient(135deg, var(--ocean-400) 0%, var(--ocean-600) 100%);
+  --ui-datepicker-selected-text: #ffffff;
+  --ui-datepicker-selected-shadow: 0 4px 10px rgba(56, 189, 248, 0.35);
+  --ui-datepicker-badge-bg: var(--cyan-400);
+  --ui-datepicker-range-text: var(--ocean-200);
+  --ui-datepicker-range-bg: rgba(14, 165, 233, 0.18);
+
+  // Component Semantic UI Colors (Group 2)
+  --ui-popover-bg: rgba(15, 23, 42, 0.85);
+  --ui-popover-border: rgba(255, 255, 255, 0.15);
+  --ui-popover-text: var(--slate-100);
+  --ui-popover-shadow: 0 8px 24px rgba(0, 0, 0, 0.4);
+
+  --ui-slider-track-bg: rgba(255, 255, 255, 0.15);
+  --ui-slider-fill-bg: linear-gradient(90deg, #38bdf8, #00f2fe);
+  --ui-slider-fill-shadow: none;
+  --ui-slider-thumb-bg: #0f172a;
+  --ui-slider-thumb-border: #38bdf8;
+  --ui-slider-thumb-shadow: 0 0 10px rgba(56, 189, 248, 0.35);
+  --ui-slider-thumb-focus-ring: 0 0 0 3px rgba(56, 189, 248, 0.5);
+  --ui-slider-tooltip-bg: rgba(15, 23, 42, 0.95);
+  --ui-slider-tooltip-text: #38bdf8;
+  --ui-slider-tooltip-border: 1px solid rgba(56, 189, 248, 0.3);
+  --ui-slider-tooltip-shadow: 0 4px 10px rgba(0, 0, 0, 0.4);
+
+  --ui-tabs-text: var(--page-text-secondary);
+  --ui-tabs-text-hover: var(--page-text-primary);
+  --ui-tabs-focus-outline: var(--color-action);
+  --ui-tabs-active-color: var(--ocean-400);
+  --ui-tabs-indicator-bg: var(--color-action);
+  --ui-tabs-indicator-shadow: none;
+  --ui-tabs-underline-border: rgba(255, 255, 255, 0.1);
+  --ui-tabs-pill-active-bg: var(--color-action);
+  --ui-tabs-pill-active-text: #ffffff;
+  --ui-tabs-pill-active-shadow: none;
+  --ui-tabs-segment-bg: rgba(15, 23, 42, 0.6);
+  --ui-tabs-segment-active-bg: var(--slate-800);
+  --ui-tabs-segment-active-text: var(--ocean-400);
+  --ui-tabs-segment-active-border: transparent;
+  --ui-tabs-segment-active-shadow: 0 2px 6px rgba(0, 0, 0, 0.2);
+
+  --ui-accordion-bg: rgba(15, 23, 42, 0.7);
+  --ui-accordion-border: var(--slate-800);
+  --ui-accordion-expanded-border: var(--color-action);
+  --ui-accordion-expanded-shadow: 0 4px 16px rgba(0, 0, 0, 0.3);
+  --ui-accordion-header-hover-bg: rgba(255, 255, 255, 0.05);
+  --ui-accordion-title-color: var(--page-text-primary);
+  --ui-accordion-subtitle-color: var(--page-text-secondary);
+  --ui-accordion-icon-color: var(--color-action);
+  --ui-accordion-chevron-color: var(--page-text-secondary);
+  --ui-accordion-chevron-expanded-color: var(--color-action);
+  --ui-accordion-content-color: var(--page-text-primary);
+  --ui-accordion-content-border: rgba(255, 255, 255, 0.06);
+
+  --ui-badge-bg: rgba(148, 163, 184, 0.15);
+  --ui-badge-border: rgba(148, 163, 184, 0.3);
+  --ui-badge-text: var(--slate-200);
+  --ui-badge-remove-bg: rgba(255, 255, 255, 0.15);
+  --ui-badge-remove-hover-bg: rgba(255, 255, 255, 0.3);
+  --ui-badge-neutral-bg: rgba(148, 163, 184, 0.15);
+  --ui-badge-neutral-border: rgba(148, 163, 184, 0.3);
+  --ui-badge-neutral-text: var(--slate-200);
+  --ui-badge-primary-bg: rgba(56, 189, 248, 0.2);
+  --ui-badge-primary-border: rgba(56, 189, 248, 0.35);
+  --ui-badge-primary-text: #38bdf8;
+  --ui-badge-secondary-bg: rgba(129, 140, 248, 0.2);
+  --ui-badge-secondary-border: rgba(129, 140, 248, 0.35);
+  --ui-badge-secondary-text: #818cf8;
+  --ui-badge-success-bg: rgba(74, 222, 128, 0.2);
+  --ui-badge-success-border: rgba(74, 222, 128, 0.35);
+  --ui-badge-success-text: #4ade80;
+  --ui-badge-warning-bg: rgba(251, 191, 36, 0.2);
+  --ui-badge-warning-border: rgba(251, 191, 36, 0.35);
+  --ui-badge-warning-text: #fbbf24;
+  --ui-badge-danger-bg: rgba(248, 113, 113, 0.2);
+  --ui-badge-danger-border: rgba(248, 113, 113, 0.35);
+  --ui-badge-danger-text: #f87171;
+  --ui-badge-coral-bg: rgba(251, 113, 133, 0.2);
+  --ui-badge-coral-border: rgba(251, 113, 133, 0.35);
+  --ui-badge-coral-text: #fb7185;
+  --ui-badge-abyss-bg: rgba(0, 242, 254, 0.18);
+  --ui-badge-abyss-border: rgba(0, 242, 254, 0.4);
+  --ui-badge-abyss-text: #00f2fe;
+
+  --ui-alert-close-color: var(--slate-400);
+  --ui-alert-close-hover-bg: rgba(255, 255, 255, 0.1);
+  --ui-alert-close-hover-color: #ffffff;
+  --ui-alert-info-bg: rgba(14, 165, 233, 0.12);
+  --ui-alert-info-border: rgba(56, 189, 248, 0.3);
+  --ui-alert-info-text: var(--slate-200);
+  --ui-alert-info-title: #38bdf8;
+  --ui-alert-success-bg: rgba(34, 197, 94, 0.12);
+  --ui-alert-success-border: rgba(74, 222, 128, 0.3);
+  --ui-alert-success-text: var(--slate-200);
+  --ui-alert-success-title: #4ade80;
+  --ui-alert-warning-bg: rgba(245, 158, 11, 0.12);
+  --ui-alert-warning-border: rgba(251, 191, 36, 0.3);
+  --ui-alert-warning-text: var(--slate-200);
+  --ui-alert-warning-title: #fbbf24;
+  --ui-alert-danger-bg: rgba(239, 68, 68, 0.12);
+  --ui-alert-danger-border: rgba(248, 113, 113, 0.3);
+  --ui-alert-danger-text: var(--slate-200);
+  --ui-alert-danger-title: #f87171;
+  --ui-alert-ocean-bg: rgba(2, 132, 199, 0.15);
+  --ui-alert-ocean-border: rgba(56, 189, 248, 0.35);
+  --ui-alert-ocean-text: var(--slate-100);
+  --ui-alert-ocean-title: #38bdf8;
+  --ui-alert-coral-bg: rgba(244, 63, 94, 0.12);
+  --ui-alert-coral-border: rgba(251, 113, 133, 0.3);
+  --ui-alert-coral-text: var(--slate-200);
+  --ui-alert-coral-title: #fb7185;
+  --ui-alert-abyss-bg: rgba(0, 242, 254, 0.12);
+  --ui-alert-abyss-border: rgba(0, 242, 254, 0.35);
+  --ui-alert-abyss-text: var(--slate-100);
+  --ui-alert-abyss-title: #00f2fe;
+  --ui-alert-neutral-bg: rgba(148, 163, 184, 0.12);
+  --ui-alert-neutral-border: rgba(148, 163, 184, 0.25);
+  --ui-alert-neutral-text: var(--slate-200);
+  --ui-alert-neutral-title: var(--slate-100);
+
+  --ui-modal-overlay-bg: rgba(0, 0, 0, 0.7);
+  --ui-theme-card-bg: var(--bg-color);
+  --ui-theme-card-border: var(--page-card-border);
+  --ui-theme-card-hover-border: var(--color-action);
+  --ui-theme-card-active-border: var(--color-action);
+  --ui-theme-card-active-shadow: 0 0 0 3px color-mix(in srgb, var(--color-action) 25%, transparent);
+  --ui-theme-card-text: var(--text-color);
+  --ui-theme-card-subtext: var(--page-text-secondary);
+  --ui-theme-card-badge-bg: rgba(56, 189, 248, 0.2);
+  --ui-theme-card-badge-text: var(--color-action);
 }
 
 body:not(.dark) {
@@ -112,6 +357,223 @@ body:not(.dark) {
   --color-neutral-bg: var(--slate-200);
   --color-disabled-text: var(--slate-400);
   --color-disabled-bg: var(--slate-100);
+
+  // Form / Input Semantic UI Colors (Group 1)
+  --ui-input-bg: rgba(255, 255, 255, 0.88);
+  --ui-input-bg-hover: #ffffff;
+  --ui-input-bg-focus: #ffffff;
+  --ui-input-bg-disabled: var(--slate-100);
+  --ui-input-bg-readonly: var(--slate-50);
+  --ui-input-border: rgba(100, 116, 139, 0.32);
+  --ui-input-border-hover: var(--slate-400);
+  --ui-input-border-focus: var(--ocean-500);
+  --ui-input-text: var(--slate-800);
+  --ui-input-text-disabled: var(--slate-500);
+  --ui-input-placeholder: var(--slate-400);
+  --ui-input-shadow: 0 1px 2px rgba(15, 23, 42, 0.04);
+  --ui-input-focus-ring: 0 0 0 4px rgba(14, 165, 233, 0.14);
+
+  --ui-input-clear-bg: rgba(100, 116, 139, 0.12);
+  --ui-input-clear-bg-hover: rgba(100, 116, 139, 0.24);
+  --ui-input-clear-text: var(--slate-500);
+  --ui-input-clear-text-hover: var(--slate-800);
+
+  --ui-stepper-btn-text: var(--ocean-500);
+  --ui-stepper-btn-text-hover: var(--ocean-600);
+  --ui-stepper-btn-bg-hover: rgba(0, 0, 0, 0.04);
+  --ui-stepper-btn-disabled: var(--slate-300);
+
+  --ui-dropdown-bg: #ffffff;
+  --ui-dropdown-border: rgba(148, 163, 184, 0.25);
+  --ui-dropdown-shadow: 0 12px 30px rgba(15, 23, 42, 0.12);
+  --ui-dropdown-text: var(--slate-800);
+
+  --ui-select-arrow: var(--slate-500);
+  --ui-select-arrow-open: var(--ocean-500);
+
+  --ui-chip-bg: rgba(14, 165, 233, 0.12);
+  --ui-chip-text: var(--ocean-700);
+
+  --ui-option-text: var(--slate-700);
+  --ui-option-hover-bg: rgba(14, 165, 233, 0.08);
+  --ui-option-hover-text: var(--slate-900);
+  --ui-option-selected-bg: var(--ocean-500);
+  --ui-option-selected-text: #ffffff;
+
+  --ui-segmented-bg: var(--page-surface-card, rgba(248, 250, 252, 0.85));
+  --ui-segmented-border: rgba(148, 163, 184, 0.22);
+  --ui-segmented-shadow: 0 4px 16px rgba(15, 23, 42, 0.06);
+  --ui-segmented-text: var(--page-text-secondary, #64748b);
+  --ui-segmented-text-hover: var(--page-text-primary, #0f172a);
+  --ui-segmented-indicator-bg: linear-gradient(145deg, #ffffff, #f8fafc);
+  --ui-segmented-indicator-border: rgba(14, 165, 233, 0.35);
+  --ui-segmented-indicator-shadow: 0 4px 12px rgba(14, 165, 233, 0.16);
+  --ui-segmented-active-text: #0f172a;
+
+  --ui-btn-default-border: rgba(100, 116, 139, 0.28);
+  --ui-btn-default-text: var(--slate-800);
+  --ui-btn-default-bg: rgba(255, 255, 255, 0.82);
+  --ui-btn-default-hover-border: rgba(14, 165, 233, 0.34);
+  --ui-btn-default-hover-text: var(--ocean-700);
+  --ui-btn-default-hover-bg: var(--ocean-50);
+
+  --ui-btn-secondary-border: rgba(14, 165, 233, 0.25);
+  --ui-btn-secondary-text: var(--ocean-700);
+  --ui-btn-secondary-bg: var(--ocean-50);
+
+  --ui-btn-outline-border: var(--ocean-500);
+  --ui-btn-outline-text: var(--ocean-600);
+  --ui-btn-outline-hover-border: var(--ocean-600);
+  --ui-btn-outline-hover-text: var(--ocean-700);
+  --ui-btn-outline-hover-bg: var(--ocean-50);
+
+  --ui-btn-ghost-text: var(--slate-600);
+
+  --ui-datepicker-icon: var(--ocean-500);
+  --ui-datepicker-title-text: var(--slate-800);
+  --ui-datepicker-title-hover-text: var(--ocean-600);
+  --ui-datepicker-title-hover-bg: rgba(0, 0, 0, 0.04);
+  --ui-datepicker-nav-text: var(--slate-500);
+  --ui-datepicker-nav-hover-text: var(--slate-800);
+  --ui-datepicker-nav-hover-bg: rgba(0, 0, 0, 0.04);
+  --ui-datepicker-weekday-text: var(--slate-400);
+  --ui-datepicker-sunday-text: rgba(248, 113, 113, 0.8);
+  --ui-datepicker-saturday-text: var(--ocean-500);
+  --ui-datepicker-day-text: var(--slate-700);
+  --ui-datepicker-day-muted-text: var(--slate-300);
+  --ui-datepicker-day-hover-bg: rgba(0, 0, 0, 0.04);
+  --ui-datepicker-day-hover-text: var(--slate-900);
+  --ui-datepicker-today-text: var(--ocean-600);
+  --ui-datepicker-selected-bg: linear-gradient(135deg, var(--ocean-500) 0%, var(--ocean-700) 100%);
+  --ui-datepicker-selected-text: #ffffff;
+  --ui-datepicker-selected-shadow: 0 4px 10px rgba(14, 165, 233, 0.3);
+  --ui-datepicker-badge-bg: var(--ocean-500);
+  --ui-datepicker-range-text: var(--ocean-800);
+  --ui-datepicker-range-bg: var(--ocean-100);
+
+  // Component Semantic UI Colors (Group 2)
+  --ui-popover-bg: rgba(255, 255, 255, 0.85);
+  --ui-popover-border: rgba(255, 255, 255, 0.6);
+  --ui-popover-text: var(--slate-800);
+  --ui-popover-shadow: 0 8px 24px rgba(0, 0, 0, 0.15);
+
+  --ui-slider-track-bg: rgba(148, 163, 184, 0.25);
+  --ui-slider-fill-bg: linear-gradient(90deg, #0284c7, #06b6d4);
+  --ui-slider-fill-shadow: none;
+  --ui-slider-thumb-bg: #ffffff;
+  --ui-slider-thumb-border: var(--color-action);
+  --ui-slider-thumb-shadow: 0 2px 8px rgba(0, 0, 0, 0.18);
+  --ui-slider-thumb-focus-ring: 0 0 0 3px rgba(14, 165, 233, 0.4);
+  --ui-slider-tooltip-bg: #0f172a;
+  --ui-slider-tooltip-text: #ffffff;
+  --ui-slider-tooltip-border: 1px solid transparent;
+  --ui-slider-tooltip-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
+
+  --ui-tabs-text: var(--page-text-secondary);
+  --ui-tabs-text-hover: var(--page-text-primary);
+  --ui-tabs-focus-outline: var(--color-action);
+  --ui-tabs-active-color: var(--color-action);
+  --ui-tabs-indicator-bg: var(--color-action);
+  --ui-tabs-indicator-shadow: none;
+  --ui-tabs-underline-border: rgba(148, 163, 184, 0.2);
+  --ui-tabs-pill-active-bg: var(--color-action);
+  --ui-tabs-pill-active-text: #ffffff;
+  --ui-tabs-pill-active-shadow: none;
+  --ui-tabs-segment-bg: rgba(148, 163, 184, 0.12);
+  --ui-tabs-segment-active-bg: var(--page-card-bg);
+  --ui-tabs-segment-active-text: var(--color-action);
+  --ui-tabs-segment-active-border: transparent;
+  --ui-tabs-segment-active-shadow: 0 2px 6px rgba(0, 0, 0, 0.08);
+
+  --ui-accordion-bg: var(--page-card-bg);
+  --ui-accordion-border: var(--page-card-border);
+  --ui-accordion-expanded-border: var(--color-action);
+  --ui-accordion-expanded-shadow: 0 4px 16px rgba(0, 0, 0, 0.06);
+  --ui-accordion-header-hover-bg: rgba(148, 163, 184, 0.08);
+  --ui-accordion-title-color: var(--page-text-primary);
+  --ui-accordion-subtitle-color: var(--page-text-secondary);
+  --ui-accordion-icon-color: var(--color-action);
+  --ui-accordion-chevron-color: var(--page-text-secondary);
+  --ui-accordion-chevron-expanded-color: var(--color-action);
+  --ui-accordion-content-color: var(--page-text-primary);
+  --ui-accordion-content-border: rgba(148, 163, 184, 0.12);
+
+  --ui-badge-bg: rgba(148, 163, 184, 0.15);
+  --ui-badge-border: rgba(148, 163, 184, 0.3);
+  --ui-badge-text: var(--slate-700);
+  --ui-badge-remove-bg: rgba(0, 0, 0, 0.12);
+  --ui-badge-remove-hover-bg: rgba(0, 0, 0, 0.25);
+  --ui-badge-neutral-bg: rgba(148, 163, 184, 0.15);
+  --ui-badge-neutral-border: rgba(148, 163, 184, 0.3);
+  --ui-badge-neutral-text: var(--slate-700);
+  --ui-badge-primary-bg: rgba(14, 165, 233, 0.14);
+  --ui-badge-primary-border: rgba(14, 165, 233, 0.35);
+  --ui-badge-primary-text: #0369a1;
+  --ui-badge-secondary-bg: rgba(99, 102, 241, 0.14);
+  --ui-badge-secondary-border: rgba(99, 102, 241, 0.35);
+  --ui-badge-secondary-text: #4338ca;
+  --ui-badge-success-bg: rgba(22, 163, 74, 0.14);
+  --ui-badge-success-border: rgba(22, 163, 74, 0.35);
+  --ui-badge-success-text: #15803d;
+  --ui-badge-warning-bg: rgba(245, 158, 11, 0.14);
+  --ui-badge-warning-border: rgba(245, 158, 11, 0.35);
+  --ui-badge-warning-text: #b45309;
+  --ui-badge-danger-bg: rgba(239, 68, 68, 0.14);
+  --ui-badge-danger-border: rgba(239, 68, 68, 0.35);
+  --ui-badge-danger-text: #b91c1c;
+  --ui-badge-coral-bg: rgba(244, 63, 94, 0.14);
+  --ui-badge-coral-border: rgba(244, 63, 94, 0.35);
+  --ui-badge-coral-text: #be123c;
+  --ui-badge-abyss-bg: rgba(0, 242, 254, 0.18);
+  --ui-badge-abyss-border: rgba(0, 242, 254, 0.4);
+  --ui-badge-abyss-text: #0284c7;
+
+  --ui-alert-close-color: var(--slate-400);
+  --ui-alert-close-hover-bg: rgba(0, 0, 0, 0.06);
+  --ui-alert-close-hover-color: var(--slate-800);
+  --ui-alert-info-bg: rgba(14, 165, 233, 0.08);
+  --ui-alert-info-border: rgba(14, 165, 233, 0.25);
+  --ui-alert-info-text: var(--slate-700);
+  --ui-alert-info-title: #0284c7;
+  --ui-alert-success-bg: rgba(22, 163, 74, 0.08);
+  --ui-alert-success-border: rgba(22, 163, 74, 0.25);
+  --ui-alert-success-text: var(--slate-700);
+  --ui-alert-success-title: #15803d;
+  --ui-alert-warning-bg: rgba(245, 158, 11, 0.08);
+  --ui-alert-warning-border: rgba(245, 158, 11, 0.25);
+  --ui-alert-warning-text: var(--slate-700);
+  --ui-alert-warning-title: #b45309;
+  --ui-alert-danger-bg: rgba(239, 68, 68, 0.08);
+  --ui-alert-danger-border: rgba(239, 68, 68, 0.25);
+  --ui-alert-danger-text: var(--slate-700);
+  --ui-alert-danger-title: #b91c1c;
+  --ui-alert-ocean-bg: rgba(14, 165, 233, 0.1);
+  --ui-alert-ocean-border: rgba(14, 165, 233, 0.3);
+  --ui-alert-ocean-text: var(--slate-800);
+  --ui-alert-ocean-title: #0369a1;
+  --ui-alert-coral-bg: rgba(244, 63, 94, 0.08);
+  --ui-alert-coral-border: rgba(244, 63, 94, 0.25);
+  --ui-alert-coral-text: var(--slate-700);
+  --ui-alert-coral-title: #be123c;
+  --ui-alert-abyss-bg: rgba(0, 242, 254, 0.1);
+  --ui-alert-abyss-border: rgba(0, 242, 254, 0.3);
+  --ui-alert-abyss-text: var(--slate-800);
+  --ui-alert-abyss-title: #0284c7;
+  --ui-alert-neutral-bg: rgba(148, 163, 184, 0.1);
+  --ui-alert-neutral-border: rgba(148, 163, 184, 0.25);
+  --ui-alert-neutral-text: var(--slate-700);
+  --ui-alert-neutral-title: var(--slate-800);
+
+  --ui-modal-overlay-bg: rgba(0, 0, 0, 0.6);
+  --ui-theme-card-bg: var(--bg-color);
+  --ui-theme-card-border: var(--page-card-border);
+  --ui-theme-card-hover-border: var(--color-action);
+  --ui-theme-card-active-border: var(--color-action);
+  --ui-theme-card-active-shadow: 0 0 0 3px color-mix(in srgb, var(--color-action) 25%, transparent);
+  --ui-theme-card-text: var(--text-color);
+  --ui-theme-card-subtext: var(--page-text-secondary);
+  --ui-theme-card-badge-bg: rgba(14, 165, 233, 0.15);
+  --ui-theme-card-badge-text: var(--color-action);
 }
 
 // 🪸 산호초 코랄 테마 (Coral reef theme: warm sand waterbubble, coral orange, teal main accent)
@@ -161,6 +623,223 @@ body.theme-coral {
   --color-neutral-bg: #f3e8dc;
   --color-disabled-text: #a89687;
   --color-disabled-bg: #f8efea;
+
+  // Form / Input Semantic UI Colors (Group 1)
+  --ui-input-bg: rgba(253, 242, 242, 0.9);
+  --ui-input-bg-hover: #ffffff;
+  --ui-input-bg-focus: #ffffff;
+  --ui-input-bg-disabled: #f8efea;
+  --ui-input-bg-readonly: #f8efea;
+  --ui-input-border: rgba(244, 63, 94, 0.25);
+  --ui-input-border-hover: #f43f5e;
+  --ui-input-border-focus: #f43f5e;
+  --ui-input-text: #881337;
+  --ui-input-text-disabled: #a89687;
+  --ui-input-placeholder: rgba(159, 18, 57, 0.6);
+  --ui-input-shadow: 0 1px 2px rgba(240, 83, 60, 0.04);
+  --ui-input-focus-ring: 0 0 0 4px rgba(244, 63, 94, 0.18);
+
+  --ui-input-clear-bg: rgba(240, 83, 60, 0.12);
+  --ui-input-clear-bg-hover: rgba(240, 83, 60, 0.24);
+  --ui-input-clear-text: #9f1239;
+  --ui-input-clear-text-hover: #881337;
+
+  --ui-stepper-btn-text: #f43f5e;
+  --ui-stepper-btn-text-hover: #e11d48;
+  --ui-stepper-btn-bg-hover: rgba(240, 83, 60, 0.08);
+  --ui-stepper-btn-disabled: #a89687;
+
+  --ui-dropdown-bg: #ffffff;
+  --ui-dropdown-border: rgba(244, 63, 94, 0.25);
+  --ui-dropdown-shadow: 0 12px 32px rgba(225, 29, 72, 0.12);
+  --ui-dropdown-text: #881337;
+
+  --ui-select-arrow: #e11d48;
+  --ui-select-arrow-open: #f43f5e;
+
+  --ui-chip-bg: rgba(244, 63, 94, 0.14);
+  --ui-chip-text: #be123c;
+
+  --ui-option-text: #9f1239;
+  --ui-option-hover-bg: rgba(244, 63, 94, 0.08);
+  --ui-option-hover-text: #881337;
+  --ui-option-selected-bg: linear-gradient(135deg, #e11d48 0%, #be123c 100%);
+  --ui-option-selected-text: #ffffff;
+
+  --ui-segmented-bg: rgba(253, 242, 242, 0.85);
+  --ui-segmented-border: rgba(244, 63, 94, 0.25);
+  --ui-segmented-shadow: 0 4px 16px rgba(220, 100, 80, 0.08);
+  --ui-segmented-text: #881337;
+  --ui-segmented-text-hover: #3d2c20;
+  --ui-segmented-indicator-bg: linear-gradient(145deg, #ffffff, #ffe4e6);
+  --ui-segmented-indicator-border: rgba(244, 63, 94, 0.45);
+  --ui-segmented-indicator-shadow: 0 4px 12px rgba(244, 63, 94, 0.22);
+  --ui-segmented-active-text: #e11d48;
+
+  --ui-btn-default-border: rgba(240, 83, 60, 0.3);
+  --ui-btn-default-text: #443427;
+  --ui-btn-default-bg: rgba(255, 248, 240, 0.85);
+  --ui-btn-default-hover-border: rgba(240, 83, 60, 0.5);
+  --ui-btn-default-hover-text: #0d9488;
+  --ui-btn-default-hover-bg: rgba(240, 83, 60, 0.08);
+
+  --ui-btn-secondary-border: rgba(13, 148, 136, 0.25);
+  --ui-btn-secondary-text: #0f766e;
+  --ui-btn-secondary-bg: #ccfbf1;
+
+  --ui-btn-outline-border: #0d9488;
+  --ui-btn-outline-text: #0d9488;
+  --ui-btn-outline-hover-border: #0f766e;
+  --ui-btn-outline-hover-text: #0f766e;
+  --ui-btn-outline-hover-bg: #ccfbf1;
+
+  --ui-btn-ghost-text: #7c6859;
+
+  --ui-datepicker-icon: #f43f5e;
+  --ui-datepicker-title-text: #3d2c20;
+  --ui-datepicker-title-hover-text: #0d9488;
+  --ui-datepicker-title-hover-bg: rgba(240, 83, 60, 0.08);
+  --ui-datepicker-nav-text: #7c6859;
+  --ui-datepicker-nav-hover-text: #3d2c20;
+  --ui-datepicker-nav-hover-bg: rgba(240, 83, 60, 0.08);
+  --ui-datepicker-weekday-text: #7c6859;
+  --ui-datepicker-sunday-text: #b91c1c;
+  --ui-datepicker-saturday-text: #0d9488;
+  --ui-datepicker-day-text: #543e30;
+  --ui-datepicker-day-muted-text: #a89687;
+  --ui-datepicker-day-hover-bg: rgba(240, 83, 60, 0.08);
+  --ui-datepicker-day-hover-text: #3d2c20;
+  --ui-datepicker-today-text: #0d9488;
+  --ui-datepicker-selected-bg: linear-gradient(135deg, #f0533c 0%, #d93822 100%);
+  --ui-datepicker-selected-text: #ffffff;
+  --ui-datepicker-selected-shadow: 0 4px 10px rgba(240, 83, 60, 0.3);
+  --ui-datepicker-badge-bg: #0d9488;
+  --ui-datepicker-range-text: #0f766e;
+  --ui-datepicker-range-bg: #ccfbf1;
+
+  // Component Semantic UI Colors (Group 2)
+  --ui-popover-bg: rgba(255, 251, 245, 0.9);
+  --ui-popover-border: rgba(240, 83, 60, 0.3);
+  --ui-popover-text: #443427;
+  --ui-popover-shadow: 0 8px 24px rgba(220, 100, 80, 0.15);
+
+  --ui-slider-track-bg: rgba(240, 83, 60, 0.15);
+  --ui-slider-fill-bg: linear-gradient(90deg, #f43f5e, #fb7185);
+  --ui-slider-fill-shadow: none;
+  --ui-slider-thumb-bg: #ffffff;
+  --ui-slider-thumb-border: #f43f5e;
+  --ui-slider-thumb-shadow: 0 2px 10px rgba(244, 63, 94, 0.22);
+  --ui-slider-thumb-focus-ring: 0 0 0 3px rgba(244, 63, 94, 0.35);
+  --ui-slider-tooltip-bg: #ffffff;
+  --ui-slider-tooltip-text: #881337;
+  --ui-slider-tooltip-border: 1px solid rgba(244, 63, 94, 0.3);
+  --ui-slider-tooltip-shadow: 0 4px 12px rgba(244, 63, 94, 0.15);
+
+  --ui-tabs-text: #7c6859;
+  --ui-tabs-text-hover: #3d2c20;
+  --ui-tabs-focus-outline: #f0533c;
+  --ui-tabs-active-color: #f0533c;
+  --ui-tabs-indicator-bg: #f0533c;
+  --ui-tabs-indicator-shadow: none;
+  --ui-tabs-underline-border: rgba(240, 83, 60, 0.15);
+  --ui-tabs-pill-active-bg: #f0533c;
+  --ui-tabs-pill-active-text: #ffffff;
+  --ui-tabs-pill-active-shadow: none;
+  --ui-tabs-segment-bg: rgba(240, 83, 60, 0.08);
+  --ui-tabs-segment-active-bg: #ffffff;
+  --ui-tabs-segment-active-text: #f0533c;
+  --ui-tabs-segment-active-border: transparent;
+  --ui-tabs-segment-active-shadow: 0 2px 6px rgba(220, 100, 80, 0.1);
+
+  --ui-accordion-bg: rgba(255, 251, 245, 0.85);
+  --ui-accordion-border: #f3e6d8;
+  --ui-accordion-expanded-border: #f0533c;
+  --ui-accordion-expanded-shadow: 0 4px 16px rgba(220, 100, 80, 0.12);
+  --ui-accordion-header-hover-bg: rgba(240, 83, 60, 0.06);
+  --ui-accordion-title-color: #3d2c20;
+  --ui-accordion-subtitle-color: #7c6859;
+  --ui-accordion-icon-color: #f0533c;
+  --ui-accordion-chevron-color: #7c6859;
+  --ui-accordion-chevron-expanded-color: #f0533c;
+  --ui-accordion-content-color: #3d2c20;
+  --ui-accordion-content-border: rgba(240, 83, 60, 0.1);
+
+  --ui-badge-bg: rgba(240, 83, 60, 0.12);
+  --ui-badge-border: rgba(240, 83, 60, 0.25);
+  --ui-badge-text: #543e30;
+  --ui-badge-remove-bg: rgba(240, 83, 60, 0.15);
+  --ui-badge-remove-hover-bg: rgba(240, 83, 60, 0.3);
+  --ui-badge-neutral-bg: #f3e8dc;
+  --ui-badge-neutral-border: rgba(107, 88, 74, 0.2);
+  --ui-badge-neutral-text: #6b584a;
+  --ui-badge-primary-bg: rgba(13, 148, 136, 0.15);
+  --ui-badge-primary-border: rgba(13, 148, 136, 0.35);
+  --ui-badge-primary-text: #0f766e;
+  --ui-badge-secondary-bg: rgba(240, 83, 60, 0.14);
+  --ui-badge-secondary-border: rgba(240, 83, 60, 0.35);
+  --ui-badge-secondary-text: #c2410c;
+  --ui-badge-success-bg: #dcfce7;
+  --ui-badge-success-border: rgba(21, 128, 61, 0.3);
+  --ui-badge-success-text: #15803d;
+  --ui-badge-warning-bg: #ffedd5;
+  --ui-badge-warning-border: rgba(194, 65, 12, 0.3);
+  --ui-badge-warning-text: #c2410c;
+  --ui-badge-danger-bg: #fee2e2;
+  --ui-badge-danger-border: rgba(185, 28, 28, 0.3);
+  --ui-badge-danger-text: #b91c1c;
+  --ui-badge-coral-bg: rgba(240, 83, 60, 0.18);
+  --ui-badge-coral-border: rgba(240, 83, 60, 0.4);
+  --ui-badge-coral-text: #f0533c;
+  --ui-badge-abyss-bg: rgba(0, 242, 254, 0.18);
+  --ui-badge-abyss-border: rgba(0, 242, 254, 0.4);
+  --ui-badge-abyss-text: #0d9488;
+
+  --ui-alert-close-color: #7c6859;
+  --ui-alert-close-hover-bg: rgba(240, 83, 60, 0.1);
+  --ui-alert-close-hover-color: #3d2c20;
+  --ui-alert-info-bg: rgba(13, 148, 136, 0.1);
+  --ui-alert-info-border: rgba(13, 148, 136, 0.3);
+  --ui-alert-info-text: #443427;
+  --ui-alert-info-title: #0f766e;
+  --ui-alert-success-bg: rgba(22, 163, 74, 0.1);
+  --ui-alert-success-border: rgba(22, 163, 74, 0.3);
+  --ui-alert-success-text: #443427;
+  --ui-alert-success-title: #15803d;
+  --ui-alert-warning-bg: rgba(240, 83, 60, 0.1);
+  --ui-alert-warning-border: rgba(240, 83, 60, 0.3);
+  --ui-alert-warning-text: #443427;
+  --ui-alert-warning-title: #c2410c;
+  --ui-alert-danger-bg: rgba(239, 68, 68, 0.1);
+  --ui-alert-danger-border: rgba(239, 68, 68, 0.3);
+  --ui-alert-danger-text: #443427;
+  --ui-alert-danger-title: #b91c1c;
+  --ui-alert-ocean-bg: rgba(13, 148, 136, 0.12);
+  --ui-alert-ocean-border: rgba(13, 148, 136, 0.35);
+  --ui-alert-ocean-text: #3d2c20;
+  --ui-alert-ocean-title: #0d9488;
+  --ui-alert-coral-bg: rgba(240, 83, 60, 0.14);
+  --ui-alert-coral-border: rgba(240, 83, 60, 0.35);
+  --ui-alert-coral-text: #3d2c20;
+  --ui-alert-coral-title: #f0533c;
+  --ui-alert-abyss-bg: rgba(0, 242, 254, 0.1);
+  --ui-alert-abyss-border: rgba(0, 242, 254, 0.3);
+  --ui-alert-abyss-text: #3d2c20;
+  --ui-alert-abyss-title: #0f766e;
+  --ui-alert-neutral-bg: rgba(243, 232, 220, 0.8);
+  --ui-alert-neutral-border: rgba(107, 88, 74, 0.25);
+  --ui-alert-neutral-text: #543e30;
+  --ui-alert-neutral-title: #3d2c20;
+
+  --ui-modal-overlay-bg: rgba(68, 52, 39, 0.5);
+  --ui-theme-card-bg: var(--bg-color);
+  --ui-theme-card-border: var(--page-card-border);
+  --ui-theme-card-hover-border: #f0533c;
+  --ui-theme-card-active-border: #f0533c;
+  --ui-theme-card-active-shadow: 0 0 0 3px rgba(240, 83, 60, 0.25);
+  --ui-theme-card-text: var(--text-color);
+  --ui-theme-card-subtext: var(--page-text-secondary);
+  --ui-theme-card-badge-bg: rgba(240, 83, 60, 0.15);
+  --ui-theme-card-badge-text: #f0533c;
 }
 
 // 🌌 초심해 어비스 테마 (Abyss ocean theme: deep midnight space navy, neon cyan / hot pink accent)
@@ -210,4 +889,221 @@ body.theme-abyss {
   --color-neutral-bg: rgba(30, 41, 59, 0.8);
   --color-disabled-text: #475569;
   --color-disabled-bg: rgba(15, 23, 42, 0.6);
+
+  // Form / Input Semantic UI Colors (Group 1)
+  --ui-input-bg: rgba(5, 12, 30, 0.9);
+  --ui-input-bg-hover: rgba(5, 12, 30, 0.98);
+  --ui-input-bg-focus: rgba(5, 12, 30, 0.98);
+  --ui-input-bg-disabled: rgba(15, 23, 42, 0.6);
+  --ui-input-bg-readonly: rgba(15, 23, 42, 0.6);
+  --ui-input-border: rgba(0, 242, 254, 0.28);
+  --ui-input-border-hover: #00f2fe;
+  --ui-input-border-focus: #00f2fe;
+  --ui-input-text: #bce3ff;
+  --ui-input-text-disabled: #475569;
+  --ui-input-placeholder: rgba(0, 242, 254, 0.5);
+  --ui-input-shadow: 0 1px 2px rgba(0, 242, 254, 0.04);
+  --ui-input-focus-ring: 0 0 0 4px rgba(0, 242, 254, 0.25);
+
+  --ui-input-clear-bg: rgba(0, 242, 254, 0.15);
+  --ui-input-clear-bg-hover: rgba(0, 242, 254, 0.3);
+  --ui-input-clear-text: #00f2fe;
+  --ui-input-clear-text-hover: #ffffff;
+
+  --ui-stepper-btn-text: #00f2fe;
+  --ui-stepper-btn-text-hover: #38ef7d;
+  --ui-stepper-btn-bg-hover: rgba(0, 242, 254, 0.12);
+  --ui-stepper-btn-disabled: #475569;
+
+  --ui-dropdown-bg: rgba(5, 12, 30, 0.98);
+  --ui-dropdown-border: rgba(0, 242, 254, 0.35);
+  --ui-dropdown-shadow: 0 12px 40px rgba(0, 242, 254, 0.2);
+  --ui-dropdown-text: #bce3ff;
+
+  --ui-select-arrow: #00f2fe;
+  --ui-select-arrow-open: #00f2fe;
+
+  --ui-chip-bg: rgba(0, 242, 254, 0.22);
+  --ui-chip-text: #00f2fe;
+
+  --ui-option-text: #bce3ff;
+  --ui-option-hover-bg: rgba(0, 242, 254, 0.12);
+  --ui-option-hover-text: #ffffff;
+  --ui-option-selected-bg: linear-gradient(135deg, rgba(0, 242, 254, 0.4) 0%, rgba(14, 116, 144, 0.95) 100%);
+  --ui-option-selected-text: #ffffff;
+
+  --ui-segmented-bg: rgba(5, 12, 30, 0.9);
+  --ui-segmented-border: rgba(0, 242, 254, 0.25);
+  --ui-segmented-shadow: 0 4px 16px rgba(0, 242, 254, 0.15);
+  --ui-segmented-text: #bce3ff;
+  --ui-segmented-text-hover: #ffffff;
+  --ui-segmented-indicator-bg: linear-gradient(145deg, rgba(0, 242, 254, 0.22), rgba(15, 23, 42, 0.95));
+  --ui-segmented-indicator-border: rgba(0, 242, 254, 0.6);
+  --ui-segmented-indicator-shadow: 0 4px 14px rgba(0, 242, 254, 0.3);
+  --ui-segmented-active-text: #00f2fe;
+
+  --ui-btn-default-border: rgba(0, 242, 254, 0.3);
+  --ui-btn-default-text: #e2f1ff;
+  --ui-btn-default-bg: rgba(0, 242, 254, 0.08);
+  --ui-btn-default-hover-border: rgba(0, 242, 254, 0.5);
+  --ui-btn-default-hover-text: #00f2fe;
+  --ui-btn-default-hover-bg: rgba(0, 242, 254, 0.18);
+
+  --ui-btn-secondary-border: rgba(0, 242, 254, 0.3);
+  --ui-btn-secondary-text: #00f2fe;
+  --ui-btn-secondary-bg: rgba(0, 242, 254, 0.15);
+
+  --ui-btn-outline-border: #00f2fe;
+  --ui-btn-outline-text: #00f2fe;
+  --ui-btn-outline-hover-border: #38ef7d;
+  --ui-btn-outline-hover-text: #38ef7d;
+  --ui-btn-outline-hover-bg: rgba(0, 242, 254, 0.2);
+
+  --ui-btn-ghost-text: #7dd3fc;
+
+  --ui-datepicker-icon: #00f2fe;
+  --ui-datepicker-title-text: #f0f9ff;
+  --ui-datepicker-title-hover-text: #00f2fe;
+  --ui-datepicker-title-hover-bg: rgba(0, 242, 254, 0.12);
+  --ui-datepicker-nav-text: #7dd3fc;
+  --ui-datepicker-nav-hover-text: #ffffff;
+  --ui-datepicker-nav-hover-bg: rgba(0, 242, 254, 0.12);
+  --ui-datepicker-weekday-text: #7dd3fc;
+  --ui-datepicker-sunday-text: #ff5277;
+  --ui-datepicker-saturday-text: #00f2fe;
+  --ui-datepicker-day-text: #bce3ff;
+  --ui-datepicker-day-muted-text: #475569;
+  --ui-datepicker-day-hover-bg: rgba(0, 242, 254, 0.12);
+  --ui-datepicker-day-hover-text: #ffffff;
+  --ui-datepicker-today-text: #00f2fe;
+  --ui-datepicker-selected-bg: linear-gradient(135deg, #00f2fe 0%, #0072ff 100%);
+  --ui-datepicker-selected-text: #ffffff;
+  --ui-datepicker-selected-shadow: 0 4px 10px rgba(0, 242, 254, 0.4);
+  --ui-datepicker-badge-bg: #00f2fe;
+  --ui-datepicker-range-text: #00f2fe;
+  --ui-datepicker-range-bg: rgba(0, 242, 254, 0.2);
+
+  // Component Semantic UI Colors (Group 2)
+  --ui-popover-bg: rgba(4, 12, 30, 0.9);
+  --ui-popover-border: rgba(0, 242, 254, 0.4);
+  --ui-popover-text: #e2f1ff;
+  --ui-popover-shadow: 0 0 20px rgba(0, 242, 254, 0.25);
+
+  --ui-slider-track-bg: rgba(0, 242, 254, 0.15);
+  --ui-slider-fill-bg: linear-gradient(90deg, #00c6ff, #ff007f);
+  --ui-slider-fill-shadow: 0 0 10px rgba(0, 242, 254, 0.5);
+  --ui-slider-thumb-bg: #040814;
+  --ui-slider-thumb-border: #00f2fe;
+  --ui-slider-thumb-shadow: 0 0 12px rgba(0, 242, 254, 0.6);
+  --ui-slider-thumb-focus-ring: 0 0 0 4px rgba(0, 242, 254, 0.6);
+  --ui-slider-tooltip-bg: rgba(0, 242, 254, 0.9);
+  --ui-slider-tooltip-text: #040814;
+  --ui-slider-tooltip-border: 1px solid transparent;
+  --ui-slider-tooltip-shadow: 0 0 12px rgba(0, 242, 254, 0.4);
+
+  --ui-tabs-text: #7dd3fc;
+  --ui-tabs-text-hover: #f0f9ff;
+  --ui-tabs-focus-outline: #00f2fe;
+  --ui-tabs-active-color: #00f2fe;
+  --ui-tabs-indicator-bg: linear-gradient(90deg, #00f2fe, #ff007f);
+  --ui-tabs-indicator-shadow: 0 0 8px rgba(0, 242, 254, 0.6);
+  --ui-tabs-underline-border: rgba(0, 242, 254, 0.2);
+  --ui-tabs-pill-active-bg: linear-gradient(135deg, #00c6ff, #0072ff);
+  --ui-tabs-pill-active-text: #ffffff;
+  --ui-tabs-pill-active-shadow: 0 0 10px rgba(0, 242, 254, 0.4);
+  --ui-tabs-segment-bg: rgba(0, 242, 254, 0.08);
+  --ui-tabs-segment-active-bg: rgba(6, 16, 38, 0.9);
+  --ui-tabs-segment-active-text: #00f2fe;
+  --ui-tabs-segment-active-border: 1px solid rgba(0, 242, 254, 0.3);
+  --ui-tabs-segment-active-shadow: 0 0 10px rgba(0, 242, 254, 0.2);
+
+  --ui-accordion-bg: rgba(6, 16, 38, 0.78);
+  --ui-accordion-border: rgba(0, 242, 254, 0.2);
+  --ui-accordion-expanded-border: rgba(0, 242, 254, 0.6);
+  --ui-accordion-expanded-shadow: 0 0 16px rgba(0, 242, 254, 0.25);
+  --ui-accordion-header-hover-bg: rgba(0, 242, 254, 0.08);
+  --ui-accordion-title-color: #f0f9ff;
+  --ui-accordion-subtitle-color: #7dd3fc;
+  --ui-accordion-icon-color: #00f2fe;
+  --ui-accordion-chevron-color: #7dd3fc;
+  --ui-accordion-chevron-expanded-color: #00f2fe;
+  --ui-accordion-content-color: #f0f9ff;
+  --ui-accordion-content-border: rgba(0, 242, 254, 0.12);
+
+  --ui-badge-bg: rgba(0, 242, 254, 0.18);
+  --ui-badge-border: rgba(0, 242, 254, 0.4);
+  --ui-badge-text: #00f2fe;
+  --ui-badge-remove-bg: rgba(0, 242, 254, 0.2);
+  --ui-badge-remove-hover-bg: rgba(0, 242, 254, 0.4);
+  --ui-badge-neutral-bg: rgba(30, 41, 59, 0.8);
+  --ui-badge-neutral-border: rgba(148, 163, 184, 0.3);
+  --ui-badge-neutral-text: #94a3b8;
+  --ui-badge-primary-bg: rgba(0, 242, 254, 0.18);
+  --ui-badge-primary-border: rgba(0, 242, 254, 0.4);
+  --ui-badge-primary-text: #00f2fe;
+  --ui-badge-secondary-bg: rgba(255, 0, 127, 0.18);
+  --ui-badge-secondary-border: rgba(255, 0, 127, 0.4);
+  --ui-badge-secondary-text: #ff007f;
+  --ui-badge-success-bg: rgba(34, 197, 94, 0.22);
+  --ui-badge-success-border: rgba(74, 222, 128, 0.4);
+  --ui-badge-success-text: #4ade80;
+  --ui-badge-warning-bg: rgba(245, 158, 11, 0.22);
+  --ui-badge-warning-border: rgba(251, 191, 36, 0.4);
+  --ui-badge-warning-text: #fbbf24;
+  --ui-badge-danger-bg: rgba(255, 0, 127, 0.25);
+  --ui-badge-danger-border: rgba(255, 82, 119, 0.4);
+  --ui-badge-danger-text: #ff5277;
+  --ui-badge-coral-bg: rgba(255, 0, 127, 0.2);
+  --ui-badge-coral-border: rgba(255, 0, 127, 0.4);
+  --ui-badge-coral-text: #ff007f;
+  --ui-badge-abyss-bg: rgba(0, 242, 254, 0.18);
+  --ui-badge-abyss-border: rgba(0, 242, 254, 0.4);
+  --ui-badge-abyss-text: #00f2fe;
+
+  --ui-alert-close-color: #7dd3fc;
+  --ui-alert-close-hover-bg: rgba(0, 242, 254, 0.15);
+  --ui-alert-close-hover-color: #ffffff;
+  --ui-alert-info-bg: rgba(0, 242, 254, 0.12);
+  --ui-alert-info-border: rgba(0, 242, 254, 0.35);
+  --ui-alert-info-text: #e2f1ff;
+  --ui-alert-info-title: #00f2fe;
+  --ui-alert-success-bg: rgba(56, 239, 125, 0.12);
+  --ui-alert-success-border: rgba(56, 239, 125, 0.35);
+  --ui-alert-success-text: #e2f1ff;
+  --ui-alert-success-title: #38ef7d;
+  --ui-alert-warning-bg: rgba(251, 191, 36, 0.12);
+  --ui-alert-warning-border: rgba(251, 191, 36, 0.35);
+  --ui-alert-warning-text: #e2f1ff;
+  --ui-alert-warning-title: #fbbf24;
+  --ui-alert-danger-bg: rgba(255, 0, 127, 0.15);
+  --ui-alert-danger-border: rgba(255, 0, 127, 0.4);
+  --ui-alert-danger-text: #e2f1ff;
+  --ui-alert-danger-title: #ff5277;
+  --ui-alert-ocean-bg: rgba(0, 198, 255, 0.15);
+  --ui-alert-ocean-border: rgba(0, 242, 254, 0.4);
+  --ui-alert-ocean-text: #f0f9ff;
+  --ui-alert-ocean-title: #00f2fe;
+  --ui-alert-coral-bg: rgba(255, 0, 127, 0.15);
+  --ui-alert-coral-border: rgba(255, 0, 127, 0.4);
+  --ui-alert-coral-text: #f0f9ff;
+  --ui-alert-coral-title: #ff007f;
+  --ui-alert-abyss-bg: rgba(0, 242, 254, 0.18);
+  --ui-alert-abyss-border: rgba(0, 242, 254, 0.45);
+  --ui-alert-abyss-text: #f0f9ff;
+  --ui-alert-abyss-title: #00f2fe;
+  --ui-alert-neutral-bg: rgba(30, 41, 59, 0.6);
+  --ui-alert-neutral-border: rgba(148, 163, 184, 0.3);
+  --ui-alert-neutral-text: #bce3ff;
+  --ui-alert-neutral-title: #f0f9ff;
+
+  --ui-modal-overlay-bg: rgba(4, 8, 20, 0.8);
+  --ui-theme-card-bg: var(--bg-color);
+  --ui-theme-card-border: var(--page-card-border);
+  --ui-theme-card-hover-border: #00f2fe;
+  --ui-theme-card-active-border: #00f2fe;
+  --ui-theme-card-active-shadow: 0 0 15px rgba(0, 242, 254, 0.4);
+  --ui-theme-card-text: var(--text-color);
+  --ui-theme-card-subtext: var(--page-text-secondary);
+  --ui-theme-card-badge-bg: rgba(0, 242, 254, 0.2);
+  --ui-theme-card-badge-text: #00f2fe;
 }

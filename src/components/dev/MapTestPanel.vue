@@ -1,5 +1,5 @@
 <template>
-  <div class="map-test-panel">
+  <div ref="mapPanelContainerRef" class="map-test-panel">
     <div class="sandbox-dashboard">
       <div class="info-card">
         <h3>🔑 API Key 바인딩 상태</h3>
@@ -60,14 +60,13 @@
           </button>
         </div>
 
-        <div class="instructions-card">
-          <h4>💡 테스트 가이드라인</h4>
+        <CustomAlert variant="info" title="테스트 가이드라인" icon="💡">
           <ul>
             <li>등록된 주소 외의 도메인에서 호출 시 지도창이 하얗게 굳거나 에러가 납니다.</li>
             <li>브라우저 <strong>F12 개발자 도구 → Console(콘솔)</strong> 창을 확인하여 <code>Unauthorized</code>나 <code>domain mismatch</code> 에러가 출력되는지 체크하세요.</li>
             <li>지도가 정상 동작한다면, 메디컬 스탬프 파인더 화면으로 넘어가셔도 지도가 완벽하게 동작합니다.</li>
           </ul>
-        </div>
+        </CustomAlert>
       </div>
     </div>
   </div>
@@ -75,6 +74,7 @@
 
 <script setup lang="ts">
 import { ref, computed, onMounted } from 'vue';
+import CustomAlert from '@/components/CustomAlert.vue';
 import { useKakaoMap } from '@/composables/useKakaoMap';
 import { useToast } from '@/composables/useToast';
 

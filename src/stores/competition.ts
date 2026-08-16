@@ -4,6 +4,7 @@ import { computed, ref } from 'vue';
 import type { Competition, CompetitionFeed } from '@/types/competition';
 import rawFeed from '@/data/competition-feed.json';
 import { fetchCompetitionFeed, hasCompetitionApi } from '@/api/competitionApi';
+import { getStoredItem, setStoredItem, removeStoredItem } from '@/utils/storage';
 
 const toKstDate = (value: unknown): string => {
   const text = String(value ?? '');
@@ -46,27 +47,27 @@ export const useCompetitionStore = defineStore('competition', () => {
   const competitions = computed(() => feed.value.events);
 
   if (typeof window !== 'undefined' && typeof localStorage !== 'undefined') {
-    const current = localStorage.getItem(COMPETITION_BOOKMARKS_STORAGE_KEY);
-    const legacyBookmarks = localStorage.getItem(LEGACY_BOOKMARKS_STORAGE_KEY);
-    const legacyV4Flag = localStorage.getItem(LEGACY_BOOKMARKS_V4_FLAG_KEY);
+    const current = getStoredItem(COMPETITION_BOOKMARKS_STORAGE_KEY, null);
+    const legacyBookmarks = getStoredItem(LEGACY_BOOKMARKS_STORAGE_KEY, null);
+    const legacyV4Flag = getStoredItem(LEGACY_BOOKMARKS_V4_FLAG_KEY, null);
 
     if (!current && legacyBookmarks !== null) {
       try {
-        const parsed = JSON.parse(legacyBookmarks);
+        const parsed = Array.isArray(legacyBookmarks) ? legacyBookmarks : JSON.parse(String(legacyBookmarks));
         if (Array.isArray(parsed)) {
           const needsV4Mapping = !legacyV4Flag;
           const mapped = needsV4Mapping
             ? [...new Set(parsed.map((id: string) => LEGACY_IDS[id] ?? id))]
             : parsed;
-          localStorage.setItem(COMPETITION_BOOKMARKS_STORAGE_KEY, JSON.stringify(mapped));
+          setStoredItem(COMPETITION_BOOKMARKS_STORAGE_KEY, mapped);
         }
       } catch {
         // Safe handle malformed legacy data
       }
     }
 
-    if (legacyBookmarks !== null) localStorage.removeItem(LEGACY_BOOKMARKS_STORAGE_KEY);
-    if (legacyV4Flag !== null) localStorage.removeItem(LEGACY_BOOKMARKS_V4_FLAG_KEY);
+    if (legacyBookmarks !== null) removeStoredItem(LEGACY_BOOKMARKS_STORAGE_KEY);
+    if (legacyV4Flag !== null) removeStoredItem(LEGACY_BOOKMARKS_V4_FLAG_KEY);
   }
 
   const bookmarkedIds = useStorage<string[]>(COMPETITION_BOOKMARKS_STORAGE_KEY, []);
