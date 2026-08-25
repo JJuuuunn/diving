@@ -136,15 +136,9 @@ onUnmounted(() => {
     font-size: 1.2rem;
     font-weight: 800;
     margin: 0;
-    background: linear-gradient(135deg, #0ea5e9, #2563eb);
+    background: linear-gradient(135deg, var(--color-action), var(--color-action-strong));
     -webkit-background-clip: text;
     -webkit-text-fill-color: transparent;
-
-    body.dark & {
-      background: linear-gradient(135deg, #38bdf8, #60a5fa);
-      -webkit-background-clip: text;
-      -webkit-text-fill-color: transparent;
-    }
   }
 }
 

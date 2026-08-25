@@ -50,7 +50,7 @@
       <CustomButton
         class="download-center-btn"
         @click="emit('openForms')"
-        title="공식 스쿠버/프리다이빙 메디컬 질문지 다운로드 센터 열기"
+        title="공식 프리다이빙 메디컬 질문지 다운로드 센터 열기"
       >
         <span>📄 서식 다운로드 센터 열기</span>
         <span class="arrow-icon">➔</span>

@@ -6,7 +6,7 @@
   left: 0;
   width: 100vw;
   height: 100vh;
-  background-color: rgba(0, 0, 0, 0.4); 
+  background-color: var(--overlay-bg);
   visibility: hidden;
   opacity: 0;
   transition: visibility 0.3s, opacity 0.3s;
@@ -28,7 +28,7 @@
   height: 100vh; // 100% 대신 100vh로 고정하여 내용에 따라 길어짐 방지
   background: var(--sidebar-bg);
   border-right: 1px solid var(--sidebar-border);
-  box-shadow: 4px 0 24px rgba(0, 0, 0, 0.1);
+  box-shadow: var(--sidebar-shadow);
   backdrop-filter: blur(12px);
   -webkit-backdrop-filter: blur(12px);
   position: fixed;
@@ -63,13 +63,8 @@
           width: 36px;
           height: 36px;
           transition: all 0.3s ease;
-          color: #0ea5e9; 
-          filter: drop-shadow(0 0 2px rgba(14, 165, 233, 0.3));
-
-          body.dark & { 
-            color: #38bdf8;
-            filter: drop-shadow(0 0 8px rgba(56, 189, 248, 0.8));
-          }
+          color: var(--logo-icon-color);
+          filter: drop-shadow(0 0 4px var(--logo-icon-color));
         }
       }
 
@@ -83,7 +78,7 @@
       &:hover {
         .logo-icon svg {
           transform: rotate(-10deg) scale(1.1);
-          filter: drop-shadow(0 0 10px rgba(14, 165, 233, 0.8));
+          filter: drop-shadow(0 0 10px var(--logo-icon-color));
         }
       }
     }
@@ -111,7 +106,7 @@
 
     &::-webkit-scrollbar { width: 4px; }
     &::-webkit-scrollbar-thumb { background: var(--sidebar-border); border-radius: 2px; }
-    
+
     ul {
       list-style: none;
       padding: 0;
@@ -128,16 +123,16 @@
         font-size: 1rem;
         font-weight: 600;
         transition: all 0.2s ease;
-        
+
         &:hover {
           background-color: var(--sidebar-hover-bg);
           transform: translateX(4px);
         }
 
         &.router-link-active {
-          background-color: rgba(14, 165, 233, 0.1);
-          color: #0ea5e9;
-          .icon svg { color: #0ea5e9; }
+          background-color: var(--color-info-bg);
+          color: var(--color-action);
+          .icon svg { color: var(--color-action); }
         }
 
         .icon {
@@ -175,7 +170,7 @@
       color: var(--sidebar-icon-color);
       text-decoration: none;
       font-size: 0.85rem;
-      &:hover { color: #0ea5e9; }
+      &:hover { color: var(--color-action); }
     }
   }
 }

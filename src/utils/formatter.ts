@@ -24,3 +24,23 @@ export const formatDate = (date: string | Date | undefined | null, formatPattern
     if (!date) return '';
     return dayjs(date).format(formatPattern);
 };
+
+/**
+ * 초(seconds) 숫자를 mm:ss 또는 h:mm:ss 포맷의 시간 문자열로 변환합니다.
+ */
+export const formatDuration = (seconds: number | string | undefined | null): string => {
+    if (seconds === undefined || seconds === null || seconds === '') return '';
+    const total = typeof seconds === 'string' ? parseFloat(seconds) : seconds;
+    if (isNaN(total)) return '';
+
+    const rounded = Math.round(total);
+    const hrs = Math.floor(rounded / 3600);
+    const mins = Math.floor((rounded % 3600) / 60);
+    const secs = rounded % 60;
+
+    const pad = (n: number) => String(n).padStart(2, '0');
+    if (hrs > 0) {
+        return `${hrs}:${pad(mins)}:${pad(secs)}`;
+    }
+    return `${mins}:${pad(secs)}`;
+};

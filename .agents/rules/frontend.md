@@ -30,6 +30,7 @@ trigger: always_on
 - 외부 데이터는 런타임 검증을 통과한 뒤 사용한다.
 - 운영 화면의 버튼과 text 계열 input은 공용 UI 컴포넌트를 사용한다.
 - 비밀정보와 민감정보를 브라우저 저장소, 공개 Sheet, `VITE_*`에 저장하지 않는다.
+- 본 프로젝트는 **프리다이빙(Freediving)** 전용 플랫폼이다. 스쿠버 다이빙 관련 기능(로그북 잔압/탱크, WRSTC 서식 등)은 일체 고려하지 않고 배제한다. (추후 추가되더라도 '퀴즈 문제은행'으로만 제한됨)
 - 변경 후 최소 `npm test`, `npm run typecheck`, `npm run build`,
   `git diff --check`를 통과한다.
 

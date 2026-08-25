@@ -1,7 +1,26 @@
 export type DiveType = 'scuba' | 'freediving';
-export type LogCardDesign = 'ocean' | 'expedition' | 'coral' | 'minimal';
-export type FreedivingDiscipline = 'CWT' | 'FIM' | 'CNF' | 'STA' | 'DYN';
+export type LogCardDesign = 'hud' | 'ticket' | 'sports' | 'classic' | 'ocean' | 'expedition' | 'coral' | 'minimal' | 'garmin';
+export type FreedivingDiscipline = 'CWT' | 'CWTB' | 'CNF' | 'FIM' | 'STA' | 'DYN' | 'DYNB' | 'DNF';
 export type EqualizingMethod = 'Frenzel' | 'Valsalva' | 'Mouthfill';
+
+export type PhotoHudPreset = 'sporty-right' | 'left-minimal' | 'top-hero' | 'balanced';
+
+export interface HudElementPosition {
+  x: number;
+  y: number;
+  scale?: number;
+}
+
+export type GarminElementPosition = HudElementPosition;
+
+export interface HudLayoutMap {
+  heroStat?: HudElementPosition;
+  subline?: HudElementPosition;
+  brandBadge?: HudElementPosition;
+  rightStats?: HudElementPosition;
+}
+
+export type GarminLayoutMap = HudLayoutMap;
 
 export interface BaseDiveLog {
   id: string;
@@ -13,6 +32,10 @@ export interface BaseDiveLog {
   buddyName: string;
   buddySignature: string;
   notes: string;
+  photoUrl?: string;
+  design?: LogCardDesign;
+  hudLayout?: HudLayoutMap;
+  garminLayout?: HudLayoutMap;
   createdAt: string;
   updatedAt: string;
 }
@@ -30,7 +53,7 @@ export interface FreedivingDiveLog extends BaseDiveLog {
   apneaSeconds: number;
   discipline: FreedivingDiscipline;
   weightKg: number;
-  equalizingMethod: EqualizingMethod;
+  equalizingMethod?: EqualizingMethod;
 }
 
 export type DiveLog = ScubaDiveLog | FreedivingDiveLog;

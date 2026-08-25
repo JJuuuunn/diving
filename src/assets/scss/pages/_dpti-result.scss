@@ -11,40 +11,29 @@
     text-align: center;
     position: relative;
     box-sizing: border-box;
-    
+
     // 🌟 480px 너비 고정 (캡쳐 시 일정한 비율 유지)
     width: 100%;
-    max-width: 480px; 
-    margin: 0 auto; 
-
-    .dark & {
-        box-shadow: 0 10px 40px rgba(0, 0, 0, 0.4);
-    }
+    max-width: 480px;
+    margin: 0 auto;
 
     .user-capture-badge {
         display: inline-block;
-        background: var(--ocean-100);
-        color: var(--ocean-700);
+        background: var(--color-info-bg);
+        color: var(--color-info-text);
         padding: 0.4rem 1.25rem;
         border-radius: 2rem;
         font-weight: 800;
         font-size: 0.85rem;
         margin-bottom: 1.5rem;
-        border: 1px solid var(--ocean-200);
+        border: 1px solid var(--ui-badge-primary-border);
         animation: fadeInDown 0.5s ease-out;
-
-        .dark & {
-            background: rgba(14, 165, 233, 0.15);
-            color: var(--ocean-300);
-            border-color: rgba(14, 165, 233, 0.3);
-        }
     }
 
     .tagline {
-        color: var(--ocean-600);
+        color: var(--color-action);
         font-weight: 600;
         font-size: 0.95rem;
-        .dark & { color: var(--ocean-400); }
     }
 
     .title {
@@ -52,9 +41,8 @@
         margin: 1rem 0;
         color: var(--page-text-primary);
         line-height: 1.3;
-        .animal { 
-            color: var(--ocean-500); 
-            .dark & { color: var(--ocean-400); } 
+        .animal {
+            color: var(--color-action);
         }
     }
 
@@ -62,10 +50,10 @@
         width: 100%;
         max-width: 280px;
         margin: 1.5rem auto;
-        .animal-img { 
-            width: 100%; 
-            height: 100%; 
-            object-fit: contain; 
+        .animal-img {
+            width: 100%;
+            height: 100%;
+            object-fit: contain;
         }
     }
 
@@ -80,26 +68,21 @@
 
 // 2. 성향 분석 그래프
 .traits-analysis {
-    background: var(--slate-50);
+    background: var(--page-card-bg);
+    border: 1px solid var(--page-card-border);
     border-radius: 1.5rem;
     padding: 1.5rem;
-    
+
     // 🌟 상하단 마진 조정 (아래 여백 제거)
     margin-top: 2rem;
-    margin-bottom: 0; 
+    margin-bottom: 0;
     box-sizing: border-box;
-
-    .dark & { 
-        background: rgba(30, 41, 59, 0.4); 
-        border: 1px solid rgba(255, 255, 255, 0.05);
-    }
 
     .analysis-title {
         font-size: 1rem;
-        color: var(--slate-700);
+        color: var(--page-text-primary);
         margin-bottom: 1.5rem;
         font-weight: 700;
-        .dark & { color: var(--slate-200); }
     }
 
     .trait-row {
@@ -114,26 +97,24 @@
     .trait-label {
         font-size: 0.85rem;
         font-weight: 600;
-        color: var(--slate-400);
+        color: var(--page-text-secondary);
         width: 3.7rem;
         text-align: center;
-        &.active { 
-            color: var(--ocean-600); 
-            .dark & { color: var(--ocean-400); } 
+        &.active {
+            color: var(--color-action);
         }
     }
 
     .trait-bar {
         flex-grow: 1;
         height: 10px;
-        background: var(--slate-200);
+        background: var(--color-neutral-bg);
         border-radius: 5px;
         overflow: hidden;
-        .dark & { background: var(--slate-700); }
-        
+
         .trait-fill {
             height: 100%;
-            background: linear-gradient(90deg, var(--ocean-500), var(--cyan-400));
+            background: linear-gradient(90deg, var(--color-action), var(--cyan-400));
             border-radius: 5px;
             transition: width 1.2s cubic-bezier(0.34, 1.56, 0.64, 1);
         }
@@ -164,11 +145,11 @@
     }
 
     .download-btn {
-        background: var(--ocean-600);
-        color: white;
-        box-shadow: 0 4px 12px rgba(14, 165, 233, 0.2);
-        
-        &:hover:not(:disabled) { background: var(--ocean-700); }
+        background: var(--color-action);
+        color: var(--white);
+        box-shadow: var(--ui-btn-primary-shadow);
+
+        &:hover:not(:disabled) { background: var(--color-action-strong); }
         &:disabled { opacity: 0.6; cursor: wait; }
     }
 
@@ -177,16 +158,15 @@
         grid-template-columns: 1fr 1fr;
         gap: 0.8rem;
         margin-top: 0.5rem;
-        .retry-btn { 
-            background: var(--ocean-500); 
-            color: white; 
-            &:hover { background: var(--ocean-600); }
+        .retry-btn {
+            background: var(--color-action);
+            color: var(--white);
+            &:hover { background: var(--color-action-strong); }
         }
         .all-types-btn {
             background: transparent;
-            color: var(--slate-500);
-            border: 1px solid var(--slate-200);
-            .dark & { border-color: var(--slate-700); color: var(--slate-400); }
+            color: var(--page-text-secondary);
+            border: 1px solid var(--page-card-border);
         }
     }
 }
@@ -198,7 +178,7 @@
     left: 0;
     width: 100%;
     height: 100%;
-    background: rgba(0, 0, 0, 0.7);
+    background: var(--overlay-bg);
     backdrop-filter: blur(4px);
     display: flex;
     align-items: center;
@@ -215,7 +195,7 @@
     text-align: center;
     box-sizing: border-box;
     border: 1px solid var(--page-card-border);
-    box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.2);
+    box-shadow: var(--page-card-shadow);
 
     h3 { font-size: 1.3rem; margin-bottom: 0.5rem; color: var(--page-text-primary); }
     p { font-size: 0.9rem; color: var(--page-text-secondary); margin-bottom: 1.5rem; }
@@ -225,47 +205,41 @@
         box-sizing: border-box;
         padding: 0.9rem;
         margin-bottom: 1.5rem;
-        border: 2px solid var(--page-card-border);
+        border: 2px solid var(--ui-input-border);
         border-radius: 0.75rem;
         text-align: center;
-        background: var(--slate-50);
-        color: var(--page-text-primary);
+        background: var(--ui-input-bg);
+        color: var(--ui-input-text);
         font-size: 1rem;
-        &:focus { outline: none; border-color: var(--ocean-400); }
-        .dark & { background: var(--slate-900); }
+        &:focus { outline: none; border-color: var(--ui-input-border-focus); }
     }
 
     .modal-btns {
         display: flex;
         gap: 0.8rem;
-        
-        button { 
-            flex: 1; 
-            height: 3.2rem; 
-            border-radius: 0.8rem; 
+
+        button {
+            flex: 1;
+            height: 3.2rem;
+            border-radius: 0.8rem;
             font-weight: 700;
             cursor: pointer;
             border: none;
             transition: all 0.2s ease;
-            
+
             &:active { transform: scale(0.96); }
         }
 
-        .confirm-btn { 
-            background: var(--ocean-500); 
-            color: white; 
-            &:hover { background: var(--ocean-600); }
+        .confirm-btn {
+            background: var(--color-action);
+            color: var(--white);
+            &:hover { background: var(--color-action-strong); }
         }
 
-        .cancel-btn { 
-            background: var(--slate-100); 
-            color: var(--slate-600);
-            .dark & { 
-                background: var(--slate-700); 
-                color: var(--slate-300); 
-                &:hover { background: var(--slate-600); }
-            }
-            &:hover { background: var(--slate-200); }
+        .cancel-btn {
+            background: var(--color-disabled-bg);
+            color: var(--color-disabled-text);
+            &:hover { background: var(--color-neutral-bg); }
         }
     }
 }
@@ -274,8 +248,8 @@
 .error-container {
     padding: 6rem 2rem;
     text-align: center;
-    i { font-size: 3.5rem; color: var(--slate-300); margin-bottom: 1.5rem; }
-    p { color: var(--slate-500); margin-bottom: 2.5rem; }
+    i { font-size: 3.5rem; color: var(--page-text-secondary); margin-bottom: 1.5rem; }
+    p { color: var(--page-text-secondary); margin-bottom: 2.5rem; }
 }
 
 .modal-fade-enter-active, .modal-fade-leave-active { transition: opacity 0.3s; }
@@ -298,33 +272,24 @@
         // 🌟 만들어진 이미지가 화면 너비에 맞게 자동으로 줄어들도록 설정
         width: 100%;
         max-width: 480px;
-        margin: 0 auto; 
+        margin: 0 auto;
         height: auto; // 화면 비율에 맞춰 핏(Fit)
-        border-radius: 2rem; 
+        border-radius: 2rem;
         box-shadow: var(--page-card-shadow);
         display: block;
-        pointer-events: auto; 
-        
-        .dark & {
-            box-shadow: 0 10px 40px rgba(0, 0, 0, 0.4);
-        }
+        pointer-events: auto;
     }
 
     .save-guide {
         margin-top: 1.5rem;
         font-size: 0.9rem;
-        color: var(--ocean-600);
+        color: var(--color-info-text);
         font-weight: 600;
-        background: rgba(14, 165, 233, 0.1);
+        background: var(--color-info-bg);
         padding: 1rem;
         border-radius: 1rem;
         animation: fadeInDown 0.5s ease-out;
-        
-        .dark & {
-            color: var(--ocean-300);
-            background: rgba(14, 165, 233, 0.15);
-        }
-        
+
         i { margin-right: 0.4rem; }
     }
 }
@@ -345,10 +310,6 @@
     box-sizing: border-box;
     animation: fadeInDown 0.6s ease-out;
 
-    .dark & {
-        box-shadow: 0 10px 40px rgba(0, 0, 0, 0.4);
-    }
-
     .match-title {
         font-size: 1.15rem;
         font-weight: 800;
@@ -359,7 +320,7 @@
         gap: 0.5rem;
 
         i {
-            color: #ef4444; // 하트 색상 포인트
+            color: var(--red-500); // 하트 색상 포인트
             animation: pulse 1.5s infinite;
         }
     }
@@ -384,18 +345,13 @@
         width: 100%;
         padding: 1.25rem 0.75rem;
         border-radius: 1.25rem;
-        border: 1px solid transparent;
-        background: var(--slate-50);
+        border: 1px solid var(--page-card-border);
+        background: var(--page-card-bg);
         cursor: pointer;
         transition: all 0.25s cubic-bezier(0.4, 0, 0.2, 1);
         text-align: center;
         box-sizing: border-box;
         gap: 0.5rem;
-
-        .dark & {
-            background: rgba(30, 41, 59, 0.4);
-            border-color: rgba(255, 255, 255, 0.03);
-        }
 
         .badge {
             font-size: 0.75rem;
@@ -413,49 +369,29 @@
 
         &.best {
             .badge {
-                background: var(--ocean-100);
-                color: var(--ocean-700);
-                .dark & {
-                    background: rgba(14, 165, 233, 0.2);
-                    color: var(--ocean-300);
-                }
+                background: var(--color-info-bg);
+                color: var(--color-info-text);
             }
 
             &:hover {
                 transform: translateY(-2px);
-                border-color: var(--ocean-300);
-                background: var(--ocean-50);
-                box-shadow: 0 4px 12px rgba(14, 165, 233, 0.1);
-
-                .dark & {
-                    background: rgba(14, 165, 233, 0.1);
-                    border-color: var(--ocean-800);
-                    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
-                }
+                border-color: var(--color-action);
+                background: var(--color-info-bg);
+                box-shadow: var(--page-card-shadow);
             }
         }
 
         &.worst {
             .badge {
-                background: var(--slate-200);
-                color: var(--slate-600);
-                .dark & {
-                    background: var(--slate-800);
-                    color: var(--slate-400);
-                }
+                background: var(--color-neutral-bg);
+                color: var(--color-neutral-text);
             }
 
             &:hover {
                 transform: translateY(-2px);
-                border-color: var(--slate-300);
-                background: var(--slate-100);
-                box-shadow: 0 4px 12px rgba(148, 163, 184, 0.1);
-
-                .dark & {
-                    background: rgba(255, 255, 255, 0.08);
-                    border-color: var(--slate-700);
-                    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
-                }
+                border-color: var(--color-neutral-text);
+                background: var(--color-neutral-bg);
+                box-shadow: var(--page-card-shadow);
             }
         }
     }

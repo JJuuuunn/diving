@@ -66,6 +66,14 @@ const ALL_MENU_ITEMS: MenuItem[] = [
         active: true,
     },
     {
+        title: '스태틱 앱니아 트레이너',
+        label: 'Apnea',
+        desc: 'CO₂/O₂ 훈련 테이블 생성 및 숨참기 측정 타이머',
+        icon: divingMaskIcon,
+        route: RouterName.Apnea,
+        active: true,
+    },
+    {
         title: '컴포넌트 플레이그라운드',
         label: 'Playground',
         desc: '커스텀 컴포넌트, 지도 SDK, UI 인터랙션 통합 테스트 공간',

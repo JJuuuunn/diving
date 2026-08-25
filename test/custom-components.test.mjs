@@ -46,6 +46,19 @@ test('CustomMultiSelect exposes multi-selection semantics and selection controls
   assert.match(source, /@keydown\.esc="close"/);
 });
 
+
+
+test('CustomPagination exposes accessible navigation, page list, and size options', async () => {
+  const source = await read('src/components/CustomPagination.vue');
+  assert.match(source, /role="navigation"/);
+  assert.match(source, /aria-label="페이지 이동 네비게이션"/);
+  assert.match(source, /aria-current="activePage === p \? 'page' : undefined"/);
+  assert.match(source, /getSizeClass\('custom-pagination', size\)/);
+  assert.match(source, /changePage/);
+  assert.match(source, /changePageSize/);
+  assert.match(source, /showQuickJumper/);
+});
+
 test('application views do not render native button elements directly', async () => {
   const directories = ['src/views', 'src/layouts'];
   const files = [];
@@ -240,4 +253,27 @@ test('CustomSlider supports single/dual range track, keyboard nav, and 10-level 
   assert.match(source, /isRange/);
   assert.match(source, /@keydown="onKeyDown\(\$event/);
   assert.match(source, /getSizeClass\('custom-slider', size\)/);
+});
+
+test('CustomTable provides table accessibility semantics, sorting, pagination, and selection', async () => {
+  const source = await read('src/components/CustomTable.vue');
+  const scss = await read('src/assets/scss/components/_table.scss');
+  assert.match(source, /role="region"/);
+  assert.match(source, /aria-label="데이터 테이블"/);
+  assert.match(source, /aria-sort/);
+  assert.match(source, /CustomPagination/);
+  assert.match(source, /handleSort/);
+  assert.match(source, /toggleSelectAll/);
+  assert.match(source, /getSizeClass\('custom-table', size\)/);
+  assert.match(scss, /&--size-1/);
+  assert.match(scss, /&--size-10/);
+});
+
+test('CustomErrorBoundary catches child runtime errors and provides retry recovery', async () => {
+  const source = await read('src/components/CustomErrorBoundary.vue');
+  assert.match(source, /role="alert"/);
+  assert.match(source, /aria-live="assertive"/);
+  assert.match(source, /onErrorCaptured/);
+  assert.match(source, /CustomButton/);
+  assert.match(source, /resetError/);
 });

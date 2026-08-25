@@ -148,7 +148,7 @@ import { useRoute, useRouter } from 'vue-router';
 import questionsData from '@/data/questions.json';
 import { useQuiz } from '@/composables/useQuiz';
 import { useQuizStore } from '@/stores/quiz';
-import type { Question } from '@/types/quiz';
+import type { Question, QuizSet } from '@/types/quiz';
 import ConfirmModal from '@/components/ConfirmModal.vue';
 import CustomButton from '@/components/CustomButton.vue';
 import CustomInput from '@/components/CustomInput.vue';
@@ -192,12 +192,12 @@ onMounted(() => {
       return;
     }
   } else {
-    const setInfo = questionsData.quizSets.find(s => s.id === setId.value);
+    const setInfo = questionsData.quizSets.find(s => s.id === setId.value) as QuizSet | undefined;
     if (!setInfo) {
       router.push({ name: RouterName.QuizDashboard });
       return;
     }
-    quizHelper.startQuiz(setInfo as any, allQ);
+    quizHelper.startQuiz(setInfo, allQ);
   }
   syncMultiAnswer();
 });

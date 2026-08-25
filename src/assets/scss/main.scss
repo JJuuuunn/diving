@@ -23,6 +23,9 @@
 @use 'components/tooltip';
 @use 'components/slider';
 @use 'components/alert';
+@use 'components/pagination';
+@use 'components/table';
+@use 'components/chart';
 
 // 4. Layout (Sidebar, header, etc.)
 @use 'layout/sidebar';

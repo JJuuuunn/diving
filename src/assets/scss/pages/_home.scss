@@ -22,16 +22,9 @@
     margin: 0 0 1rem;
 
     // 텍스트 그라데이션 (Ocean Blue)
-    background: linear-gradient(135deg, #2563eb, #06b6d4);
+    background: linear-gradient(135deg, var(--color-action), var(--cyan-400));
     -webkit-background-clip: text;
     -webkit-text-fill-color: transparent;
-
-    // 다크모드일 때 그라데이션 조정
-    body.dark & {
-      background: linear-gradient(135deg, #60a5fa, #22d3ee);
-      -webkit-background-clip: text;
-      -webkit-text-fill-color: transparent;
-    }
 
     .chunk {
       display: inline-block;
@@ -84,24 +77,24 @@
   // Hover Effect: 둥둥 뜨는 느낌 + 보더 강조
   &:hover:not(.disabled) {
     transform: translateY(-8px);
-    box-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04);
-    border-color: #0ea5e9; // 브랜드 컬러
+    box-shadow: var(--page-card-shadow);
+    border-color: var(--color-action); // 브랜드 컬러
 
     .card-icon :deep(svg) {
       transform: scale(1.1) rotate(-5deg);
-      color: #0ea5e9;
+      color: var(--color-action);
     }
 
     .card-go {
       transform: translateX(4px);
-      color: #0ea5e9;
+      color: var(--color-action);
     }
   }
 
   .card-icon {
     width: 56px;
     height: 56px;
-    background: rgba(14, 165, 233, 0.1); // 아이콘 배경 연한 파랑
+    background: var(--color-info-bg); // 아이콘 배경 연한 파랑
     border-radius: 1rem;
     display: flex;
     align-items: center;
@@ -114,11 +107,6 @@
       height: 28px;
       color: var(--page-text-secondary); // 기본 회색
       transition: all 0.3s ease;
-
-      // 다크모드에서 아이콘 기본 상태
-      body.dark & {
-        color: #94a3b8;
-      }
     }
   }
 
@@ -151,32 +139,20 @@
   .status-badge {
     font-size: 0.75rem;
     padding: 4px 8px;
-    background: rgba(0, 0, 0, 0.05);
+    background: var(--color-neutral-bg);
     border-radius: 20px;
-    color: var(--page-text-secondary);
+    color: var(--color-neutral-text);
     font-weight: 600;
-
-    body.dark & {
-      background: rgba(255, 255, 255, 0.1);
-    }
   }
 
   // 비활성화 상태 스타일
   &.disabled {
     cursor: default;
     opacity: 0.7;
-    background: rgba(240, 240, 240, 0.3); // 더 흐리게
-
-    body.dark & {
-      background: rgba(255, 255, 255, 0.02);
-    }
+    background: var(--color-disabled-bg); // 더 흐리게
 
     .card-icon {
-      background: rgba(0, 0, 0, 0.03); // 아이콘 배경도 흐리게
-
-      body.dark & {
-        background: rgba(255, 255, 255, 0.05);
-      }
+      background: var(--color-disabled-bg); // 아이콘 배경도 흐리게
     }
   }
 }

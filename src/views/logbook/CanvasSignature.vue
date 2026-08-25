@@ -80,7 +80,8 @@ const resizeCanvas = () => {
 
 const setupBrush = () => {
   if (!ctx) return;
-  ctx.strokeStyle = '#0f172a'; // 다크 잉크 블루
+  const inkColor = getComputedStyle(document.documentElement).getPropertyValue('--slate-900').trim() || 'var(--slate-900)';
+  ctx.strokeStyle = inkColor;
   ctx.lineWidth = 3.5;
   ctx.lineCap = 'round';
   ctx.lineJoin = 'round';

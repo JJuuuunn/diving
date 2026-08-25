@@ -231,18 +231,15 @@ onMounted(async () => {
       word-break: break-all;
 
       &.success {
-        color: #10b981;
-        body.dark & { color: #34d399; }
+        color: var(--color-success-text);
       }
 
       &.fail {
-        color: #ef4444;
-        body.dark & { color: #f87171; }
+        color: var(--color-danger-text);
       }
 
       &.pending {
-        color: #f59e0b;
-        body.dark & { color: #fbbf24; }
+        color: var(--color-warning-text);
       }
     }
 
@@ -261,9 +258,9 @@ onMounted(async () => {
       flex-wrap: wrap;
 
       .reset-limit-btn {
-        background: #f1f5f9;
-        border: 1px solid #cbd5e1;
-        color: #475569;
+        background: var(--slate-100);
+        border: 1px solid var(--slate-300);
+        color: var(--slate-600);
         font-weight: 600;
         padding: 0.35rem 0.6rem;
         border-radius: 6px;
@@ -272,18 +269,18 @@ onMounted(async () => {
         transition: all 0.2s ease;
 
         &:hover {
-          background: #e2e8f0;
-          color: #1e293b;
+          background: var(--slate-200);
+          color: var(--slate-800);
         }
 
         body.dark & {
-          background: #334155;
-          border-color: #475569;
-          color: #cbd5e1;
+          background: var(--slate-700);
+          border-color: var(--slate-600);
+          color: var(--slate-300);
 
           &:hover {
-            background: #475569;
-            color: #ffffff;
+            background: var(--slate-600);
+            color: var(--white);
           }
         }
       }
@@ -426,21 +423,21 @@ onMounted(async () => {
 
     &:hover:not(:disabled) {
       transform: translateY(-2px);
-      border-color: #0ea5e9;
+      border-color: var(--color-action);
       box-shadow: 0 4px 12px rgba(14, 165, 233, 0.1);
 
       body.dark & {
-        border-color: #38bdf8;
+        border-color: var(--color-action-strong);
         box-shadow: 0 4px 12px rgba(56, 189, 248, 0.15);
       }
     }
 
     .spot-icon {
       font-size: 1.25rem;
-      color: #0ea5e9;
+      color: var(--color-action);
 
       body.dark & {
-        color: #38bdf8;
+        color: var(--color-action-strong);
       }
     }
 
@@ -464,24 +461,24 @@ onMounted(async () => {
 
   .instructions-card {
     background: rgba(14, 165, 233, 0.04);
-    border-left: 4px solid #0ea5e9;
+    border-left: 4px solid var(--color-action);
     padding: 1rem;
     border-radius: 0 0.75rem 0.75rem 0;
     margin-top: 0.5rem;
 
     body.dark & {
       background: rgba(56, 189, 248, 0.04);
-      border-left-color: #38bdf8;
+      border-left-color: var(--color-action-strong);
     }
 
     h4 {
       margin: 0 0 0.5rem;
       font-size: 0.85rem;
       font-weight: 700;
-      color: #0284c7;
+      color: var(--color-action-strong);
 
       body.dark & {
-        color: #38bdf8;
+        color: var(--color-action);
       }
     }
 
@@ -502,13 +499,13 @@ onMounted(async () => {
   width: 32px;
   height: 32px;
   border: 3px solid rgba(14, 165, 233, 0.1);
-  border-top-color: #0ea5e9;
+  border-top-color: var(--color-action);
   border-radius: 50%;
   animation: spin 1s infinite linear;
 
   body.dark & {
     border-color: rgba(56, 189, 248, 0.1);
-    border-top-color: #38bdf8;
+    border-top-color: var(--color-action-strong);
   }
 }
 

@@ -45,13 +45,48 @@ export function useCapture() {
                 : '#ffffff';
       }
 
-      // 2. 기본 html-to-image toPng 설정
+      // 2. 기본 html-to-image toPng 설정 (카드 디자인별 고유 규격 타겟팅)
+      const isTicket = element.classList.contains('design-ticket') || !!element.querySelector('.design-ticket');
+      const isClassic =
+        element.classList.contains('design-classic') ||
+        element.classList.contains('design-ocean') ||
+        element.classList.contains('design-expedition') ||
+        element.classList.contains('design-coral') ||
+        element.classList.contains('design-minimal') ||
+        !!element.querySelector('.design-classic');
+      const isLogCard = element.classList.contains('log-card-visual') || !!element.querySelector('.log-card-visual');
+
+      const clientW = element.clientWidth || width || 360;
+      let targetCanvasWidth: number;
+      let targetCanvasHeight: number;
+      let targetPixelRatio = pixelRatio;
+
+      if (isTicket) {
+        // 항공권 보딩패스: 1920 x 1080 (16:9 FHD 규격)
+        targetPixelRatio = Math.max(1920 / clientW, pixelRatio);
+        targetCanvasWidth = 1920;
+        targetCanvasHeight = 1080;
+      } else if (isClassic) {
+        // 클래식/스탬프 여권형 로그북: 1080 x 1440 (3:4 규격)
+        targetPixelRatio = Math.max(1080 / clientW, pixelRatio);
+        targetCanvasWidth = 1080;
+        targetCanvasHeight = 1440;
+      } else if (isLogCard) {
+        // 포토 HUD / 스포츠 텔레메트리: 1080 x 1920 (9:16 인스타/모바일 스토리 규격)
+        targetPixelRatio = Math.max(1080 / clientW, pixelRatio);
+        targetCanvasWidth = 1080;
+        targetCanvasHeight = 1920;
+      } else {
+        targetCanvasWidth = Math.round((element.scrollWidth || width) * pixelRatio);
+        targetCanvasHeight = Math.round(element.scrollHeight * pixelRatio);
+      }
+
       const baseConfig = {
-        pixelRatio,
+        pixelRatio: targetPixelRatio,
         cacheBust: false,
         backgroundColor: undefined,
-        canvasWidth: Math.round((element.scrollWidth || width) * pixelRatio),
-        canvasHeight: Math.round(element.scrollHeight * pixelRatio),
+        canvasWidth: targetCanvasWidth,
+        canvasHeight: targetCanvasHeight,
         style: {
           transform: 'none',
           margin: '0 auto',

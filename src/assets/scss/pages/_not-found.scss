@@ -10,9 +10,9 @@
   text-align: center;
   overflow: hidden;
   
-  // 심해 느낌: 항상 어두운 배경 유지 (시스템 테마와 무관하게 컨셉 유지)
-  background: linear-gradient(180deg, #1e3a8a 0%, #0f172a 100%);
-  color: #fff;
+  // 심해 느낌 컨셉 유지
+  background: linear-gradient(180deg, var(--blue-900), var(--slate-900));
+  color: var(--white);
 }
 
 .content-box {
@@ -29,7 +29,7 @@
   letter-spacing: -5px;
   
   // 텍스트 물결 효과
-  background: linear-gradient(to bottom, rgba(255,255,255,0.8), rgba(255,255,255,0));
+  background: linear-gradient(to bottom, var(--white), transparent);
   -webkit-background-clip: text;
   -webkit-text-fill-color: transparent;
 }
@@ -39,17 +39,17 @@
   font-weight: 700;
   margin-top: -40px; 
   margin-bottom: 1.5rem;
-  text-shadow: 0 2px 10px rgba(0,0,0,0.5);
+  text-shadow: var(--ui-shadow-text);
 }
 
 .description {
   font-size: 1.1rem;
   line-height: 1.6;
-  color: #cbd5e1;
+  color: var(--page-text-secondary);
   margin-bottom: 3rem;
 
   strong {
-    color: #38bdf8;
+    color: var(--color-action);
   }
 }
 
@@ -60,19 +60,19 @@
   gap: 10px; // 아이콘과 텍스트 사이 간격
   
   padding: 1rem 2rem;
-  background-color: #0ea5e9;
-  color: white;
+  background-color: var(--color-action);
+  color: var(--white);
   text-decoration: none;
   border-radius: 50px;
   font-weight: bold;
   font-size: 1.1rem;
   transition: all 0.3s ease;
-  box-shadow: 0 4px 15px rgba(14, 165, 233, 0.4);
+  box-shadow: var(--ui-btn-primary-shadow);
 
   &:hover {
-    background-color: #0284c7;
+    background-color: var(--color-action-strong);
     transform: translateY(-5px);
-    box-shadow: 0 8px 25px rgba(14, 165, 233, 0.6);
+    box-shadow: var(--ui-btn-primary-shadow);
   }
 
   // 아이콘 스타일

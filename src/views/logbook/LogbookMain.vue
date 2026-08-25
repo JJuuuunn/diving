@@ -1,198 +1,213 @@
 <template>
-  <div class="logbook-container">
-    <Header title="다이빙 로그북" subtitle="Diving Log Book 🤿" />
+  <div class="logbook-container logbook-list-page">
+    <Header title="프리다이빙 로그북" subtitle="나의 무호흡 기록과 세이프티 버디 서명 관리" />
 
     <main class="main-content">
-      <div v-if="logbookStore.storageError" class="logbook-alert" role="alert">
-        <i class="fa-solid fa-triangle-exclamation" aria-hidden="true"></i>
-        <span>{{ logbookStore.storageError }}</span>
+      <div v-if="logbookStore.storageError" class="logbook-alert-card">
+        <CustomAlert variant="warning" dismissible>
+          {{ logbookStore.storageError }}
+        </CustomAlert>
       </div>
 
-      <CustomButton
-        class="form-toggle-btn"
-        :aria-expanded="isFormOpen"
-        aria-controls="logbook-entry-form"
-        @click="toggleForm"
-      >
-        <span>
-          <i class="fa-solid fa-pen-nib" aria-hidden="true"></i>
-          {{ formToggleLabel }}
-        </span>
-        <i class="fa-solid fa-chevron-down toggle-icon" :class="{ 'is-active': isFormOpen }" aria-hidden="true"></i>
-      </CustomButton>
-
-      <transition name="fade">
-        <div v-if="isFormOpen" id="logbook-entry-form" class="log-form-card">
-          <h2 class="form-title">{{ editingLogId ? '다이빙 로그 수정' : '새로운 다이빙 로그' }}</h2>
-
-          <div class="diving-type-tabs" role="group" aria-label="다이빙 종류">
-            <CustomButton
-              class="tab-btn"
-              :class="{ 'is-active': form.type === 'scuba' }"
-              :aria-pressed="form.type === 'scuba'"
-              @click="form.type = 'scuba'"
-            >
-              <i class="fa-solid fa-water" aria-hidden="true"></i> 스쿠버 다이빙
-            </CustomButton>
-            <CustomButton
-              class="tab-btn"
-              :class="{ 'is-active': form.type === 'freediving' }"
-              :aria-pressed="form.type === 'freediving'"
-              @click="form.type = 'freediving'"
-            >
-              <i class="fa-solid fa-fish" aria-hidden="true"></i> 프리다이빙
-            </CustomButton>
+      <!-- 상단 다이버 세션 스탯 오버뷰 콕핏 -->
+      <section class="logbook-stats-ribbon" aria-label="나의 프리다이빙 퍼포먼스 통계">
+        <div class="cockpit-header">
+          <div class="cockpit-title-wrap">
+            <i class="fa-solid fa-gauge-high cockpit-icon" aria-hidden="true"></i>
+            <span class="cockpit-title">다이빙 퍼포먼스 텔레메트리</span>
           </div>
-
-          <div class="form-row">
-            <div class="form-group">
-              <label for="location">📍 다이빙 포인트 / 장소</label>
-              <CustomInput id="location" v-model="form.location" type="text" :trim="true" placeholder="예: 가평 K26 / 제주도 문섬" />
-            </div>
-            <div class="form-group">
-              <label for="logbook-date">📅 다이빙 일자</label>
-              <CustomDatePicker id="logbook-date" v-model="form.date" />
-            </div>
-          </div>
-
-          <div class="form-row">
-            <div class="form-group">
-              <label for="maxDepth">🌊 최대 수심 (m)</label>
-              <CustomNumberInput id="maxDepth" v-model="form.maxDepth" :min="0" :max="350" :step="0.1" placeholder="0.0" />
-            </div>
-            <div class="form-group">
-              <label for="temp">🌡️ 수온 (℃)</label>
-              <CustomNumberInput id="temp" v-model="form.temp" :min="-10" :max="50" :step="1" placeholder="20" />
-            </div>
-          </div>
-
-          <div v-if="form.type === 'scuba'" class="form-row">
-            <div class="form-group">
-              <label for="durationMinutes">⏱️ 다이빙 시간 (분)</label>
-              <CustomNumberInput id="durationMinutes" v-model="form.durationMinutes" :min="0" :max="1440" :step="1" placeholder="0" />
-            </div>
-            <div class="form-group">
-              <label for="buddyName">👤 버디 이름</label>
-              <CustomInput id="buddyName" v-model="form.buddyName" type="text" :trim="true" placeholder="함께한 다이버 이름" />
-            </div>
-          </div>
-
-          <div v-if="form.type === 'scuba'" class="form-row">
-            <div class="form-group">
-              <label for="entryPressureBar">🏁 입수 압력 (bar)</label>
-              <CustomNumberInput id="entryPressureBar" v-model="form.entryPressureBar" :min="0" :max="350" :step="5" placeholder="200" />
-            </div>
-            <div class="form-group">
-              <label for="exitPressureBar">🏳️ 출수 압력 (bar)</label>
-              <CustomNumberInput id="exitPressureBar" v-model="form.exitPressureBar" :min="0" :max="350" :step="5" placeholder="50" />
-            </div>
-          </div>
-
-          <div v-if="form.type === 'freediving'" class="form-row">
-            <div class="form-group">
-              <label for="apneaTime">⏱️ 최대 무호흡 시간 (분:초)</label>
-              <CustomInput id="apneaTime" v-model="form.apneaTime" type="text" placeholder="예: 01:45" />
-            </div>
-            <div class="form-group">
-              <label for="discipline">🏆 시도 종목</label>
-              <CustomSelect id="discipline" v-model="form.discipline" :options="disciplineOptions" />
-            </div>
-          </div>
-
-          <div v-if="form.type === 'freediving'" class="form-row">
-            <div class="form-group">
-              <label for="weightKg">⚖️ 착용 웨이트 (kg)</label>
-              <CustomNumberInput id="weightKg" v-model="form.weightKg" :min="0" :max="50" :step="0.5" placeholder="0" />
-            </div>
-            <div class="form-group">
-              <label for="equalizingMethod">👂 이퀄라이징 기법</label>
-              <CustomSelect id="equalizingMethod" v-model="form.equalizingMethod" :options="equalizingMethodOptions" />
-            </div>
-          </div>
-
-          <div v-if="form.type === 'freediving'" class="form-row">
-            <div class="form-group">
-              <label for="buddyNameFree">👤 세이프티 버디</label>
-              <CustomInput id="buddyNameFree" v-model="form.buddyName" type="text" :trim="true" placeholder="함께한 세이프티 이름" />
-            </div>
-            <div class="form-group">
-              <label for="diveCount">🔁 세션 총 다이빙 횟수</label>
-              <CustomNumberInput id="diveCount" v-model="form.diveCount" :min="0" :max="1000" :step="1" placeholder="예: 8" />
-            </div>
-          </div>
-
-          <div class="form-row">
-            <div class="form-group full-width">
-              <label for="notes">📝 다이빙 메모</label>
-              <CustomTextarea id="notes" v-model="form.notes" :max-length="300" placeholder="오늘의 다이빙 경험을 기록해주세요. (최대 300자)" />
-            </div>
-          </div>
-
-          <div class="signature-trigger-wrapper">
-            <span class="field-label">✍️ 버디(세이프티) 서명 인증</span>
-            <CustomButton class="signature-preview-area" aria-label="버디 서명 그리기" @click="showSignatureModal = true">
-              <img v-if="form.buddySignature" :src="form.buddySignature" alt="현재 버디 서명" />
-              <span v-else class="placeholder-text">
-                <i class="fa-solid fa-signature" aria-hidden="true"></i>
-                <span>서명을 받으려면 선택하세요</span>
-              </span>
-            </CustomButton>
-          </div>
-
-          <div class="form-actions">
-            <CustomButton v-if="editingLogId" class="cancel-btn" @click="cancelEditing">수정 취소</CustomButton>
-            <CustomButton class="submit-btn" @click="saveDiveLog">
-              <i class="fa-solid fa-cloud-arrow-up" aria-hidden="true"></i>
-              {{ editingLogId ? '수정 내용 저장하기' : '로그북 저장하기' }}
-            </CustomButton>
-          </div>
+          <span class="cockpit-badge">
+            <span class="badge-dot pulse"></span>
+            <span>PB TRACKER</span>
+          </span>
         </div>
-      </transition>
 
-      <section class="logbook-tools" aria-label="로그북 관리">
-        <div class="tool-fields">
-          <CustomInput v-model="searchQuery" type="search" aria-label="로그 검색" placeholder="장소, 버디, 메모 검색" />
-          <CustomSelect v-model="typeFilter" aria-label="다이빙 종류 필터" :options="filterOptions" />
-          <CustomSelect v-model="sortOrder" aria-label="로그 정렬" :options="sortOptions" />
-        </div>
-        <div class="backup-actions">
-          <CustomButton @click="exportLogbook"><i class="fa-solid fa-download" aria-hidden="true"></i> 백업</CustomButton>
-          <CustomButton @click="openImportPicker"><i class="fa-solid fa-upload" aria-hidden="true"></i> 복원</CustomButton>
-          <input ref="importInputRef" class="visually-hidden-input" type="file" accept="application/json,.json" @change="importLogbook" />
+        <div class="stats-ribbon-grid">
+          <div class="stat-pill highlight-depth">
+            <div class="stat-icon">
+              <i class="fa-solid fa-arrows-up-down" aria-hidden="true"></i>
+            </div>
+            <div class="stat-data">
+              <span class="stat-label">최고 수심 (PB)</span>
+              <div class="stat-value-group">
+                <strong class="stat-value">{{ maxDepthRecord }}</strong>
+                <span class="stat-unit">m</span>
+              </div>
+            </div>
+          </div>
+
+          <div class="stat-pill highlight-apnea">
+            <div class="stat-icon">
+              <i class="fa-solid fa-stopwatch" aria-hidden="true"></i>
+            </div>
+            <div class="stat-data">
+              <span class="stat-label">최장 무호흡 (PB)</span>
+              <div class="stat-value-group">
+                <strong class="stat-value">{{ maxApneaRecord }}</strong>
+              </div>
+            </div>
+          </div>
+
+          <div class="stat-pill">
+            <div class="stat-icon">
+              <i class="fa-solid fa-book-bookmark" aria-hidden="true"></i>
+            </div>
+            <div class="stat-data">
+              <span class="stat-label">총 다이빙 로그</span>
+              <div class="stat-value-group">
+                <strong class="stat-value">{{ totalLogsCount }}</strong>
+                <span class="stat-unit">개</span>
+              </div>
+            </div>
+          </div>
+
+          <div class="stat-pill">
+            <div class="stat-icon">
+              <i class="fa-solid fa-water" aria-hidden="true"></i>
+            </div>
+            <div class="stat-data">
+              <span class="stat-label">누적 다이브</span>
+              <div class="stat-value-group">
+                <strong class="stat-value">{{ totalSessionDives }}</strong>
+                <span class="stat-unit">회</span>
+              </div>
+            </div>
+          </div>
         </div>
       </section>
 
-      <LogCardDesignPicker v-model="selectedCardDesign" />
+      <!-- 새 로그 작성 페이지 이동 액션 버튼 -->
+      <div class="logbook-hero-action">
+        <CustomButton
+          class="create-log-primary-btn"
+          aria-label="새로운 프리다이빙 로그 작성하기"
+          @click="router.push({ name: RouterName.LogbookNew })"
+        >
+          <div class="btn-inner">
+            <span class="btn-icon-wrap">
+              <i class="fa-solid fa-plus" aria-hidden="true"></i>
+            </span>
+            <span class="btn-label">새 다이빙 로그 기록하기</span>
+          </div>
+          <i class="fa-solid fa-chevron-right btn-arrow" aria-hidden="true"></i>
+        </CustomButton>
+      </div>
 
-      <section class="logs-section">
-        <h2 class="section-title">
-          🤿 나의 다이빙 기록
-          <span>{{ visibleLogs.length }}/{{ logbookStore.logs.length }}개의 로그</span>
-        </h2>
+      <!-- 툴바 (검색, 정렬, 백업/복원, 종목 필터) -->
+      <section class="logbook-tools-section" aria-label="로그북 검색 및 필터">
+        <div class="tools-primary-row">
+          <div class="search-input-wrap">
+            <i class="fa-solid fa-magnifying-glass search-icon" aria-hidden="true"></i>
+            <CustomInput
+              v-model="searchQuery"
+              type="search"
+              aria-label="다이빙 로그 검색"
+              placeholder="포인트 장소, 버디 이름, 메모 내용 검색"
+            />
+          </div>
 
-        <div v-if="logbookStore.logs.length === 0" class="no-logs">
-          <i class="fa-solid fa-umbrella-beach" aria-hidden="true"></i>
-          <p>아직 등록된 로그가 없습니다.<br />오늘의 다이빙 기록을 남겨보세요!</p>
+          <div class="tools-utility-group">
+            <div class="sort-select-wrap">
+              <CustomSelect
+                v-model="sortOrder"
+                aria-label="로그 정렬 기준"
+                :options="sortOptions"
+              />
+            </div>
+            <div class="backup-actions">
+              <CustomButton
+                class="backup-btn"
+                aria-label="로그북 데이터 백업"
+                title="JSON 파일로 백업"
+                @click="exportLogbook"
+              >
+                <i class="fa-solid fa-download" aria-hidden="true"></i>
+                <span>백업</span>
+              </CustomButton>
+              <CustomButton
+                class="restore-btn"
+                aria-label="로그북 데이터 복원"
+                title="JSON 백업 파일 복원"
+                @click="triggerImport"
+              >
+                <i class="fa-solid fa-upload" aria-hidden="true"></i>
+                <span>복원</span>
+              </CustomButton>
+              <input
+                ref="importInputRef"
+                type="file"
+                accept=".json,application/json"
+                class="visually-hidden-input"
+                @change="handleImportFile"
+              />
+            </div>
+          </div>
         </div>
-        <div v-else-if="visibleLogs.length === 0" class="no-logs">
-          <i class="fa-solid fa-magnifying-glass" aria-hidden="true"></i>
-          <p>검색 조건에 맞는 로그가 없습니다.</p>
+
+        <!-- 종목 필터 칩 바 (현재 로그에 존재하는 종목만 동적 노출) -->
+        <div v-if="activeDisciplines.length > 0" class="discipline-chips-bar" role="tablist" aria-label="종목별 필터">
+          <CustomButton
+            v-for="chip in filterOptions"
+            :key="chip.value"
+            class="filter-chip-btn"
+            :class="{ 'is-active': disciplineFilter === chip.value }"
+            :aria-selected="disciplineFilter === chip.value"
+            role="tab"
+            @click="disciplineFilter = chip.value"
+          >
+            <span>{{ chip.label }}</span>
+            <small class="chip-count">{{ getDisciplineCount(chip.value) }}</small>
+          </CustomButton>
+        </div>
+      </section>
+
+      <!-- 로그 카드 목록 피드 -->
+      <section class="logs-feed-section" aria-label="다이빙 로그 목록">
+        <!-- 피드 상단 상태 정보 헤더 -->
+        <div v-if="visibleLogs.length > 0" class="feed-status-bar">
+          <span class="feed-count">
+            총 <strong>{{ visibleLogs.length }}</strong>개의 기록
+            <span v-if="disciplineFilter !== 'all'" class="active-filter-tag">({{ disciplineFilter }})</span>
+          </span>
+          <span class="feed-hint">카드를 탭하여 상세 정보 및 버디 서명을 확인하세요</span>
         </div>
 
-        <LogCard
-          v-for="log in visibleLogs"
-          :key="log.id"
-          :log="log"
-          :design="selectedCardDesign"
-          @edit="startEditing"
-          @delete="deleteLog"
-        />
+        <div v-if="visibleLogs.length === 0" class="logbook-empty-state">
+          <div class="empty-icon-wrap">
+            <i class="fa-solid fa-water" aria-hidden="true"></i>
+          </div>
+          <h3 class="empty-title">
+            {{ searchQuery || disciplineFilter !== 'all' ? '일치하는 다이빙 로그가 없습니다' : '아직 기록된 다이빙 로그가 없습니다' }}
+          </h3>
+          <p class="empty-desc">
+            {{ searchQuery || disciplineFilter !== 'all' ? '검색어나 종목 필터를 변경해보세요.' : '첫 번째 다이빙 세션을 기록하고 멋진 9:16 카드를 만들어보세요!' }}
+          </p>
+          <CustomButton
+            v-if="!searchQuery && disciplineFilter === 'all'"
+            class="empty-cta-btn"
+            @click="router.push({ name: RouterName.LogbookNew })"
+          >
+            <i class="fa-solid fa-pen-nib" aria-hidden="true"></i>
+            <span>첫 다이빙 로그 작성하기</span>
+          </CustomButton>
+        </div>
+
+        <div v-else class="logs-grid-layout">
+          <LogCard
+            v-for="log in visibleLogs"
+            :key="log.id"
+            :log="log"
+            :design="log.design || 'hud'"
+            :readonly="true"
+            @view="openDetail"
+            @edit="startEditing"
+            @delete="deleteLog"
+          />
+        </div>
       </section>
 
       <Footer />
     </main>
-
-    <CanvasSignature v-if="showSignatureModal" @close="showSignatureModal = false" @save="onSignatureSave" />
 
     <ConfirmModal
       :show="confirmModalState.show"
@@ -207,121 +222,103 @@
 </template>
 
 <script setup lang="ts">
-import { computed, nextTick, reactive, ref } from 'vue';
-import { useStorage } from '@vueuse/core';
+import { computed, ref, watch } from 'vue';
+import { useRouter } from 'vue-router';
+import { RouterName } from '@/mappings/enum';
 import { useLogbookStore } from '@/stores/logbook';
 import { useToast } from '@/composables/useToast';
-import type {
-  DiveLog,
-  DiveLogDraft,
-  EqualizingMethod,
-  FreedivingDiscipline,
-  LogCardDesign
-} from '@/types/logbook';
-import { formatApneaTime, parseApneaTime, validateDiveLogDraft } from '@/utils/logbook';
+import type { DiveLog } from '@/types/logbook';
+import { formatApneaTime } from '@/utils/logbook';
 import Header from '@/components/Header.vue';
 import Footer from '@/components/Footer.vue';
-import CustomDatePicker from '@/components/CustomDatePicker.vue';
-import CustomNumberInput from '@/components/CustomNumberInput.vue';
+import CustomButton from '@/components/CustomButton.vue';
+import CustomInput from '@/components/CustomInput.vue';
 import CustomSelect from '@/components/CustomSelect.vue';
-import CustomTextarea from '@/components/CustomTextarea.vue';
+import CustomAlert from '@/components/CustomAlert.vue';
 import ConfirmModal from '@/components/ConfirmModal.vue';
 import LogCard from './LogCard.vue';
-import CanvasSignature from './CanvasSignature.vue';
-import LogCardDesignPicker from './LogCardDesignPicker.vue';
 
-type TypeFilter = 'all' | 'scuba' | 'freediving';
 type SortOrder = 'date-desc' | 'date-asc' | 'updated-desc';
 
-const disciplineOptions = [
-  { value: 'CWT', label: 'CWT (Constant Weight)' },
-  { value: 'FIM', label: 'FIM (Free Immersion)' },
-  { value: 'CNF', label: 'CNF (Constant No Fins)' },
-  { value: 'STA', label: 'STA (Static Apnea)' },
-  { value: 'DYN', label: 'DYN (Dynamic Apnea)' }
-];
-const equalizingMethodOptions = [
-  { value: 'Frenzel', label: 'Frenzel (프렌젤)' },
-  { value: 'Valsalva', label: 'Valsalva (발살바)' },
-  { value: 'Mouthfill', label: 'Mouthfill (마우스필)' }
-];
-const filterOptions = [
-  { value: 'all', label: '전체 종류' },
-  { value: 'scuba', label: '스쿠버' },
-  { value: 'freediving', label: '프리다이빙' }
-];
+const AIDA_DISCIPLINE_ORDER = ['CWT', 'CWTB', 'CNF', 'FIM', 'STA', 'DYN', 'DYNB', 'DNF'];
+
 const sortOptions = [
-  { value: 'date-desc', label: '다이빙 날짜 최신순' },
-  { value: 'date-asc', label: '다이빙 날짜 오래된순' },
+  { value: 'date-desc', label: '최신순' },
+  { value: 'date-asc', label: '오래된순' },
   { value: 'updated-desc', label: '최근 수정순' }
 ];
 
-const getTodayDate = (): string => {
-  const date = new Date();
-  const year = date.getFullYear();
-  const month = String(date.getMonth() + 1).padStart(2, '0');
-  const day = String(date.getDate()).padStart(2, '0');
-  return `${year}-${month}-${day}`;
-};
-
-const createEmptyForm = () => ({
-  type: 'scuba' as 'scuba' | 'freediving',
-  location: '',
-  date: getTodayDate(),
-  maxDepth: 0,
-  temp: 20,
-  buddyName: '',
-  buddySignature: '',
-  notes: '',
-  durationMinutes: 0,
-  entryPressureBar: 200,
-  exitPressureBar: 50,
-  diveCount: 0,
-  apneaTime: '',
-  discipline: 'CWT' as FreedivingDiscipline,
-  weightKg: 0,
-  equalizingMethod: 'Frenzel' as EqualizingMethod
-});
-
+const router = useRouter();
 const logbookStore = useLogbookStore();
 const { triggerToast } = useToast();
-const form = reactive(createEmptyForm());
-const isFormOpen = ref(false);
-const showSignatureModal = ref(false);
-const editingLogId = ref<string | null>(null);
+
 const searchQuery = ref('');
-const typeFilter = ref<TypeFilter>('all');
+const disciplineFilter = ref<string>('all');
 const sortOrder = ref<SortOrder>('date-desc');
-const LOGBOOK_CARD_DESIGN_KEY = 'diving:logbook:card_design:v1';
-const LEGACY_LOGBOOK_CARD_DESIGN_KEY = 'diving:logbook:card-design:v1';
-
-if (typeof window !== 'undefined' && typeof localStorage !== 'undefined') {
-  const current = localStorage.getItem(LOGBOOK_CARD_DESIGN_KEY);
-  const legacy = localStorage.getItem(LEGACY_LOGBOOK_CARD_DESIGN_KEY);
-  if (!current && legacy !== null) {
-    localStorage.setItem(LOGBOOK_CARD_DESIGN_KEY, legacy);
-  }
-  if (legacy !== null) {
-    localStorage.removeItem(LEGACY_LOGBOOK_CARD_DESIGN_KEY);
-  }
-}
-
-const selectedCardDesign = useStorage<LogCardDesign>(LOGBOOK_CARD_DESIGN_KEY, 'ocean');
 const importInputRef = ref<HTMLInputElement | null>(null);
 
-if (!(['ocean', 'expedition', 'coral', 'minimal'] as LogCardDesign[]).includes(selectedCardDesign.value)) {
-  selectedCardDesign.value = 'ocean';
-}
-
-const formToggleLabel = computed(() => {
-  if (editingLogId.value) return isFormOpen.value ? '수정 폼 닫기' : '수정 중인 로그 열기';
-  return isFormOpen.value ? '작성 폼 닫기' : '새로운 다이빙 로그 기록하기';
+// 현재 저장된 로그에 존재하는 종목만 동적으로 추출
+const activeDisciplines = computed(() => {
+  const present = new Set<string>();
+  for (const log of logbookStore.logs) {
+    if (log.type === 'freediving' && log.discipline) {
+      present.add(log.discipline);
+    }
+  }
+  const ordered = AIDA_DISCIPLINE_ORDER.filter((d) => present.has(d));
+  const others = Array.from(present).filter((d) => !AIDA_DISCIPLINE_ORDER.includes(d));
+  return [...ordered, ...others];
 });
+
+// 종목 필터 옵션 (전체 + 현재 존재하는 종목)
+const filterOptions = computed(() => {
+  const base = [{ value: 'all', label: '전체 종목' }];
+  const dynamic = activeDisciplines.value.map((d) => ({ value: d, label: d }));
+  return [...base, ...dynamic];
+});
+
+// 선택되어 있던 종목이 로그 삭제 등으로 사라지면 'all'로 리셋
+watch(activeDisciplines, (newDisciplines) => {
+  if (disciplineFilter.value !== 'all' && !newDisciplines.includes(disciplineFilter.value)) {
+    disciplineFilter.value = 'all';
+  }
+});
+
+// 통계 계산
+const totalLogsCount = computed(() => logbookStore.logs.length);
+
+const maxDepthRecord = computed(() => {
+  if (logbookStore.logs.length === 0) return 0;
+  const max = Math.max(...logbookStore.logs.map((l) => l.maxDepth || 0));
+  return Number.isFinite(max) ? max : 0;
+});
+
+const maxApneaRecord = computed(() => {
+  const freeLogs = logbookStore.logs.filter((l) => l.type === 'freediving');
+  if (freeLogs.length === 0) return '00:00';
+  const maxSeconds = Math.max(...freeLogs.map((l) => (l.type === 'freediving' ? l.apneaSeconds : 0)));
+  return Number.isFinite(maxSeconds) && maxSeconds > 0 ? formatApneaTime(maxSeconds) : '00:00';
+});
+
+const totalSessionDives = computed(() => {
+  return logbookStore.logs.reduce((acc, cur) => {
+    return acc + (cur.type === 'freediving' ? cur.diveCount || 1 : 1);
+  }, 0);
+});
+
+const getDisciplineCount = (discipline: string): number => {
+  if (discipline === 'all') return logbookStore.logs.length;
+  return logbookStore.logs.filter((l) => l.type === 'freediving' && l.discipline === discipline).length;
+};
 
 const visibleLogs = computed(() => {
   const query = searchQuery.value.trim().toLocaleLowerCase('ko-KR');
   return logbookStore.logs
-    .filter((log) => typeFilter.value === 'all' || log.type === typeFilter.value)
+    .filter((log) => {
+      if (disciplineFilter.value === 'all') return true;
+      if (log.type === 'freediving') return log.discipline === disciplineFilter.value;
+      return true;
+    })
     .filter((log) => !query || [log.location, log.buddyName, log.notes]
       .some((value) => value.toLocaleLowerCase('ko-KR').includes(query)))
     .slice()
@@ -332,227 +329,78 @@ const visibleLogs = computed(() => {
     });
 });
 
-const resetForm = (): void => {
-  Object.assign(form, createEmptyForm());
+const openDetail = (log: DiveLog): void => {
+  router.push({ name: RouterName.LogbookDetail, params: { id: log.id } });
 };
 
-const toggleForm = (): void => {
-  isFormOpen.value = !isFormOpen.value;
+const startEditing = (log: DiveLog): void => {
+  router.push({ name: RouterName.LogbookEdit, params: { id: log.id } });
 };
 
-const cancelEditing = (): void => {
-  editingLogId.value = null;
-  resetForm();
-  isFormOpen.value = false;
-};
-
-const onSignatureSave = (signatureData: string): void => {
-  form.buddySignature = signatureData;
-  showSignatureModal.value = false;
-  triggerToast('버디 서명이 완료되었습니다! ✍️');
-};
-
-const buildDraft = (): DiveLogDraft | null => {
-  const common = {
-    date: form.date,
-    location: form.location.trim(),
-    maxDepth: form.maxDepth,
-    temp: form.temp,
-    buddyName: form.buddyName.trim(),
-    buddySignature: form.buddySignature,
-    notes: form.notes
-  };
-
-  if (form.type === 'scuba') {
-    return {
-      type: 'scuba',
-      ...common,
-      durationMinutes: form.durationMinutes,
-      entryPressureBar: form.entryPressureBar,
-      exitPressureBar: form.exitPressureBar
-    };
-  }
-
-  const apneaSeconds = parseApneaTime(form.apneaTime);
-  if (apneaSeconds === null) {
-    triggerToast('최대 무호흡 시간을 분:초 형식으로 입력해주세요. (예: 01:45)', true);
-    return null;
-  }
-  return {
-    type: 'freediving',
-    ...common,
-    diveCount: form.diveCount,
-    apneaSeconds,
-    discipline: form.discipline,
-    weightKg: form.weightKg,
-    equalizingMethod: form.equalizingMethod
-  };
-};
-
-const saveDiveLog = (): void => {
-  const draft = buildDraft();
-  if (!draft) return;
-  const validationError = validateDiveLogDraft(draft);
-  if (validationError) return triggerToast(validationError, true);
-
-  try {
-    if (editingLogId.value) {
-      if (!logbookStore.updateLog(editingLogId.value, draft)) {
-        return triggerToast('수정할 로그를 찾지 못했습니다.', true);
-      }
-      triggerToast('다이빙 로그를 수정했습니다.');
-    } else {
-      logbookStore.addLog(draft);
-      triggerToast('새로운 다이빙 로그가 저장되었습니다! 🌊🐬');
-    }
-    editingLogId.value = null;
-    resetForm();
-    isFormOpen.value = false;
-  } catch (error) {
-    triggerToast(error instanceof Error ? error.message : '로그를 저장하지 못했습니다.', true);
-  }
-};
-
-const startEditing = async (log: DiveLog): Promise<void> => {
-  resetForm();
-  Object.assign(form, {
-    type: log.type,
-    date: log.date,
-    location: log.location,
-    maxDepth: log.maxDepth,
-    temp: log.temp,
-    buddyName: log.buddyName,
-    buddySignature: log.buddySignature,
-    notes: log.notes
-  });
-  if (log.type === 'scuba') {
-    Object.assign(form, {
-      durationMinutes: log.durationMinutes,
-      entryPressureBar: log.entryPressureBar,
-      exitPressureBar: log.exitPressureBar
-    });
-  } else {
-    Object.assign(form, {
-      diveCount: log.diveCount,
-      apneaTime: formatApneaTime(log.apneaSeconds),
-      discipline: log.discipline,
-      weightKg: log.weightKg,
-      equalizingMethod: log.equalizingMethod
-    });
-  }
-  editingLogId.value = log.id;
-  isFormOpen.value = true;
-  await nextTick();
-  document.getElementById('logbook-entry-form')?.scrollIntoView({ behavior: 'smooth', block: 'start' });
-};
-
-const confirmModalState = reactive<{
-  show: boolean;
-  title: string;
-  message: string;
-  confirmText?: string;
-  cancelText?: string;
-  onConfirm: (() => void | Promise<void>) | null;
-}>({
+const deleteTargetId = ref<string | null>(null);
+const confirmModalState = ref({
   show: false,
   title: '',
   message: '',
   confirmText: '확인',
-  cancelText: '취소',
-  onConfirm: null
+  cancelText: '취소'
 });
 
-const openConfirmModal = (options: {
-  title: string;
-  message: string;
-  confirmText?: string;
-  cancelText?: string;
-  onConfirm: () => void | Promise<void>;
-}): void => {
-  confirmModalState.title = options.title;
-  confirmModalState.message = options.message;
-  confirmModalState.confirmText = options.confirmText ?? '확인';
-  confirmModalState.cancelText = options.cancelText ?? '취소';
-  confirmModalState.onConfirm = options.onConfirm;
-  confirmModalState.show = true;
+const deleteLog = (id: string): void => {
+  deleteTargetId.value = id;
+  confirmModalState.value = {
+    show: true,
+    title: '로그 삭제',
+    message: '이 다이빙 로그를 삭제하시겠습니까?',
+    confirmText: '삭제',
+    cancelText: '취소'
+  };
 };
 
-const handleConfirmModalConfirm = async (): Promise<void> => {
-  confirmModalState.show = false;
-  if (confirmModalState.onConfirm) {
-    const fn = confirmModalState.onConfirm;
-    confirmModalState.onConfirm = null;
-    await fn();
+const handleConfirmModalConfirm = (): void => {
+  if (deleteTargetId.value) {
+    logbookStore.deleteLog(deleteTargetId.value);
+    deleteTargetId.value = null;
+    triggerToast('로그가 삭제되었습니다.');
   }
+  confirmModalState.value.show = false;
 };
 
 const handleConfirmModalCancel = (): void => {
-  confirmModalState.show = false;
-  confirmModalState.onConfirm = null;
-};
-
-const deleteLog = (id: string): void => {
-  openConfirmModal({
-    title: '로그 삭제',
-    message: '정말로 이 다이빙 로그를 삭제하시겠습니까?',
-    confirmText: '삭제',
-    cancelText: '취소',
-    onConfirm: () => {
-      try {
-        logbookStore.deleteLog(id);
-        if (editingLogId.value === id) cancelEditing();
-        triggerToast('로그북이 삭제되었습니다.');
-      } catch (error) {
-        triggerToast(error instanceof Error ? error.message : '로그를 삭제하지 못했습니다.', true);
-      }
-    }
-  });
+  deleteTargetId.value = null;
+  confirmModalState.value.show = false;
 };
 
 const exportLogbook = (): void => {
-  try {
-    const blob = new Blob([logbookStore.exportBackup()], { type: 'application/json' });
-    const url = URL.createObjectURL(blob);
-    const link = document.createElement('a');
-    link.href = url;
-    link.download = `diving-logbook-${getTodayDate()}.json`;
-    link.click();
-    URL.revokeObjectURL(url);
-    triggerToast('로그북 백업 파일을 저장했습니다.');
-  } catch {
-    triggerToast('로그북 백업 파일을 만들지 못했습니다.', true);
-  }
+  const payload = logbookStore.exportBackup();
+  const blob = new Blob([payload], { type: 'application/json' });
+  const url = URL.createObjectURL(blob);
+  const anchor = document.createElement('a');
+  const date = new Date().toISOString().slice(0, 10);
+  anchor.href = url;
+  anchor.download = `diving-logbook-backup-${date}.json`;
+  anchor.click();
+  URL.revokeObjectURL(url);
+  triggerToast('로그북 백업 파일이 다운로드되었습니다.');
 };
 
-const openImportPicker = (): void => importInputRef.value?.click();
+const triggerImport = (): void => {
+  importInputRef.value?.click();
+};
 
-const importLogbook = async (event: Event): Promise<void> => {
-  const input = event.target as HTMLInputElement;
-  const file = input.files?.[0];
+const handleImportFile = async (event: Event): Promise<void> => {
+  const target = event.target as HTMLInputElement | null;
+  const file = target?.files?.[0];
   if (!file) return;
+
   try {
-    if (file.size > 10 * 1024 * 1024) throw new Error('백업 파일은 10MB 이하여야 합니다.');
-    const content = await file.text();
-    openConfirmModal({
-      title: '로그북 복원',
-      message: '현재 로그를 백업 파일의 내용으로 교체하시겠습니까?',
-      confirmText: '복원',
-      cancelText: '취소',
-      onConfirm: () => {
-        try {
-          const result = logbookStore.importBackup(content);
-          triggerToast(result.discarded
-            ? `${result.logs.length}개를 복원하고 손상된 ${result.discarded}개를 제외했습니다.`
-            : `${result.logs.length}개의 로그를 복원했습니다.`);
-        } catch (error) {
-          triggerToast(error instanceof Error ? error.message : '로그북을 복원하지 못했습니다.', true);
-        }
-      }
-    });
+    const raw = await file.text();
+    const result = logbookStore.importBackup(raw);
+    triggerToast(`총 ${result.logs.length}개 로그를 가져왔습니다.`);
   } catch (error) {
-    triggerToast(error instanceof Error ? error.message : '로그북을 복원하지 못했습니다.', true);
+    triggerToast(error instanceof Error ? error.message : '백업 파일을 가져오지 못했습니다.', true);
   } finally {
-    input.value = '';
+    if (target) target.value = '';
   }
 };
 </script>

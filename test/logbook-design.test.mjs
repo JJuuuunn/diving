@@ -6,17 +6,18 @@ import test from 'node:test';
 const root = path.resolve(import.meta.dirname, '..');
 const read = (relativePath) => readFile(path.join(root, relativePath), 'utf8');
 
-test('logbook exposes four selectable card designs and applies the selection to cards', async () => {
+test('logbook exposes selectable card designs and applies the selection to cards', async () => {
   const picker = await read('src/views/logbook/LogCardDesignPicker.vue');
+  const form = await read('src/views/logbook/LogbookForm.vue');
   const main = await read('src/views/logbook/LogbookMain.vue');
   const card = await read('src/views/logbook/LogCard.vue');
 
-  for (const design of ['ocean', 'expedition', 'coral', 'minimal']) {
+  for (const design of ['hud', 'ticket', 'sports', 'classic']) {
     assert.match(picker, new RegExp(`value: '${design}'`));
   }
   assert.match(picker, /:aria-pressed="modelValue === option\.value"/);
-  assert.match(main, /<LogCardDesignPicker v-model="selectedCardDesign"/);
-  assert.match(main, /:design="selectedCardDesign"/);
+  assert.match(form, /<LogCardDesignPicker v-model="form\.design"/);
+  assert.match(main, /:design="log\.design \|\| 'hud'"/);
   assert.match(card, /`design-\$\{design\}`/);
 });
 

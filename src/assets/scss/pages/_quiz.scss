@@ -20,7 +20,6 @@
   box-shadow: var(--page-card-shadow);
   margin-bottom: 2rem;
   transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-
 }
 
 // 1. 대시보드 스타일
@@ -32,15 +31,9 @@
     font-size: 2.2rem;
     font-weight: 800;
     margin-bottom: 0.75rem;
-    background: linear-gradient(135deg, #0ea5e9, #2563eb);
+    background: linear-gradient(135deg, var(--color-action), var(--color-action-strong));
     -webkit-background-clip: text;
     -webkit-text-fill-color: transparent;
-
-    body.dark & {
-      background: linear-gradient(135deg, #38bdf8, #60a5fa);
-      -webkit-background-clip: text;
-      -webkit-text-fill-color: transparent;
-    }
   }
 
   p {
@@ -65,11 +58,11 @@
   justify-content: space-between;
   height: 100%;
   cursor: pointer;
-  
+
   &:hover {
     transform: translateY(-6px);
-    border-color: #0ea5e9;
-    box-shadow: 0 15px 30px rgba(14, 165, 233, 0.1);
+    border-color: var(--color-action);
+    box-shadow: var(--page-card-shadow);
   }
 
   h2 {
@@ -92,17 +85,12 @@
     gap: 0.75rem;
     font-size: 0.8rem;
     font-weight: 600;
-    
+
     .badge {
       padding: 4px 10px;
       border-radius: 20px;
-      background: rgba(14, 165, 233, 0.1);
-      color: #0284c7;
-
-      body.dark & {
-        background: rgba(56, 189, 248, 0.1);
-        color: #38bdf8;
-      }
+      background: var(--color-info-bg);
+      color: var(--color-info-text);
     }
   }
 
@@ -112,15 +100,15 @@
     padding: 0.8rem;
     border: none;
     border-radius: 0.75rem;
-    background: linear-gradient(135deg, #0ea5e9, #2563eb);
-    color: #ffffff;
+    background: linear-gradient(135deg, var(--color-action), var(--color-action-strong));
+    color: var(--white);
     font-weight: 700;
     cursor: pointer;
     transition: all 0.2s ease;
 
     &:hover {
       opacity: 0.95;
-      box-shadow: 0 4px 12px rgba(37, 99, 235, 0.2);
+      box-shadow: var(--ui-btn-primary-shadow);
     }
   }
 }
@@ -139,10 +127,10 @@
     align-items: center;
     gap: 0.5rem;
     font-size: 1.1rem;
-    color: #0ea5e9;
+    color: var(--color-action);
 
     &.warning {
-      color: #ef4444;
+      color: var(--color-danger-text);
       animation: pulse 1s infinite alternate;
     }
   }
@@ -151,18 +139,14 @@
 .quiz-progress-bar {
   height: 6px;
   width: 100%;
-  background: rgba(0, 0, 0, 0.05);
+  background: var(--color-neutral-bg);
   border-radius: 10px;
   overflow: hidden;
   margin-bottom: 2rem;
 
-  body.dark & {
-    background: rgba(255, 255, 255, 0.08);
-  }
-
   .progress-fill {
     height: 100%;
-    background: linear-gradient(90deg, #0ea5e9, #2563eb);
+    background: linear-gradient(90deg, var(--color-action), var(--color-action-strong));
     transition: width 0.3s cubic-bezier(0.4, 0, 0.2, 1);
   }
 }
@@ -177,8 +161,8 @@
     font-size: 0.8rem;
     padding: 4px 10px;
     border-radius: 6px;
-    background: #0ea5e9;
-    color: #ffffff;
+    background: var(--color-action);
+    color: var(--white);
     font-weight: 700;
   }
 
@@ -209,45 +193,26 @@
   text-align: left;
   padding: 1.1rem 1.5rem;
   border-radius: 1rem;
-  border: 1px solid rgba(0, 0, 0, 0.08);
-  background: rgba(255, 255, 255, 0.4);
+  border: 1px solid var(--page-card-border);
+  background: var(--page-card-bg);
   font-size: 1rem;
   line-height: 1.4;
   color: var(--page-text-primary);
   cursor: pointer;
   transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
 
-  body.dark & {
-    border-color: rgba(255, 255, 255, 0.08);
-    background: rgba(255, 255, 255, 0.02);
-    color: #cbd5e1; // 기본 다크모드 글자 가독성 개선
-  }
-
   &:hover {
-    background: rgba(14, 165, 233, 0.1);
-    border-color: #0ea5e9;
-    color: #0284c7; // 라이트모드 호버 텍스트 컬러 보정
-    
-    body.dark & {
-      background: rgba(56, 189, 248, 0.18); // 다크모드에서 더 밝고 선명한 대비 적용
-      border-color: #38bdf8;
-      color: #38bdf8;
-    }
+    background: var(--color-info-bg);
+    border-color: var(--color-action);
+    color: var(--color-action);
   }
 
   &.selected {
-    background: rgba(14, 165, 233, 0.15);
-    border-color: #0ea5e9;
+    background: var(--color-info-bg);
+    border-color: var(--color-action);
     font-weight: 700;
-    color: #0284c7;
-    box-shadow: 0 4px 12px rgba(14, 165, 233, 0.1);
-    
-    body.dark & {
-      background: rgba(56, 189, 248, 0.22);
-      border-color: #38bdf8;
-      color: #38bdf8;
-      box-shadow: 0 4px 12px rgba(56, 189, 248, 0.15);
-    }
+    color: var(--color-action);
+    box-shadow: var(--page-card-shadow);
   }
 }
 
@@ -261,8 +226,8 @@
 .ox-btn {
   height: 120px;
   border-radius: 1.5rem;
-  border: 1px solid rgba(0, 0, 0, 0.08);
-  background: rgba(255, 255, 255, 0.4);
+  border: 1px solid var(--page-card-border);
+  background: var(--page-card-bg);
   font-size: 3rem;
   font-weight: 800;
   display: flex;
@@ -271,37 +236,28 @@
   cursor: pointer;
   transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
 
-  body.dark & {
-    border-color: rgba(255, 255, 255, 0.05);
-    background: rgba(255, 255, 255, 0.02);
-  }
-
   &.o-btn {
-    color: #10b981;
-    &:hover { 
-      background: rgba(16, 185, 129, 0.12); 
-      border-color: #10b981; 
-      body.dark & { background: rgba(52, 211, 153, 0.18); }
+    color: var(--color-success-text);
+    &:hover {
+      background: var(--color-success-bg);
+      border-color: var(--color-success-text);
     }
-    &.selected { 
-      background: rgba(16, 185, 129, 0.18); 
-      border-color: #10b981; 
-      box-shadow: 0 4px 15px rgba(16, 185, 129, 0.15); 
-      body.dark & { background: rgba(52, 211, 153, 0.25); }
+    &.selected {
+      background: var(--color-success-bg);
+      border-color: var(--color-success-text);
+      box-shadow: var(--page-card-shadow);
     }
   }
   &.x-btn {
-    color: #ef4444;
-    &:hover { 
-      background: rgba(239, 68, 68, 0.12); 
-      border-color: #ef4444; 
-      body.dark & { background: rgba(248, 113, 113, 0.18); }
+    color: var(--color-danger-text);
+    &:hover {
+      background: var(--color-danger-bg);
+      border-color: var(--color-danger-text);
     }
-    &.selected { 
-      background: rgba(239, 68, 68, 0.18); 
-      border-color: #ef4444; 
-      box-shadow: 0 4px 15px rgba(239, 68, 68, 0.15); 
-      body.dark & { background: rgba(248, 113, 113, 0.25); }
+    &.selected {
+      background: var(--color-danger-bg);
+      border-color: var(--color-danger-text);
+      box-shadow: var(--page-card-shadow);
     }
   }
 }
@@ -312,21 +268,16 @@
     width: 100%;
     padding: 1.1rem 1.5rem;
     border-radius: 1rem;
-    border: 1px solid rgba(0, 0, 0, 0.1);
-    background: rgba(255, 255, 255, 0.5);
+    border: 1px solid var(--ui-input-border);
+    background: var(--ui-input-bg);
     font-size: 1.1rem;
-    color: var(--page-text-primary);
+    color: var(--ui-input-text);
     transition: all 0.2s ease;
-
-    body.dark & {
-      border-color: rgba(255, 255, 255, 0.1);
-      background: rgba(15, 23, 42, 0.3);
-    }
 
     &:focus {
       outline: none;
-      border-color: #0ea5e9;
-      box-shadow: 0 0 0 3px rgba(14, 165, 233, 0.15);
+      border-color: var(--ui-input-border-focus);
+      box-shadow: var(--ui-input-focus-ring);
     }
   }
 }
@@ -353,32 +304,27 @@
 
   .prev-btn {
     background: transparent;
-    border-color: rgba(0, 0, 0, 0.15);
+    border-color: var(--page-card-border);
     color: var(--page-text-primary);
 
-    body.dark & {
-      border-color: rgba(255, 255, 255, 0.15);
-    }
-
     &:hover:not(:disabled) {
-      background: rgba(0, 0, 0, 0.05);
-      body.dark & { background: rgba(255, 255, 255, 0.05); }
+      background: var(--color-neutral-bg);
     }
   }
 
   .next-btn {
-    background: #0ea5e9;
-    color: #ffffff;
+    background: var(--color-action);
+    color: var(--white);
 
     &:hover:not(:disabled) {
-      background: #0284c7;
+      background: var(--color-action-strong);
     }
   }
 
   .submit-btn {
-    background: linear-gradient(135deg, #10b981, #059669);
-    color: #ffffff;
-    box-shadow: 0 4px 10px rgba(16, 185, 129, 0.2);
+    background: var(--color-success-text);
+    color: var(--white);
+    box-shadow: var(--ui-btn-primary-shadow);
 
     &:hover:not(:disabled) {
       opacity: 0.95;
@@ -400,15 +346,14 @@
     flex-direction: column;
     align-items: center;
     justify-content: center;
-    background: linear-gradient(135deg, rgba(14, 165, 233, 0.1) 0%, rgba(37, 99, 235, 0.1) 100%);
-    border: 4px solid #0ea5e9;
-    box-shadow: 0 10px 20px rgba(14, 165, 233, 0.15);
+    background: var(--color-info-bg);
+    border: 4px solid var(--color-action);
+    box-shadow: var(--page-card-shadow);
 
     .score-num {
       font-size: 3rem;
       font-weight: 900;
-      color: #0284c7;
-      body.dark & { color: #38bdf8; }
+      color: var(--color-action);
     }
     .score-label {
       font-size: 0.8rem;
@@ -458,12 +403,8 @@
 }
 
 .review-item {
-  border-bottom: 1px solid rgba(0, 0, 0, 0.08);
+  border-bottom: 1px solid var(--page-card-border);
   padding: 1.25rem 0;
-  
-  body.dark & {
-    border-color: rgba(255, 255, 255, 0.05);
-  }
 
   &:last-child {
     border-bottom: none;
@@ -491,9 +432,9 @@
       padding: 3px 8px;
       border-radius: 4px;
       white-shrink: 0;
-      
-      &.correct { background: rgba(16, 185, 129, 0.1); color: #10b981; }
-      &.incorrect { background: rgba(239, 68, 68, 0.1); color: #ef4444; }
+
+      &.correct { background: var(--color-success-bg); color: var(--color-success-text); }
+      &.incorrect { background: var(--color-danger-bg); color: var(--color-danger-text); }
     }
   }
 
@@ -501,32 +442,27 @@
     margin-top: 1rem;
     padding: 1rem 1.25rem;
     border-radius: 0.75rem;
-    background: rgba(0, 0, 0, 0.02);
+    background: var(--color-neutral-bg);
     font-size: 0.95rem;
     line-height: 1.5;
-
-    body.dark & {
-      background: rgba(255, 255, 255, 0.02);
-    }
 
     .ans-match {
       margin-bottom: 0.75rem;
       font-weight: 600;
       span { display: inline-block; margin-right: 1.5rem; }
     }
-    
-    .correct-val { color: #10b981; }
-    .user-val { 
-      color: #ef4444; 
-      &.correct { color: #10b981; }
+
+    .correct-val { color: var(--color-success-text); }
+    .user-val {
+      color: var(--color-danger-text);
+      &.correct { color: var(--color-success-text); }
     }
 
     .explanation-box {
       margin-top: 0.5rem;
       padding-top: 0.5rem;
-      border-top: 1px dashed rgba(0, 0, 0, 0.08);
+      border-top: 1px dashed var(--page-card-border);
       color: var(--page-text-secondary);
-      body.dark & { border-color: rgba(255, 255, 255, 0.08); }
     }
   }
 }
@@ -546,32 +482,24 @@
     transition: all 0.2s ease;
 
     &.primary {
-      background: linear-gradient(135deg, #0ea5e9, #2563eb);
-      color: #ffffff;
+      background: linear-gradient(135deg, var(--color-action), var(--color-action-strong));
+      color: var(--white);
       &:hover { opacity: 0.95; }
     }
 
     &.secondary {
       background: transparent;
-      border: 1px solid rgba(0, 0, 0, 0.15);
+      border: 1px solid var(--page-card-border);
       color: var(--page-text-primary);
-      body.dark & { border-color: rgba(255, 255, 255, 0.15); }
-      &:hover { background: rgba(0, 0, 0, 0.05); body.dark & { background: rgba(255, 255, 255, 0.05); } }
+      &:hover { background: var(--color-neutral-bg); }
     }
 
     &.wrong-btn,
     &.wrong-review {
-      background: linear-gradient(135deg, #ef4444, #dc2626);
-      color: #ffffff;
-      box-shadow: 0 4px 10px rgba(239, 68, 68, 0.25);
+      background: var(--color-danger-text);
+      color: var(--white);
+      box-shadow: var(--ui-btn-primary-shadow);
       &:hover { opacity: 0.95; }
-
-      body.theme-coral & {
-        background: linear-gradient(135deg, #f0533c, #c2410c);
-      }
-      body.theme-abyss & {
-        background: linear-gradient(135deg, #ff5277, #ff007f);
-      }
     }
   }
 }
@@ -581,8 +509,8 @@
   from { opacity: 1; transform: scale(1); }
   to { opacity: 0.7; transform: scale(0.95); }
 }
-.quiz-result-correct { color: #10b981; }
-.quiz-result-rate { color: #0ea5e9; }
+.quiz-result-correct { color: var(--color-success-text); }
+.quiz-result-rate { color: var(--color-action); }
 .quiz-result-summary { margin-bottom: 1.5rem; color: var(--page-text-secondary); font-size: .85rem; }
 .quiz-answer-hint { margin-bottom: .5rem; color: var(--page-text-secondary); font-size: .85rem; }
 .quiz-answer-label { margin-right: .5rem; }
@@ -610,55 +538,20 @@
     transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
 
     &:hover {
-      background: rgba(14, 165, 233, 0.08);
+      background: var(--color-info-bg);
       color: var(--page-text-primary);
-      border-color: #0ea5e9;
-
-      body.dark & {
-        background: rgba(56, 189, 248, 0.12);
-        border-color: #38bdf8;
-      }
-      body.theme-coral & {
-        background: rgba(240, 83, 60, 0.1);
-        border-color: #f0533c;
-      }
-      body.theme-abyss & {
-        background: rgba(0, 242, 254, 0.15);
-        border-color: #00f2fe;
-      }
+      border-color: var(--color-action);
     }
 
     &.active {
-      background: linear-gradient(135deg, #0ea5e9, #2563eb);
-      color: #ffffff;
+      background: var(--color-action);
+      color: var(--white);
       border-color: transparent;
-      box-shadow: 0 4px 14px rgba(14, 165, 233, 0.3);
-
-      body.dark & {
-        background: linear-gradient(135deg, #38bdf8, #2563eb);
-        color: #ffffff;
-        box-shadow: 0 4px 14px rgba(56, 189, 248, 0.3);
-      }
-
-      body.theme-coral & {
-        background: linear-gradient(135deg, #f0533c, #0d9488);
-        color: #ffffff;
-        box-shadow: 0 4px 14px rgba(240, 83, 60, 0.3);
-      }
-
-      body.theme-abyss & {
-        background: linear-gradient(135deg, #00f2fe, #0072ff);
-        color: #040814;
-        font-weight: 800;
-        box-shadow: 0 0 16px rgba(0, 242, 254, 0.5);
-      }
+      box-shadow: var(--ui-btn-primary-shadow);
 
       .tab-badge {
         background: rgba(255, 255, 255, 0.25);
         color: inherit;
-        body.theme-abyss & {
-          background: rgba(4, 8, 20, 0.3);
-        }
       }
     }
   }
@@ -673,12 +566,8 @@
     border-radius: 11px;
     font-size: 0.75rem;
     font-weight: 700;
-    background: rgba(0, 0, 0, 0.08);
+    background: var(--color-neutral-bg);
     color: var(--page-text-primary);
-
-    body.dark & {
-      background: rgba(255, 255, 255, 0.12);
-    }
   }
 }
 
@@ -715,39 +604,21 @@
     border-radius: 0.75rem;
     font-weight: 700;
     font-size: 0.95rem;
-    color: #ffffff;
+    color: var(--white);
     border: none;
     cursor: pointer;
     transition: all 0.2s ease;
 
     &.wrong-btn {
-      background: linear-gradient(135deg, #ef4444, #dc2626);
-      box-shadow: 0 4px 12px rgba(239, 68, 68, 0.25);
+      background: var(--color-danger-text);
+      box-shadow: var(--ui-btn-primary-shadow);
       &:hover { opacity: 0.95; transform: translateY(-2px); }
-
-      body.theme-coral & {
-        background: linear-gradient(135deg, #f0533c, #c2410c);
-      }
-      body.theme-abyss & {
-        background: linear-gradient(135deg, #ff5277, #ff007f);
-        color: #ffffff;
-        box-shadow: 0 0 14px rgba(255, 0, 127, 0.4);
-      }
     }
 
     &.bookmark-btn-start {
-      background: linear-gradient(135deg, #f59e0b, #d97706);
-      box-shadow: 0 4px 12px rgba(245, 158, 11, 0.25);
+      background: var(--color-warning-text);
+      box-shadow: var(--ui-btn-primary-shadow);
       &:hover { opacity: 0.95; transform: translateY(-2px); }
-
-      body.theme-coral & {
-        background: linear-gradient(135deg, #0d9488, #0f766e);
-      }
-      body.theme-abyss & {
-        background: linear-gradient(135deg, #00f2fe, #00c6ff);
-        color: #040814;
-        box-shadow: 0 0 14px rgba(0, 242, 254, 0.4);
-      }
     }
   }
 }
@@ -780,25 +651,9 @@
   font-weight: 700;
   padding: 3px 9px;
   border-radius: 6px;
-  background: rgba(239, 68, 68, 0.12);
-  color: #ef4444;
-  border: 1px solid rgba(239, 68, 68, 0.2);
-
-  body.dark & {
-    background: rgba(248, 113, 113, 0.18);
-    color: #f87171;
-    border-color: rgba(248, 113, 113, 0.3);
-  }
-  body.theme-coral & {
-    background: rgba(240, 83, 60, 0.15);
-    color: #f0533c;
-    border-color: rgba(240, 83, 60, 0.3);
-  }
-  body.theme-abyss & {
-    background: rgba(255, 0, 127, 0.2);
-    color: #ff5277;
-    border-color: rgba(255, 0, 127, 0.4);
-  }
+  background: var(--color-danger-bg);
+  color: var(--color-danger-text);
+  border: 1px solid var(--color-danger-text);
 }
 
 // 오답 삭제 버튼
@@ -808,19 +663,15 @@
   padding: 4px 10px;
   border-radius: 6px;
   background: transparent;
-  border: 1px solid rgba(0, 0, 0, 0.1);
+  border: 1px solid var(--page-card-border);
   color: var(--page-text-secondary);
   cursor: pointer;
   transition: all 0.2s ease;
 
-  body.dark & {
-    border-color: rgba(255, 255, 255, 0.15);
-  }
-
   &:hover {
-    background: rgba(239, 68, 68, 0.1);
-    color: #ef4444;
-    border-color: #ef4444;
+    background: var(--color-danger-bg);
+    color: var(--color-danger-text);
+    border-color: var(--color-danger-text);
   }
 }
 
@@ -832,47 +683,24 @@
   width: 38px;
   height: 38px;
   border-radius: 50%;
-  background: rgba(0, 0, 0, 0.04);
-  border: 1px solid rgba(0, 0, 0, 0.08);
+  background: var(--color-neutral-bg);
+  border: 1px solid var(--page-card-border);
   font-size: 1.15rem;
   color: var(--page-text-secondary);
   cursor: pointer;
   transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
 
-  body.dark & {
-    background: rgba(255, 255, 255, 0.05);
-    border-color: rgba(255, 255, 255, 0.1);
-  }
-
   &:hover {
     transform: scale(1.1);
-    border-color: #f59e0b;
-    background: rgba(245, 158, 11, 0.1);
+    border-color: var(--color-warning-text);
+    background: var(--color-warning-bg);
   }
 
   &.active {
-    color: #f59e0b;
-    background: rgba(245, 158, 11, 0.15);
-    border-color: #f59e0b;
-    box-shadow: 0 2px 8px rgba(245, 158, 11, 0.25);
-
-    body.dark & {
-      color: #fbbf24;
-      background: rgba(251, 191, 36, 0.2);
-      border-color: #fbbf24;
-      box-shadow: 0 2px 10px rgba(251, 191, 36, 0.3);
-    }
-    body.theme-coral & {
-      color: #f0533c;
-      background: rgba(240, 83, 60, 0.18);
-      border-color: #f0533c;
-    }
-    body.theme-abyss & {
-      color: #00f2fe;
-      background: rgba(0, 242, 254, 0.2);
-      border-color: #00f2fe;
-      box-shadow: 0 0 12px rgba(0, 242, 254, 0.5);
-    }
+    color: var(--color-warning-text);
+    background: var(--color-warning-bg);
+    border-color: var(--color-warning-text);
+    box-shadow: var(--page-card-shadow);
   }
 }
 

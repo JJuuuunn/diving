@@ -793,67 +793,36 @@
 
   // Role Variants
   &.booker {
-    background-color: #fef3c7;
-    color: #78350f;
-    border-color: #f59e0b;
-    box-shadow: 0 1px 3px rgba(245, 158, 11, 0.2);
+    background-color: var(--color-warning-bg);
+    color: var(--color-warning-text);
+    border-color: var(--color-warning-text);
+    box-shadow: var(--page-card-shadow);
 
     .fa-crown {
-      color: #d97706;
-    }
-
-    .dark & {
-      background-color: rgba(245, 158, 11, 0.22);
-      color: #fef08a;
-      border-color: rgba(245, 158, 11, 0.6);
-
-      .fa-crown {
-        color: #fde047;
-      }
+      color: var(--color-warning-text);
     }
   }
 
   &.attendee,
   &.non-member {
-    background-color: var(--slate-100);
-    color: var(--slate-500);
-    border-color: var(--slate-300);
+    background-color: var(--color-neutral-bg);
+    color: var(--page-text-secondary);
+    border-color: var(--page-card-border);
 
     &:hover {
-      background-color: var(--slate-200);
-      color: var(--slate-700);
-    }
-
-    .dark & {
-      background-color: var(--slate-800);
-      color: var(--slate-400);
-      border-color: var(--slate-600);
-
-      &:hover {
-        background-color: var(--slate-700);
-        color: var(--slate-200);
-      }
+      background-color: var(--color-neutral-bg);
+      color: var(--page-text-primary);
     }
   }
 
   &.member {
-    background-color: #cff4fc;
-    color: #055160;
-    border-color: #0dcaf0;
-    box-shadow: 0 1px 3px rgba(13, 202, 240, 0.2);
+    background-color: var(--color-info-bg);
+    color: var(--color-info-text);
+    border-color: var(--ui-badge-primary-border);
+    box-shadow: var(--page-card-shadow);
 
     .fa-medal {
-      color: #0891b2;
-    }
-
-    .dark & {
-      background-color: rgba(6, 182, 212, 0.22);
-      color: #a5f3fc;
-      border-color: rgba(6, 182, 212, 0.6);
-
-      .fa-medal {
-        color: #67e8f9;
-      }
+      color: var(--color-info-text);
     }
   }
 }
@@ -1113,8 +1082,8 @@
 }
 
 .badge-toss {
-  background-color: #3182f6;
-  color: #ffffff;
+  background-color: var(--brand-toss);
+  color: var(--white);
   font-size: 0.7rem;
   font-weight: 700;
   padding: 0.125rem 0.375rem;
@@ -1123,8 +1092,8 @@
 }
 
 .badge-kakaopay {
-  background-color: #fee500;
-  color: #191919;
+  background-color: var(--brand-kakao);
+  color: var(--brand-kakao-text);
   font-size: 0.7rem;
   font-weight: 700;
   padding: 0.125rem 0.375rem;
@@ -1725,66 +1694,42 @@
         border: 1px dashed;
 
         &.carpool {
-          background-color: #eff6ff;
-          color: #1d4ed8;
-          border-color: #93c5fd;
+          background-color: var(--color-info-bg);
+          color: var(--color-info-text);
+          border-color: var(--ui-badge-primary-border);
 
           &:hover {
-            background-color: #dbeafe;
-          }
-
-          .dark & {
-            background-color: rgba(30, 58, 138, 0.3);
-            color: #93c5fd;
-            border-color: rgba(147, 197, 253, 0.4);
+            background-color: var(--color-info-bg);
           }
         }
 
         &.meal {
-          background-color: #fffbeb;
-          color: #b45309;
-          border-color: #fde68a;
+          background-color: var(--color-warning-bg);
+          color: var(--color-warning-text);
+          border-color: var(--color-warning-text);
 
           &:hover {
-            background-color: #fef3c7;
-          }
-
-          .dark & {
-            background-color: rgba(120, 53, 15, 0.3);
-            color: #fde047;
-            border-color: rgba(253, 224, 71, 0.4);
+            background-color: var(--color-warning-bg);
           }
         }
 
         &.tank {
-          background-color: #ecfdf5;
-          color: #047857;
-          border-color: #a7f3d0;
+          background-color: var(--color-success-bg);
+          color: var(--color-success-text);
+          border-color: var(--color-success-text);
 
           &:hover {
-            background-color: #d1fae5;
-          }
-
-          .dark & {
-            background-color: rgba(6, 78, 59, 0.3);
-            color: #6ee7b7;
-            border-color: rgba(110, 231, 183, 0.4);
+            background-color: var(--color-success-bg);
           }
         }
 
         &.cafe {
-          background-color: #fff1f2;
-          color: #be123c;
-          border-color: #fecdd3;
+          background-color: var(--color-danger-bg);
+          color: var(--color-danger-text);
+          border-color: var(--color-danger-text);
 
           &:hover {
-            background-color: #ffe4e6;
-          }
-
-          .dark & {
-            background-color: rgba(136, 19, 55, 0.3);
-            color: #fda4af;
-            border-color: rgba(253, 164, 175, 0.4);
+            background-color: var(--color-danger-bg);
           }
         }
       }
@@ -2042,51 +1987,6 @@
       }
     }
 
-    // 산호초 코랄 테마
-    body.theme-coral & {
-      border-color: #f3e6d8;
-      background-color: #fffbf5;
-      color: #543e30;
-
-      &:hover {
-        border-color: #f0533c;
-        background-color: #fff0ed;
-      }
-
-      &.active {
-        background-color: #f0533c;
-        border-color: #f0533c;
-        color: #ffffff;
-        box-shadow: 0 4px 12px rgba(240, 83, 60, 0.3);
-
-        .chip-status {
-          color: #ffffff;
-        }
-      }
-    }
-
-    // 초심해 어비스 테마
-    body.theme-abyss & {
-      background-color: rgba(6, 16, 38, 0.9);
-      border-color: rgba(0, 242, 254, 0.25);
-      color: #e2f1ff;
-
-      &:hover {
-        border-color: #00f2fe;
-        background-color: rgba(0, 242, 254, 0.12);
-      }
-
-      &.active {
-        background: linear-gradient(135deg, #00c6ff, #0072ff);
-        border-color: #00f2fe;
-        color: #ffffff;
-        box-shadow: 0 4px 16px rgba(0, 242, 254, 0.35);
-
-        .chip-status {
-          color: #ffffff;
-        }
-      }
-    }
   }
 }
 
@@ -2103,20 +2003,8 @@
     gap: 0.5rem;
 
     i {
-      color: var(--ocean-500);
+      color: var(--color-action);
       font-size: 1.1rem;
-
-      .dark & {
-        color: var(--ocean-400);
-      }
-
-      body.theme-coral & {
-        color: #f0533c;
-      }
-
-      body.theme-abyss & {
-        color: #00f2fe;
-      }
     }
   }
 
@@ -2134,24 +2022,9 @@
       align-items: center;
       justify-content: space-between;
       padding: 0.85rem 1rem;
-      background-color: var(--slate-50);
+      background-color: var(--color-neutral-bg);
       border-radius: 1rem;
-      border: 1px solid var(--slate-200);
-
-      .dark & {
-        background-color: rgba(30, 41, 59, 0.5);
-        border-color: var(--slate-700);
-      }
-
-      body.theme-coral & {
-        background-color: #fff8f0;
-        border-color: #f3e6d8;
-      }
-
-      body.theme-abyss & {
-        background-color: rgba(6, 16, 38, 0.6);
-        border-color: rgba(0, 242, 254, 0.2);
-      }
+      border: 1px solid var(--page-card-border);
 
       .toggle-info {
         display: flex;
@@ -2161,20 +2034,12 @@
         .toggle-title {
           font-size: 0.875rem;
           font-weight: 700;
-          color: var(--slate-800);
-
-          .dark & {
-            color: var(--slate-200);
-          }
+          color: var(--page-text-primary);
         }
 
         .toggle-desc {
           font-size: 0.75rem;
-          color: var(--slate-500);
-
-          .dark & {
-            color: var(--slate-400);
-          }
+          color: var(--page-text-secondary);
         }
       }
     }
@@ -2183,11 +2048,7 @@
   .form-label {
     font-size: 0.875rem;
     font-weight: 700;
-    color: var(--slate-700);
-
-    .dark & {
-      color: var(--slate-300);
-    }
+    color: var(--page-text-primary);
   }
 
   .amount-input-wrapper {
@@ -2205,12 +2066,8 @@
       right: 0.85rem;
       font-size: 0.875rem;
       font-weight: 700;
-      color: var(--slate-400);
+      color: var(--page-text-secondary);
       pointer-events: none;
-
-      .dark & {
-        color: var(--slate-500);
-      }
     }
   }
 
@@ -2240,9 +2097,9 @@
       border-radius: 0.75rem;
       font-size: 0.8rem;
       font-weight: 600;
-      border: 1px solid var(--slate-300);
-      background-color: var(--slate-50);
-      color: var(--slate-700);
+      border: 1px solid var(--page-card-border);
+      background-color: var(--color-neutral-bg);
+      color: var(--page-text-secondary);
       cursor: pointer;
       display: flex;
       align-items: center;
@@ -2250,28 +2107,12 @@
       transition: all 0.2s ease;
 
       &.selected {
-        background-color: rgba(6, 182, 212, 0.12);
-        border-color: var(--ocean-500);
-        color: var(--ocean-700);
+        background-color: var(--color-info-bg);
+        border-color: var(--color-action);
+        color: var(--color-action);
 
         i {
-          color: var(--ocean-600);
-        }
-      }
-
-      .dark & {
-        background-color: var(--slate-800);
-        border-color: var(--slate-700);
-        color: var(--slate-300);
-
-        &.selected {
-          background-color: rgba(6, 182, 212, 0.2);
-          border-color: var(--ocean-400);
-          color: var(--ocean-300);
-
-          i {
-            color: var(--ocean-400);
-          }
+          color: var(--color-action);
         }
       }
     }
@@ -2281,11 +2122,7 @@
     margin-top: 0.6rem;
     font-size: 0.8rem;
     font-weight: 600;
-    color: var(--ocean-600);
-
-    .dark & {
-      color: var(--ocean-400);
-    }
+    color: var(--color-action);
   }
 
   .tank-inputs-grid {
@@ -2300,26 +2137,18 @@
     justify-content: space-between;
     margin-top: 1.25rem;
     padding: 0.75rem 1rem;
-    background-color: rgba(6, 182, 212, 0.1);
+    background-color: var(--color-info-bg);
     border-radius: 0.85rem;
-    border: 1px solid rgba(6, 182, 212, 0.25);
+    border: 1px solid var(--ui-badge-primary-border);
     font-weight: 700;
 
     .summary-label {
-      color: var(--slate-700);
-
-      .dark & {
-        color: var(--slate-200);
-      }
+      color: var(--page-text-primary);
     }
 
     .summary-value {
       font-size: 1.1rem;
-      color: var(--ocean-600);
-
-      .dark & {
-        color: var(--ocean-300);
-      }
+      color: var(--color-action);
     }
   }
 }

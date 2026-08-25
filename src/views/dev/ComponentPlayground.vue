@@ -286,6 +286,19 @@
             슬라이더로 조작 중인 10단계 크기(Size {{ demoSize }}) 반응형 가이드 카드입니다.
           </CustomAlert>
         </div>
+        <div class="preview-item" style="grid-column: 1 / -1;">
+          <span class="preview-title">CustomTable (10단계 레벨 & 페이지네이션 연동 테이블)</span>
+          <CustomTable
+            :columns="demoTableColumns"
+            :data="demoTableData"
+            :size="demoSize"
+            :variant="demoTableVariant"
+            :paginated="true"
+            :page-size="3"
+            :selectable="true"
+          />
+        </div>
+
       </div>
     </div>
 
@@ -511,6 +524,15 @@
               placeholder="등급 선택"
             />
             <span class="state-readout">선택값: <strong>{{ selectLabeled || '없음' }}</strong></span>
+          </div>
+          <div class="demo-card">
+            <h4>시간/무호흡 선택 (CustomTimeSelect.vue)</h4>
+            <CustomTimeSelect
+              v-model="timeSelectDemo"
+              variant="dropdown"
+              :show-presets="true"
+            />
+            <span class="state-readout">선택 시간: <strong>{{ timeSelectDemo }}</strong></span>
           </div>
         </div>
       </div>
@@ -956,10 +978,26 @@
     <!-- ═══════════════════════════════ -->
     <section id="sec-alert" class="test-section fade-in-up delay-more">
       <div class="section-header">
-        <h2>🚨 CustomAlert</h2>
+        <h2>🚨 CustomAlert & Error Boundary</h2>
         <span class="component-tag">CustomAlert.vue</span>
+        <span class="component-tag">CustomErrorBoundary.vue</span>
       </div>
       <div class="section-body">
+        <div class="demo-row" style="margin-bottom: 1.25rem;">
+          <div class="demo-card wide">
+            <h4>CustomErrorBoundary (런타임 장애 격리 및 안전 복구)</h4>
+            <p class="demo-desc">하위 컴포넌트에서 예외가 발생해도 전체 화면 크래시를 방지하고 복구 액션을 제공합니다.</p>
+            <CustomErrorBoundary
+              title="데이터 렌더링 보호 구역"
+              message="정상적으로 렌더링되고 있는 안전한 ErrorBoundary 영역입니다."
+            >
+              <div style="padding: 1rem; background: rgba(56, 189, 248, 0.08); border-radius: 8px; border: 1px dashed rgba(56, 189, 248, 0.3);">
+                🛡️ 자식 컴포넌트가 ErrorBoundary 내에서 안전하게 보호받고 있습니다.
+              </div>
+            </CustomErrorBoundary>
+          </div>
+        </div>
+
         <div class="demo-row">
           <div class="demo-card wide">
             <h4>Variant 매트릭스 (info, success, warning, danger, ocean, coral, abyss, neutral)</h4>
@@ -1000,7 +1038,7 @@
                 <span style="font-size: 1.5rem;">🤿</span>
               </template>
               <template #title>
-                <strong style="color: #0284c7;">커스텀 다이버 팁</strong>
+                <strong style="color: var(--color-action);">커스텀 다이버 팁</strong>
               </template>
               <template #default>
                 슬롯을 활용해 아이콘, 타이틀, 액션 버튼을 완벽하게 재정의할 수 있습니다.
@@ -1049,6 +1087,357 @@
                 </CustomAlert>
               </div>
             </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ═══════════════════════════════ -->
+    <!--  🔢 CustomPagination.vue 테스트  -->
+    <!-- ═══════════════════════════════ -->
+    <section id="sec-pagination" class="test-section fade-in-up delay-more">
+      <div class="section-header">
+        <h2>🔢 Pagination</h2>
+        <span class="component-tag">CustomPagination.vue</span>
+      </div>
+      <div class="section-body">
+        <div class="demo-row">
+          <div class="demo-card wide">
+            <h4>CustomPagination (독립형 커스텀 페이지네이션)</h4>
+            <CustomPagination
+              v-model:current-page="playgroundPage"
+              v-model:page-size="playgroundPageSize"
+              :total-items="128"
+              :show-quick-jumper="true"
+              :size="demoSize"
+            />
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ═══════════════════════════════ -->
+    <!--  📊 CustomTable.vue 테스트       -->
+    <!-- ═══════════════════════════════ -->
+    <section id="sec-table" class="test-section fade-in-up delay-more">
+      <div class="section-header">
+        <h2>📊 CustomTable</h2>
+        <span class="component-tag">CustomTable.vue</span>
+      </div>
+      <div class="section-body">
+        <div class="demo-row">
+          <div class="demo-card wide">
+            <h4>인터랙티브 커스텀 테이블 (페이지네이션, 정렬, 선택, 확장, 합계 연동)</h4>
+            <div class="playground-table-toolbar">
+              <div class="toolbar-section">
+                <span class="toolbar-label">🎨 테이블 스타일</span>
+                <div class="toolbar-btn-group">
+                  <CustomButton
+                    v-for="v in (['default', 'striped', 'bordered', 'glass'] as const)"
+                    :key="v"
+                    size="xs"
+                    :variant="demoTableVariant === v ? 'primary' : 'ghost'"
+                    class="toolbar-chip-btn"
+                    @click="demoTableVariant = v"
+                  >
+                    {{ v }}
+                  </CustomButton>
+                </div>
+              </div>
+
+              <div class="toolbar-section">
+                <span class="toolbar-label">⚙️ 주요 기능</span>
+                <div class="toolbar-btn-group">
+                  <CustomButton
+                    size="xs"
+                    :variant="demoTablePaginated ? 'success' : 'outline'"
+                    class="toolbar-toggle-btn"
+                    @click="demoTablePaginated = !demoTablePaginated"
+                  >
+                    <template #leading>🔢</template>
+                    페이지네이션 {{ demoTablePaginated ? 'ON' : 'OFF' }}
+                  </CustomButton>
+
+                  <CustomButton
+                    size="xs"
+                    :variant="demoTableSelectable ? 'success' : 'outline'"
+                    class="toolbar-toggle-btn"
+                    @click="demoTableSelectable = !demoTableSelectable"
+                  >
+                    <template #leading>☑️</template>
+                    선택 {{ demoTableSelectable ? 'ON' : 'OFF' }}
+                  </CustomButton>
+
+                  <CustomButton
+                    size="xs"
+                    :variant="demoTableExpandable ? 'success' : 'outline'"
+                    class="toolbar-toggle-btn"
+                    @click="demoTableExpandable = !demoTableExpandable"
+                  >
+                    <template #leading>↕️</template>
+                    확장 {{ demoTableExpandable ? 'ON' : 'OFF' }}
+                  </CustomButton>
+
+                  <CustomButton
+                    size="xs"
+                    :variant="demoTableShowSummary ? 'success' : 'outline'"
+                    class="toolbar-toggle-btn"
+                    @click="demoTableShowSummary = !demoTableShowSummary"
+                  >
+                    <template #leading>🧮</template>
+                    합계 {{ demoTableShowSummary ? 'ON' : 'OFF' }}
+                  </CustomButton>
+                </div>
+              </div>
+            </div>
+
+            <CustomTable
+              v-model:selected-keys="demoTableSelectedKeys"
+              v-model:expanded-keys="demoTableExpandedKeys"
+              v-model:current-page="demoTableCurrentPage"
+              v-model:page-size="demoTablePageSize"
+              :columns="demoTableColumns"
+              :data="demoTableData"
+              :size="demoSize"
+              :variant="demoTableVariant"
+              :paginated="demoTablePaginated"
+              :selectable="demoTableSelectable"
+              :expandable="demoTableExpandable"
+              :show-summary="demoTableShowSummary"
+              :card-on-mobile="demoTableCardOnMobile"
+            >
+              <template #cell-status="{ value }">
+                <CustomBadge
+                  :variant="value === '양호' ? 'success' : value === '보통' ? 'warning' : 'coral'"
+                  size="xs"
+                  pill
+                >
+                  {{ value }}
+                </CustomBadge>
+              </template>
+
+              <template #expand="{ row }">
+                <div class="playground-expanded-detail">
+                  <p>🤿 <strong>{{ row.name }}</strong> 다이버 상세 세션 기록</p>
+                  <ul>
+                    <li>다이빙 장소: {{ row.location }}</li>
+                    <li>최대 수심: {{ row.depth }}m / 시간: {{ row.duration }}</li>
+                    <li>상태 비고: {{ row.status }} (귀 통증 없음, 이퀄라이징 정상)</li>
+                  </ul>
+                </div>
+              </template>
+            </CustomTable>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ═══════════════════════════════ -->
+    <!--  📈 CustomChart 시각화 테스트  -->
+    <!-- ═══════════════════════════════ -->
+    <section id="sec-chart" class="playground-section fade-in-up">
+      <div class="section-header">
+        <h2>📈 공용 차트 시각화 컴포넌트</h2>
+        <span class="component-tag">CustomChart.vue</span>
+        <span class="component-tag">CustomBarChart.vue</span>
+        <span class="component-tag">CustomLineChart.vue</span>
+        <span class="component-tag">CustomPieChart.vue</span>
+        <span class="component-tag">CustomDoughnutChart.vue</span>
+        <span class="component-tag">CustomRadarChart.vue</span>
+      </div>
+      <div class="section-body">
+        <div class="demo-row">
+          <!-- 1. 인터랙티브 다형성 차트 (CustomChart) -->
+          <div class="demo-card wide">
+            <h4>1. 인터랙티브 통합 차트 엔진 (테마 동기화, A11y 표 뷰, 이미지 내보내기)</h4>
+            <p class="demo-desc">
+              Chart.js 4 기반으로 다크/라이트/코랄/어비스 4종 테마 색상과 반응형 리사이즈, 스크린리더 접근성을 완벽 지원합니다.
+            </p>
+
+            <div class="playground-table-toolbar" style="margin-bottom: 1.25rem;">
+              <!-- 차트 유형 선택 -->
+              <div class="toolbar-section">
+                <span class="toolbar-label">📊 차트 유형</span>
+                <div class="toolbar-btn-group">
+                  <CustomButton
+                    v-for="ct in (['bar', 'line', 'pie', 'doughnut', 'radar'] as const)"
+                    :key="ct"
+                    size="xs"
+                    :variant="demoChartType === ct ? 'primary' : 'ghost'"
+                    class="toolbar-chip-btn"
+                    @click="demoChartType = ct"
+                  >
+                    {{ ct.toUpperCase() }}
+                  </CustomButton>
+                </div>
+              </div>
+
+              <!-- 카드 변형 선택 -->
+              <div class="toolbar-section">
+                <span class="toolbar-label">🎨 표면 스타일</span>
+                <div class="toolbar-btn-group">
+                  <CustomButton
+                    v-for="v in (['card', 'bordered', 'glass', 'default'] as const)"
+                    :key="v"
+                    size="xs"
+                    :variant="demoChartVariant === v ? 'primary' : 'ghost'"
+                    class="toolbar-chip-btn"
+                    @click="demoChartVariant = v"
+                  >
+                    {{ v }}
+                  </CustomButton>
+                </div>
+              </div>
+
+              <!-- 상태 토글 버튼 바 -->
+              <div class="toolbar-section">
+                <span class="toolbar-label">⚙️ 부가 기능</span>
+                <div class="toolbar-btn-group">
+                  <CustomButton
+                    size="xs"
+                    :variant="demoChartShowTable ? 'success' : 'outline'"
+                    class="toolbar-toggle-btn"
+                    @click="demoChartShowTable = !demoChartShowTable"
+                  >
+                    <template #leading>📋</template>
+                    표 토글 {{ demoChartShowTable ? 'ON' : 'OFF' }}
+                  </CustomButton>
+
+                  <CustomButton
+                    size="xs"
+                    :variant="demoChartDownloadable ? 'success' : 'outline'"
+                    class="toolbar-toggle-btn"
+                    @click="demoChartDownloadable = !demoChartDownloadable"
+                  >
+                    <template #leading>💾</template>
+                    PNG 저장 {{ demoChartDownloadable ? 'ON' : 'OFF' }}
+                  </CustomButton>
+
+                  <CustomButton
+                    size="xs"
+                    :variant="demoChartLoading ? 'warning' : 'outline'"
+                    class="toolbar-toggle-btn"
+                    @click="demoChartLoading = !demoChartLoading"
+                  >
+                    <template #leading>⏳</template>
+                    로딩 스켈레톤 {{ demoChartLoading ? 'ON' : 'OFF' }}
+                  </CustomButton>
+
+                  <CustomButton
+                    size="xs"
+                    :variant="demoChartEmpty ? 'danger' : 'outline'"
+                    class="toolbar-toggle-btn"
+                    @click="demoChartEmpty = !demoChartEmpty"
+                  >
+                    <template #leading>📭</template>
+                    Empty 상태 {{ demoChartEmpty ? 'ON' : 'OFF' }}
+                  </CustomButton>
+
+                  <CustomButton
+                    size="xs"
+                    :variant="demoChartTimeFormat ? 'primary' : 'outline'"
+                    class="toolbar-toggle-btn"
+                    @click="demoChartTimeFormat = !demoChartTimeFormat"
+                  >
+                    <template #leading>⏱️</template>
+                    시간(mm:ss) {{ demoChartTimeFormat ? 'ON' : 'OFF' }}
+                  </CustomButton>
+                </div>
+              </div>
+            </div>
+
+            <!-- 라이브 차트 렌더링 영역 (10단계 사이즈 슬라이더 반영) -->
+            <CustomChart
+              :type="demoChartType"
+              :size="demoSize"
+              :variant="demoChartVariant"
+              :title="demoChartTitle"
+              subtitle="차트 요소 위에 마우스를 올리거나 클릭하면 실시간 인터랙션이 발생합니다."
+              :labels="demoChartLabels"
+              :datasets="demoChartDatasets"
+              :unit="demoChartUnit"
+              :value-formatter="demoChartTimeFormat ? formatDuration : undefined"
+              :loading="demoChartLoading"
+              :empty="demoChartEmpty"
+              :show-table-toggle="demoChartShowTable"
+              :downloadable="demoChartDownloadable"
+              @chart-click="onChartClickDemo"
+              @chart-hover="onChartHoverDemo"
+            />
+          </div>
+        </div>
+
+        <!-- 2. 특화 래퍼 컴포넌트 4종 쇼케이스 -->
+        <div class="demo-row" style="margin-top: 1.5rem;">
+          <div class="demo-card">
+            <h4>2. CustomBarChart (종목별 PB 수심/거리)</h4>
+            <CustomBarChart
+              :labels="barDemoLabels"
+              :datasets="barDemoDatasets"
+              title="종목별 개인 최고 기록 (PB)"
+              unit="m"
+              variant="card"
+              :size="demoSize"
+              show-table-toggle
+              downloadable
+              show-hover-info
+              @chart-click="onChartClickDemo"
+              @chart-hover="onChartHoverDemo"
+            />
+          </div>
+
+          <div class="demo-card">
+            <h4>3. CustomLineChart (아프네아 시간 추이)</h4>
+            <CustomLineChart
+              :labels="lineDemoLabels"
+              :datasets="lineDemoDatasets"
+              title="STA 숨참기 세션 성장 추이"
+              :value-formatter="formatDuration"
+              variant="card"
+              :size="demoSize"
+              show-table-toggle
+              downloadable
+              show-hover-info
+              @chart-click="onChartClickDemo"
+              @chart-hover="onChartHoverDemo"
+            />
+          </div>
+        </div>
+
+        <div class="demo-row" style="margin-top: 1.5rem;">
+          <div class="demo-card">
+            <h4>4. CustomDoughnutChart (정산 항목별 지출 비중)</h4>
+            <CustomDoughnutChart
+              :labels="doughnutDemoLabels"
+              :datasets="doughnutDemoDatasets"
+              title="다이빙 투어 정산 비용 비중"
+              unit="%"
+              variant="card"
+              :size="demoSize"
+              show-table-toggle
+              downloadable
+              show-hover-info
+              @chart-click="onChartClickDemo"
+              @chart-hover="onChartHoverDemo"
+            />
+          </div>
+
+          <div class="demo-card">
+            <h4>5. CustomRadarChart (DPTI 성향 5축 레이더)</h4>
+            <CustomRadarChart
+              :labels="radarDemoLabels"
+              :datasets="radarDemoDatasets"
+              title="다이버 성향 & 역량 5각 레이더"
+              :min="0"
+              :max="100"
+              variant="card"
+              :size="demoSize"
+              show-table-toggle
+              downloadable
+              show-hover-info
+              @chart-click="onChartClickDemo"
+              @chart-hover="onChartHoverDemo"
+            />
           </div>
         </div>
       </div>
@@ -1335,6 +1724,7 @@ import CustomButton from '@/components/CustomButton.vue';
 import CustomInput from '@/components/CustomInput.vue';
 import CustomSwitch from '@/components/CustomSwitch.vue';
 import CustomSelect from '@/components/CustomSelect.vue';
+import CustomTimeSelect from '@/components/CustomTimeSelect.vue';
 import CustomMultiSelect from '@/components/CustomMultiSelect.vue';
 import CustomNumberInput from '@/components/CustomNumberInput.vue';
 import CustomDatePicker from '@/components/CustomDatePicker.vue';
@@ -1349,6 +1739,15 @@ import CustomAccordionItem from '@/components/CustomAccordionItem.vue';
 import CustomTooltip from '@/components/CustomTooltip.vue';
 import CustomSlider from '@/components/CustomSlider.vue';
 import CustomAlert from '@/components/CustomAlert.vue';
+import CustomErrorBoundary from '@/components/CustomErrorBoundary.vue';
+import CustomPagination from '@/components/CustomPagination.vue';
+import CustomTable from '@/components/CustomTable.vue';
+import CustomChart from '@/components/CustomChart.vue';
+import CustomBarChart from '@/components/CustomBarChart.vue';
+import CustomLineChart from '@/components/CustomLineChart.vue';
+import CustomPieChart from '@/components/CustomPieChart.vue';
+import CustomDoughnutChart from '@/components/CustomDoughnutChart.vue';
+import CustomRadarChart from '@/components/CustomRadarChart.vue';
 import ConfirmModal from '@/components/ConfirmModal.vue';
 import DarkModeToggle from '@/components/DarkModeToggle.vue';
 import ThemeSegmentToggle from '@/components/ThemeSegmentToggle.vue';
@@ -1360,7 +1759,8 @@ import Header from '@/components/Header.vue';
 import Footer from '@/components/Footer.vue';
 import { useThemeStore } from '@/stores/theme';
 import { useCapture } from '@/composables/useCapture';
-import type { PlaygroundNavSection } from '@/types/components';
+import { formatDuration } from '@/utils/formatter';
+import type { PlaygroundNavSection, TableColumn } from '@/types/components';
 import type { CalendarPanelCell, DateRange } from '@/types/calendar';
 
 // ─── 섹션 목차 데이터 ───
@@ -1380,6 +1780,9 @@ const sections: PlaygroundNavSection[] = [
   { id: 'sec-tooltip', icon: '💬', label: 'Tooltip' },
   { id: 'sec-slider', icon: '🎚️', label: 'Slider' },
   { id: 'sec-alert', icon: '🚨', label: 'Alert' },
+  { id: 'sec-pagination', icon: '🔢', label: 'Pagination' },
+  { id: 'sec-table', icon: '📊', label: 'Table' },
+  { id: 'sec-chart', icon: '📈', label: 'Chart' },
   { id: 'sec-capture', icon: '📸', label: 'Capture' },
   { id: 'sec-modal', icon: '💬', label: 'Modal' },
   { id: 'sec-toast', icon: '🔔', label: 'Toast' },
@@ -1400,6 +1803,99 @@ const demoAccordionMultiVal = ref<unknown[]>(['a1', 'a2']);
 const demoSliderSingle = ref<number>(42);
 const demoSliderRange = ref<[number, number]>([20, 70]);
 const tabsVariant = ref<'underline' | 'pill' | 'segment'>('underline');
+const playgroundPage = ref(1);
+const playgroundPageSize = ref(10);
+
+// ─── CustomTable 상태 ───
+const demoTableColumns: TableColumn[] = [
+  { key: 'id', label: 'ID', width: '60px', align: 'center', sortable: true },
+  { key: 'name', label: '다이버 이름', width: '130px', sortable: true },
+  { key: 'location', label: '포인트/풀장', sortable: true },
+  { key: 'depth', label: '최대 수심', align: 'right', sortable: true, summary: 'avg', formatter: (val) => `${val}m` },
+  { key: 'duration', label: '잠수 시간', align: 'center' },
+  { key: 'status', label: '이퀄라이징 상태', align: 'center', sortable: true }
+];
+
+const demoTableData = ref([
+  { id: 1, name: '김다이브', location: '가평 K26', depth: 26.0, duration: '03:45', status: '양호' },
+  { id: 2, name: '이해양', location: '용인 딥스테이션', depth: 36.0, duration: '04:12', status: '양호' },
+  { id: 3, name: '박수심', location: '제주 서귀포 문섬', depth: 18.5, duration: '45:00', status: '보통' },
+  { id: 4, name: '최산호', location: '울릉도 코끼리바위', depth: 22.0, duration: '40:30', status: '양호' },
+  { id: 5, name: '정어비스', location: '수원 아쿠아라인', depth: 5.0, duration: '02:30', status: '양호' },
+  { id: 6, name: '한바다', location: '가평 K26', depth: 25.5, duration: '03:20', status: '주의' },
+  { id: 7, name: '윤트레이닝', location: '용인 딥스테이션', depth: 30.0, duration: '03:50', status: '양호' },
+  { id: 8, name: '강버디', location: '제주 범섬', depth: 15.0, duration: '50:00', status: '양호' },
+  { id: 9, name: '조웨이브', location: '동해 락가든', depth: 19.0, duration: '38:15', status: '양호' },
+  { id: 10, name: '임블루', location: '가평 K26', depth: 26.0, duration: '04:05', status: '양호' }
+]);
+
+const demoTableSelectedKeys = ref<(string | number)[]>([1, 3]);
+const demoTableExpandedKeys = ref<(string | number)[]>([2]);
+const demoTableVariant = ref<'default' | 'striped' | 'bordered' | 'glass'>('default');
+const demoTablePaginated = ref(true);
+const demoTablePageSize = ref(5);
+const demoTableCurrentPage = ref(1);
+const demoTableSelectable = ref(true);
+const demoTableExpandable = ref(true);
+const demoTableShowSummary = ref(true);
+const demoTableCardOnMobile = ref(true);
+
+// ─── CustomChart & Chart Wrappers 상태 ───
+const demoChartType = ref<'bar' | 'line' | 'pie' | 'doughnut' | 'radar'>('bar');
+const demoChartVariant = ref<'default' | 'card' | 'bordered' | 'glass'>('card');
+const demoChartLoading = ref(false);
+const demoChartEmpty = ref(false);
+const demoChartShowTable = ref(true);
+const demoChartDownloadable = ref(true);
+const demoChartTimeFormat = ref(false);
+const demoChartUnit = computed(() => {
+  if (demoChartTimeFormat.value) return '';
+  if (demoChartType.value === 'doughnut' || demoChartType.value === 'pie') return '%';
+  return 'm';
+});
+const demoChartTitle = ref('월별 프리다이빙 최고 수심 트렌드');
+
+const demoChartLabels = ref(['1월', '2월', '3월', '4월', '5월', '6월', '7월', '8월']);
+const demoChartDatasets = ref([
+  {
+    label: 'K26 세션 수심 (m)',
+    data: [15, 20, 26, 26, 26, 26, 26, 26]
+  },
+  {
+    label: '딥스테이션 세션 수심 (m)',
+    data: [18, 22, 28, 32, 34, 36, 36, 36]
+  }
+]);
+
+// 특화 차트 데모 데이터
+const barDemoLabels = ['CWTB', 'FIM', 'CNF', 'STA', 'DYN'];
+const barDemoDatasets = [
+  { label: '개인 최고 기록 (PB)', data: [45, 42, 30, 240, 110] }
+];
+
+const lineDemoLabels = ['1회차', '2회차', '3회차', '4회차', '5회차', '6회차'];
+const lineDemoDatasets = [
+  { label: 'STA 숨참기 시간 (초)', data: [120, 145, 170, 195, 220, 245] }
+];
+
+const doughnutDemoLabels = ['입장료 / 풀장', '장비 렌탈', '식사 및 간식', '카풀 교통비'];
+const doughnutDemoDatasets = [
+  { label: '정산 비용 비율 (%)', data: [45, 20, 25, 10] }
+];
+
+const radarDemoLabels = ['수심 적응력 (D)', '호흡 제어력 (B)', '멘탈 안정성 (M)', '이퀄라이징 (E)', '추진력 (P)'];
+const radarDemoDatasets = [
+  { label: '나의 다이빙 역량', data: [85, 90, 75, 95, 80] },
+  { label: '평균 다이버', data: [65, 70, 60, 70, 65] }
+];
+
+const onChartClickDemo = (payload: any) => {
+  triggerToast(`📊 [${payload.label}] ${payload.dataset?.label || '시리즈'}: ${payload.value}`);
+};
+
+const onChartHoverDemo = (_payload: any) => {
+  // 실시간 호버 이벤트 처리
+};
 
 // ─── CustomButton 상태 ───
 const buttonLoading = ref(false);
@@ -1455,8 +1951,8 @@ const demoVariant = ref<'default' | 'primary' | 'secondary' | 'danger' | 'succes
 const demoClearable = ref<boolean>(true);
 const demoClearableText = ref('1초 X 지우기 버튼 테스트 문구');
 const demoClearableNumber = ref(42);
-const demoClearableSelect = ref('스쿠버다이빙');
-const demoClearableMultiSelect = ref<unknown[]>(['스쿠버다이빙', '프리다이빙']);
+const demoClearableSelect = ref('프리다이빙');
+const demoClearableMultiSelect = ref<unknown[]>(['프리다이빙', '핀수영']);
 const demoClearableTextarea = ref('수심 30m 지점에서 거북이와 유영함.');
 const demoSegmentVal = ref('weekday');
 const demoSingleSegmentVal = ref('cycle');
@@ -1516,7 +2012,7 @@ const switchDisabled = ref(true);
 
 // ─── 2. CustomSelect 상태 ───
 const selectBasic = ref('');
-const selectOptions = ['스쿠버다이빙', '프리다이빙', '머메이딩', '스노클링'];
+const selectOptions = ['프리다이빙', '머메이딩', '스노클링', '핀수영'];
 
 const selectLabeled = ref('');
 const selectLabeledOptions = [
@@ -1525,12 +2021,13 @@ const selectLabeledOptions = [
   { label: '⭐⭐⭐ 3스타', value: '3star' },
   { label: '💎 인스트럭터', value: 'instructor' },
 ];
+const timeSelectDemo = ref('01:45');
 
 // ─── CustomMultiSelect 상태 ───
 const multiSelectBasic = ref<unknown[]>([]);
 const multiSelectLabeled = ref<unknown[]>(['pool']);
 const multiSelectLimited = ref<unknown[]>([]);
-const multiSelectDisabled = ref<unknown[]>(['스쿠버다이빙', '프리다이빙']);
+const multiSelectDisabled = ref<unknown[]>(['프리다이빙', '머메이딩']);
 const multiSelectLabeledOptions = [
   { label: '🏊 수영장', value: 'pool' },
   { label: '🌊 바다', value: 'ocean' },
@@ -1639,12 +2136,12 @@ const isDark = computed(() => themeStore.isDark);
     font-size: 2.25rem;
     font-weight: 800;
     margin-bottom: 0.75rem;
-    background: linear-gradient(135deg, #8b5cf6, #ec4899, #f97316);
+    background: linear-gradient(135deg, var(--color-action), var(--ui-accent), var(--color-action-strong));
     -webkit-background-clip: text;
     -webkit-text-fill-color: transparent;
 
     body.dark & {
-      background: linear-gradient(135deg, #a78bfa, #f472b6, #fb923c);
+      background: linear-gradient(135deg, var(--color-action-strong), var(--color-action), var(--color-action-strong));
       -webkit-background-clip: text;
       -webkit-text-fill-color: transparent;
     }
@@ -1704,18 +2201,18 @@ const isDark = computed(() => themeStore.isDark);
   }
 
   &:hover {
-    border-color: #8b5cf6;
-    color: #8b5cf6;
+    border-color: var(--color-action);
+    color: var(--color-action);
 
     body.dark & {
-      border-color: #a78bfa;
-      color: #a78bfa;
+      border-color: var(--color-action-strong);
+      color: var(--color-action-strong);
     }
   }
 
   &.active {
-    background: linear-gradient(135deg, #8b5cf6, #7c3aed);
-    color: #fff;
+    background: linear-gradient(135deg, var(--color-action), var(--color-action-strong));
+    color: var(--white);
     border-color: transparent;
     box-shadow: 0 2px 8px rgba(139, 92, 246, 0.25);
   }
@@ -1779,12 +2276,12 @@ const isDark = computed(() => themeStore.isDark);
   padding: 0.2rem 0.6rem;
   border-radius: 6px;
   background: rgba(139, 92, 246, 0.08);
-  color: #7c3aed;
+  color: var(--color-action);
   font-family: 'JetBrains Mono', monospace;
 
   body.dark & {
     background: rgba(167, 139, 250, 0.1);
-    color: #a78bfa;
+    color: var(--color-action-strong);
   }
 }
 
@@ -1858,9 +2355,9 @@ const isDark = computed(() => themeStore.isDark);
   }
 
   strong {
-    color: #8b5cf6;
+    color: var(--color-action);
     body.dark & {
-      color: #a78bfa;
+      color: var(--color-action-strong);
     }
   }
 }
@@ -1904,8 +2401,8 @@ const isDark = computed(() => themeStore.isDark);
   font-weight: 700;
   cursor: pointer;
   border: none;
-  color: #fff;
-  background: linear-gradient(135deg, #8b5cf6, #7c3aed);
+  color: var(--white);
+  background: linear-gradient(135deg, var(--color-action), var(--color-action-strong));
   box-shadow: 0 4px 10px rgba(139, 92, 246, 0.2);
   transition: all 0.2s ease;
 
@@ -1919,7 +2416,7 @@ const isDark = computed(() => themeStore.isDark);
   }
 
   &.success {
-    background: linear-gradient(135deg, #10b981, #059669);
+    background: linear-gradient(135deg, var(--green-600), var(--green-700));
     box-shadow: 0 4px 10px rgba(16, 185, 129, 0.2);
 
     &:hover {
@@ -1928,7 +2425,7 @@ const isDark = computed(() => themeStore.isDark);
   }
 
   &.warning {
-    background: linear-gradient(135deg, #f59e0b, #d97706);
+    background: linear-gradient(135deg, var(--amber-500), var(--amber-700));
     box-shadow: 0 4px 10px rgba(245, 158, 11, 0.2);
 
     &:hover {
@@ -1937,7 +2434,7 @@ const isDark = computed(() => themeStore.isDark);
   }
 
   &.danger {
-    background: linear-gradient(135deg, #ef4444, #dc2626);
+    background: linear-gradient(135deg, var(--red-500), var(--red-600));
     box-shadow: 0 4px 10px rgba(239, 68, 68, 0.2);
 
     &:hover {
@@ -1981,22 +2478,22 @@ const isDark = computed(() => themeStore.isDark);
   gap: 0.5rem;
   padding: 0.75rem 1rem;
   background: rgba(139, 92, 246, 0.05);
-  border-left: 4px solid #8b5cf6;
+  border-left: 4px solid var(--color-action);
   border-radius: 0 0.75rem 0.75rem 0;
   font-size: 0.85rem;
   color: var(--page-text-primary);
 
   body.dark & {
     background: rgba(167, 139, 250, 0.05);
-    border-left-color: #a78bfa;
+    border-left-color: var(--color-action-strong);
   }
 
   i {
-    color: #8b5cf6;
+    color: var(--color-action);
     animation: bounce-down 1.5s infinite;
 
     body.dark & {
-      color: #a78bfa;
+      color: var(--color-action-strong);
     }
   }
 }
@@ -2132,7 +2629,7 @@ const isDark = computed(() => themeStore.isDark);
   &.active {
     background: var(--ocean-500);
     border-color: var(--ocean-500);
-    color: #fff;
+    color: var(--white);
   }
 }
 
@@ -2173,5 +2670,56 @@ const isDark = computed(() => themeStore.isDark);
   border: 1px solid var(--ui-input-border);
   box-shadow: var(--ui-input-shadow);
   transition: all 0.2s ease;
+}
+
+.playground-table-toolbar {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: 1rem;
+  padding: 0.85rem 1.1rem;
+  margin-bottom: 1.25rem;
+  background: var(--ui-input-bg, rgba(15, 23, 42, 0.4));
+  border: 1px solid var(--ui-input-border, rgba(255, 255, 255, 0.08));
+  border-radius: 12px;
+  box-shadow: var(--ui-input-shadow, 0 4px 16px rgba(0, 0, 0, 0.06));
+
+  .toolbar-section {
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+    flex-wrap: wrap;
+  }
+
+  .toolbar-label {
+    font-size: 0.82rem;
+    font-weight: 700;
+    color: var(--page-text-secondary);
+    user-select: none;
+  }
+
+  .toolbar-btn-group {
+    display: flex;
+    align-items: center;
+    gap: 0.4rem;
+    flex-wrap: wrap;
+  }
+
+  .toolbar-chip-btn {
+    text-transform: capitalize;
+    font-weight: 600;
+  }
+
+  .toolbar-toggle-btn {
+    font-weight: 600;
+    transition: all 0.2s ease;
+  }
+}
+
+.playground-expanded-detail {
+  font-size: 0.9rem;
+  line-height: 1.6;
+  color: var(--page-text-primary);
 }
 </style>

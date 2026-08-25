@@ -84,8 +84,8 @@ const themeOptions: ThemeOption[] = [
     emoji: '☀️',
     description: '맑고 투명한 햇살 아래 빛나는 밝은 해변 샌드 모드',
     badgeText: 'LIGHT BEACH',
-    previewBg: 'linear-gradient(135deg, #f8fafc, #e2e8f0)',
-    accentColor: '#0284c7'
+    previewBg: 'linear-gradient(135deg, var(--slate-50), var(--slate-200))',
+    accentColor: 'var(--ocean-600)'
   },
   {
     id: 'dark',
@@ -93,8 +93,8 @@ const themeOptions: ThemeOption[] = [
     emoji: '🌙',
     description: '아늑하고 차분한 깊은 바다속 심해 다크 모드',
     badgeText: 'DARK SEA',
-    previewBg: 'linear-gradient(135deg, #0f172a, #1e293b)',
-    accentColor: '#38bdf8'
+    previewBg: 'linear-gradient(135deg, var(--slate-900), var(--slate-800))',
+    accentColor: 'var(--ocean-400)'
   },
   {
     id: 'coral',
@@ -102,8 +102,8 @@ const themeOptions: ThemeOption[] = [
     emoji: '🪸',
     description: '따뜻한 샌드 워터버블과 코랄 오렌지 & 티일 모드',
     badgeText: 'CORAL REEF',
-    previewBg: 'linear-gradient(135deg, #fdfaf6, #f3e8dc)',
-    accentColor: '#f0533c'
+    previewBg: 'linear-gradient(135deg, var(--slate-50), var(--amber-100))',
+    accentColor: 'var(--amber-500)'
   },
   {
     id: 'abyss',
@@ -111,8 +111,8 @@ const themeOptions: ThemeOption[] = [
     emoji: '🌌',
     description: '딥 미드나이트 스페이스 네이비와 형광 네온 모드',
     badgeText: 'ABYSS OCEAN',
-    previewBg: 'linear-gradient(135deg, #040814, #0b193c)',
-    accentColor: '#00f2fe'
+    previewBg: 'linear-gradient(135deg, var(--slate-950), var(--slate-900))',
+    accentColor: 'var(--cyan-400)'
   }
 ];
 

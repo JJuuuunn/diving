@@ -38,8 +38,28 @@ const routes = [
       },
       {
         path: 'logbook',
-        name: RouterName.Logbook,
-        component: () => import('@/views/logbook/LogbookMain.vue')
+        children: [
+          {
+            path: '',
+            name: RouterName.Logbook,
+            component: () => import('@/views/logbook/LogbookMain.vue')
+          },
+          {
+            path: 'new',
+            name: RouterName.LogbookNew,
+            component: () => import('@/views/logbook/LogbookForm.vue')
+          },
+          {
+            path: ':id',
+            name: RouterName.LogbookDetail,
+            component: () => import('@/views/logbook/LogbookDetail.vue')
+          },
+          {
+            path: 'edit/:id',
+            name: RouterName.LogbookEdit,
+            component: () => import('@/views/logbook/LogbookForm.vue')
+          }
+        ]
       },
       {
         path: 'quiz',
@@ -65,6 +85,16 @@ const routes = [
         path: 'medical',
         name: RouterName.MedicalFinder,
         component: () => import('@/views/medical/MedicalFinder.vue')
+      },
+      {
+        path: 'apnea',
+        name: RouterName.Apnea,
+        component: () => import('@/views/apnea/ApneaMain.vue')
+      },
+      {
+        path: 'time-select-test',
+        name: RouterName.TimeSelectLab,
+        component: () => import('@/views/dev/TimeSelectLab.vue')
       },
       // 개발 모드(npm run dev)일 때만 Playground 등록
       ...(import.meta.env.DEV

@@ -44,6 +44,18 @@
   --z-scroll-top: 1600;
   --z-modal: 9999;
   --z-toast: 10000;
+
+  // Semantic UI & Page Overlay / Shadow / Accent defaults
+  --ui-accent: var(--color-action);
+  --ui-shadow-overlay: 0 2px 10px rgba(0, 0, 0, 0.7);
+  --ui-shadow-text: 0 1px 4px rgba(0, 0, 0, 0.8);
+  --ui-shadow-text-heavy: 0 2px 10px rgba(0, 0, 0, 0.9);
+  --ui-shadow-text-hero: 0 4px 24px rgba(0, 0, 0, 0.95), 0 2px 6px rgba(0, 0, 0, 0.8);
+  --ui-hud-photo-overlay: linear-gradient(180deg, rgba(3, 10, 20, 0.45) 0%, rgba(3, 10, 20, 0.15) 45%, rgba(3, 10, 20, 0.85) 100%);
+  --ui-hud-widget-bg: rgba(3, 10, 20, 0.45);
+  --ui-hud-widget-shadow: 0 8px 24px rgba(0, 0, 0, 0.5);
+  --page-text-contrast-subtle: rgba(255, 255, 255, 0.9);
+  --page-text-muted-contrast: rgba(255, 255, 255, 0.7);
 }
 
 body.dark {
@@ -309,6 +321,27 @@ body.dark {
   --ui-theme-card-subtext: var(--page-text-secondary);
   --ui-theme-card-badge-bg: rgba(56, 189, 248, 0.2);
   --ui-theme-card-badge-text: var(--color-action);
+
+  // Logbook Semantic Tokens (Dark Theme)
+  --ui-accent: var(--ocean-400);
+  --ui-btn-primary-bg: var(--ocean-400);
+  --ui-btn-primary-hover-bg: var(--ocean-500);
+  --ui-btn-primary-text: var(--slate-900);
+  --ui-btn-primary-shadow: 0 4px 12px rgba(56, 189, 248, 0.3);
+
+  --ui-card-option-delete-hover-bg: #ef4444;
+  --ui-card-option-download-hover-bg: #38bdf8;
+  --ui-card-option-download-hover-text: #0f172a;
+  --ui-card-option-edit-hover-bg: #0d9488;
+
+  --page-logbook-stamp-bg: rgba(56, 189, 248, 0.1);
+  --page-logbook-stamp-border: rgba(56, 189, 248, 0.2);
+  --page-logbook-stamp-text: #38bdf8;
+
+  --page-logbook-freediving-accent: #0d9488;
+  --page-logbook-freediving-accent-dark: #2dd4bf;
+  --page-logbook-freediving-stamp-bg: rgba(13, 148, 136, 0.15);
+  --page-logbook-freediving-stamp-border: rgba(13, 148, 136, 0.3);
 }
 
 body:not(.dark) {
@@ -574,6 +607,27 @@ body:not(.dark) {
   --ui-theme-card-subtext: var(--page-text-secondary);
   --ui-theme-card-badge-bg: rgba(14, 165, 233, 0.15);
   --ui-theme-card-badge-text: var(--color-action);
+
+  // Logbook Semantic Tokens (Light Theme)
+  --ui-accent: var(--ocean-600);
+  --ui-btn-primary-bg: var(--ocean-600);
+  --ui-btn-primary-hover-bg: var(--ocean-700);
+  --ui-btn-primary-text: var(--white);
+  --ui-btn-primary-shadow: 0 4px 12px rgba(2, 132, 199, 0.25);
+
+  --ui-card-option-delete-hover-bg: #ef4444;
+  --ui-card-option-download-hover-bg: #0284c7;
+  --ui-card-option-download-hover-text: #ffffff;
+  --ui-card-option-edit-hover-bg: #0d9488;
+
+  --page-logbook-stamp-bg: rgba(56, 189, 248, 0.1);
+  --page-logbook-stamp-border: rgba(56, 189, 248, 0.2);
+  --page-logbook-stamp-text: #0284c7;
+
+  --page-logbook-freediving-accent: #0d9488;
+  --page-logbook-freediving-accent-dark: #0f766e;
+  --page-logbook-freediving-stamp-bg: rgba(13, 148, 136, 0.15);
+  --page-logbook-freediving-stamp-border: rgba(13, 148, 136, 0.3);
 }
 
 // 🪸 산호초 코랄 테마 (Coral reef theme: warm sand waterbubble, coral orange, teal main accent)
@@ -840,6 +894,27 @@ body.theme-coral {
   --ui-theme-card-subtext: var(--page-text-secondary);
   --ui-theme-card-badge-bg: rgba(240, 83, 60, 0.15);
   --ui-theme-card-badge-text: #f0533c;
+
+  // Logbook Semantic Tokens (Coral Theme)
+  --ui-accent: #0d9488;
+  --ui-btn-primary-bg: #f0533c;
+  --ui-btn-primary-hover-bg: #d93822;
+  --ui-btn-primary-text: var(--white);
+  --ui-btn-primary-shadow: 0 4px 12px rgba(240, 83, 60, 0.3);
+
+  --ui-card-option-delete-hover-bg: #ef4444;
+  --ui-card-option-download-hover-bg: #f0533c;
+  --ui-card-option-download-hover-text: #ffffff;
+  --ui-card-option-edit-hover-bg: #0d9488;
+
+  --page-logbook-stamp-bg: rgba(240, 83, 60, 0.1);
+  --page-logbook-stamp-border: rgba(240, 83, 60, 0.25);
+  --page-logbook-stamp-text: #f0533c;
+
+  --page-logbook-freediving-accent: #0d9488;
+  --page-logbook-freediving-accent-dark: #0f766e;
+  --page-logbook-freediving-stamp-bg: rgba(13, 148, 136, 0.15);
+  --page-logbook-freediving-stamp-border: rgba(13, 148, 136, 0.3);
 }
 
 // 🌌 초심해 어비스 테마 (Abyss ocean theme: deep midnight space navy, neon cyan / hot pink accent)
@@ -1106,4 +1181,25 @@ body.theme-abyss {
   --ui-theme-card-subtext: var(--page-text-secondary);
   --ui-theme-card-badge-bg: rgba(0, 242, 254, 0.2);
   --ui-theme-card-badge-text: #00f2fe;
+
+  // Logbook Semantic Tokens (Abyss Theme)
+  --ui-accent: #00f2fe;
+  --ui-btn-primary-bg: #00f2fe;
+  --ui-btn-primary-hover-bg: #38ef7d;
+  --ui-btn-primary-text: #040814;
+  --ui-btn-primary-shadow: 0 4px 12px rgba(0, 242, 254, 0.4);
+
+  --ui-card-option-delete-hover-bg: #ff5277;
+  --ui-card-option-download-hover-bg: #00f2fe;
+  --ui-card-option-download-hover-text: #040814;
+  --ui-card-option-edit-hover-bg: #38ef7d;
+
+  --page-logbook-stamp-bg: rgba(0, 242, 254, 0.12);
+  --page-logbook-stamp-border: rgba(0, 242, 254, 0.35);
+  --page-logbook-stamp-text: #00f2fe;
+
+  --page-logbook-freediving-accent: #00f2fe;
+  --page-logbook-freediving-accent-dark: #38ef7d;
+  --page-logbook-freediving-stamp-bg: rgba(0, 242, 254, 0.18);
+  --page-logbook-freediving-stamp-border: rgba(0, 242, 254, 0.4);
 }

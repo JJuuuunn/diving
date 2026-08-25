@@ -16,6 +16,7 @@ Vue 화면, Pinia Store, Composable, API, 타입 또는 파일 구조를 변경�
 - 하위 계층은 Vue 컴포넌트나 화면 파일을 import하지 않는다.
 - 기능 파일명은 `useFeature.ts`, `featureApi.ts`, `PascalCase.vue` 형식을 따른다.
 - boolean 이름은 가능하면 `is`, `has`, `can`, `should`로 시작한다.
+- **도메인 범위**: 본 프로젝트의 핵심 도메인은 프리다이빙(Freediving)이며, 스쿠버 다이빙 기능은 배제한다 (추후 확장 시에도 퀴즈 문제은행으로만 한정).
 
 ## Store와 Composable 구분
 

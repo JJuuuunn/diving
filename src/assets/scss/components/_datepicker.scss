@@ -35,17 +35,17 @@
     &--size-10, &--xl { height: 60px; min-height: 60px; padding: 11px var(--spacing-2xl); font-size: 1.10rem; border-radius: 15px; }
 
     &--error {
-      border-color: var(--red-500, #ef4444) !important;
+      border-color: var(--red-500) !important;
       box-shadow: 0 0 10px rgba(239, 68, 68, 0.25) !important;
     }
 
     &--warning {
-      border-color: var(--amber-500, #f59e0b) !important;
+      border-color: var(--amber-500) !important;
       box-shadow: 0 0 10px rgba(245, 158, 11, 0.25) !important;
     }
 
     &--success {
-      border-color: var(--green-600, #10b981) !important;
+      border-color: var(--green-600) !important;
       box-shadow: 0 0 10px rgba(16, 185, 129, 0.25) !important;
     }
 
@@ -254,7 +254,7 @@
         box-shadow: var(--ui-datepicker-selected-shadow);
 
         .datepicker-log-badge {
-          background: #ffffff !important;
+          background: var(--white) !important;
         }
       }
 
@@ -384,7 +384,7 @@
     &.is-range-end {
       z-index: 1;
       border-radius: 50%;
-      color: #fff;
+      color: var(--white);
       background: var(--ui-datepicker-selected-bg);
       box-shadow: var(--ui-datepicker-selected-shadow);
       font-weight: 800;
@@ -404,7 +404,7 @@
 
     &.is-range-start,
     &.is-range-end {
-      color: #fff;
+      color: var(--white);
       background: var(--ui-datepicker-selected-bg);
       box-shadow: var(--ui-datepicker-selected-shadow);
       font-weight: 800;

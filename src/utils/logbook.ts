@@ -11,7 +11,7 @@ export const LOGBOOK_SCHEMA_VERSION = 1 as const;
 export const LOGBOOK_STORAGE_KEY = 'diving:logbook:logs:v1';
 export const LEGACY_LOGBOOK_STORAGE_KEY = 'diving-logs';
 
-const disciplines = new Set<FreedivingDiscipline>(['CWT', 'FIM', 'CNF', 'STA', 'DYN']);
+const disciplines = new Set<FreedivingDiscipline>(['CWT', 'CWTB', 'CNF', 'FIM', 'STA', 'DYN', 'DYNB', 'DNF']);
 const equalizingMethods = new Set<EqualizingMethod>(['Frenzel', 'Valsalva', 'Mouthfill']);
 
 const isRecord = (value: unknown): value is Record<string, unknown> =>
@@ -91,7 +91,7 @@ export const validateDiveLogDraft = (draft: DiveLogDraft): string | null => {
   }
   if (!disciplines.has(draft.discipline)) return '올바른 프리다이빙 종목을 선택해주세요.';
   if (!isNumberInRange(draft.weightKg, 0, 50)) return '웨이트는 0~50kg 범위로 입력해주세요.';
-  if (!equalizingMethods.has(draft.equalizingMethod)) return '올바른 이퀄라이징 기법을 선택해주세요.';
+  if (draft.equalizingMethod && !equalizingMethods.has(draft.equalizingMethod)) return '올바른 이퀄라이징 기법을 선택해주세요.';
   return null;
 };
 
@@ -104,7 +104,7 @@ const normalizeDiveLog = (
 
   const createdAt = isIsoTimestamp(value.createdAt) ? value.createdAt : now;
   const updatedAt = isIsoTimestamp(value.updatedAt) ? value.updatedAt : createdAt;
-  const common = {
+  const common: Record<string, unknown> = {
     id: typeof value.id === 'string' && value.id.trim() ? value.id : idFactory(),
     date: value.date,
     location: typeof value.location === 'string' ? value.location.trim() : value.location,
@@ -116,6 +116,26 @@ const normalizeDiveLog = (
     createdAt,
     updatedAt
   };
+  if (typeof value.photoUrl === 'string') {
+    common.photoUrl = value.photoUrl;
+  }
+  if (typeof value.design === 'string') {
+    const d = value.design;
+    if (['hud', 'ticket', 'sports', 'classic'].includes(d)) {
+      common.design = d;
+    } else if (['ocean', 'expedition', 'coral', 'minimal'].includes(d)) {
+      common.design = 'classic';
+    } else if (d === 'garmin') {
+      common.design = 'hud';
+    }
+  }
+  if (isRecord(value.hudLayout)) {
+    common.hudLayout = value.hudLayout;
+    common.garminLayout = value.hudLayout;
+  } else if (isRecord(value.garminLayout)) {
+    common.hudLayout = value.garminLayout;
+    common.garminLayout = value.garminLayout;
+  }
 
   let draft: DiveLogDraft;
   if (value.type === 'scuba') {

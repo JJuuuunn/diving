@@ -49,6 +49,12 @@ test('validates type-specific logbook drafts', () => {
   delete freedivingDraft.entryPressureBar;
   delete freedivingDraft.exitPressureBar;
   assert.equal(validateDiveLogDraft(freedivingDraft), null);
+
+  const aidaDisciplines = ['CWT', 'CWTB', 'CNF', 'FIM', 'STA', 'DYN', 'DYNB', 'DNF'];
+  for (const d of aidaDisciplines) {
+    assert.equal(validateDiveLogDraft({ ...freedivingDraft, discipline: d }), null);
+  }
+  assert.match(validateDiveLogDraft({ ...freedivingDraft, discipline: 'INVALID' }), /종목/);
   assert.match(validateDiveLogDraft({ ...freedivingDraft, apneaSeconds: 0 }), /무호흡/);
 });
 

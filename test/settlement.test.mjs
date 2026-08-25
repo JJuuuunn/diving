@@ -6,8 +6,8 @@ import test from 'node:test';
 const root = path.resolve(import.meta.dirname, '..');
 const read = (relativePath) => readFile(path.join(root, relativePath), 'utf8');
 
-test('useSettlement defines standardized storage keys and legacy migration keys', async () => {
-  const source = await read('src/composables/useSettlement.ts');
+test('useSettlementStore defines standardized storage keys and legacy migration keys', async () => {
+  const source = await read('src/stores/settlement.ts');
   assert.match(source, /SETTLEMENT_STORAGE_KEYS\s*=\s*\{/);
   assert.match(source, /STEP:\s*['"]diving:settlement:step:v1['"]/);
   assert.match(source, /SETTINGS:\s*['"]diving:settlement:settings:v1['"]/);
@@ -21,17 +21,24 @@ test('useSettlement defines standardized storage keys and legacy migration keys'
   assert.match(source, /RESULTS:\s*['"]settlement-results['"]/);
 });
 
-test('useSettlement uses reactive ref for globalResultText', async () => {
-  const source = await read('src/composables/useSettlement.ts');
+test('useSettlementStore uses reactive ref for globalResultText', async () => {
+  const source = await read('src/stores/settlement.ts');
   assert.match(source, /const globalResultText = ref\(['"]['"]\);/);
   assert.match(source, /globalResultText\.value = generateResultText/);
 });
 
-test('useSettlement integrates legacy storage key migration', async () => {
-  const source = await read('src/composables/useSettlement.ts');
+test('useSettlementStore integrates legacy storage key migration', async () => {
+  const source = await read('src/stores/settlement.ts');
   assert.match(source, /function migrateSettlementStorageKeys\(\)/);
   assert.match(source, /migrateLegacyKey\(legacyKey,\s*newKey\)/);
   assert.match(source, /migrateSettlementStorageKeys\(\);/);
+});
+
+test('useSettlement composable delegates to Pinia useSettlementStore singleton', async () => {
+  const composableSource = await read('src/composables/useSettlement.ts');
+  assert.match(composableSource, /useSettlementStore/);
+  assert.match(composableSource, /const store = useSettlementStore\(\);/);
+  assert.match(composableSource, /storeToRefs/);
 });
 
 test('ResultSection implements Phase 1 features: 1-sec copy, deeplinks, useCapture', async () => {
@@ -46,8 +53,8 @@ test('ResultSection implements Phase 1 features: 1-sec copy, deeplinks, useCaptu
   assert.match(source, /result-card/);
 });
 
-test('useSettlement and ExtensionCardCustom support Kakao-style customExpenses and preset chips', async () => {
-  const source = await read('src/composables/useSettlement.ts');
+test('useSettlementStore and ExtensionCardCustom support Kakao-style customExpenses and preset chips', async () => {
+  const source = await read('src/stores/settlement.ts');
   assert.match(source, /customExpenses/);
   assert.match(source, /addCustomExpense/);
   assert.match(source, /removeCustomExpense/);
@@ -58,18 +65,18 @@ test('useSettlement and ExtensionCardCustom support Kakao-style customExpenses a
   assert.match(cardSource, /addCustomExpense/);
 });
 
-test('useSettlement exports extension management methods and types', async () => {
+test('useSettlementStore exports extension management methods and types', async () => {
   const typeSource = await read('src/types/settlement.ts');
   assert.match(typeSource, /export type SettlementExtensionType =/);
   assert.match(typeSource, /export interface SettlementExtensionItem/);
   assert.match(typeSource, /activeExtensions\?: SettlementExtensionItem\[\]/);
   assert.match(typeSource, /baseSimpleAmount\?: number/);
 
-  const composableSource = await read('src/composables/useSettlement.ts');
-  assert.match(composableSource, /toggleExtension/);
-  assert.match(composableSource, /addExtensionItem/);
-  assert.match(composableSource, /removeExtensionItem/);
-  assert.match(composableSource, /updateExtensionItem/);
+  const storeSource = await read('src/stores/settlement.ts');
+  assert.match(storeSource, /toggleExtension/);
+  assert.match(storeSource, /addExtensionItem/);
+  assert.match(storeSource, /removeExtensionItem/);
+  assert.match(storeSource, /updateExtensionItem/);
 });
 
 test('SettlementExtensionManager and specialized extension cards exist and use shared UI components', async () => {
@@ -101,19 +108,19 @@ test('SettlementExtensionManager and specialized extension cards exist and use s
 });
 
 test('SettlementMain implements Step 1 (정산 내용) -> Step 2 (인원/계좌) -> Step 3 (정산 결과) wizard flow', async () => {
-  const mainSource = await read('src/views/settlement/SettlementMain.vue');
-  assert.match(mainSource, /정산 내용/);
-  assert.match(mainSource, /인원\/계좌/);
-  assert.match(mainSource, /정산 결과/);
-  assert.match(mainSource, /SettlementExtensionManager/);
-  assert.match(mainSource, /PeopleCard/);
-  assert.match(mainSource, /ResultSection/);
+  const source = await read('src/views/settlement/SettlementMain.vue');
+  assert.match(source, /currentStep\s*===\s*1/);
+  assert.match(source, /currentStep\s*===\s*2/);
+  assert.match(source, /currentStep\s*===\s*3/);
+  assert.match(source, /SettlementExtensionManager/);
+  assert.match(source, /PeopleCard/);
+  assert.match(source, /ResultSection/);
 });
 
 test('PersonCard uses compact 1-line toggles and CustomSelect without legacy arrows', async () => {
-  const cardSource = await read('src/views/settlement/PersonCard.vue');
-  assert.match(cardSource, /person-toggles/);
-  assert.match(cardSource, /person-toggle-btn/);
-  assert.match(cardSource, /CustomSelect/);
-  assert.match(cardSource, /bank-select/);
+  const source = await read('src/views/settlement/PersonCard.vue');
+  assert.match(source, /person-toggles/);
+  assert.match(source, /CustomSelect/);
+  assert.match(source, /CustomInput/);
+  assert.doesNotMatch(source, /<select\b/);
 });
